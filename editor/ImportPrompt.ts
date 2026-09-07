@@ -26,16 +26,16 @@ export class ImportPrompt implements Prompt {
 			option({value: "PaandorasBox"}, "PaandorasBox"),
 			// Currently this option is unnecessary (UB is handled the same as JB) but we're keeping it in case there's any future conflicts
 			// There's also the situation where someone will see the "GoldBox" or "PaandorasBox" options and think they have to use one of those two
-			option({value: "UltraBox"}, "UltraBox"),
+			option({value: "UltraBox"}, "MegaBox / UltraBox"),
 		);
 		
 		public readonly container: HTMLDivElement = div({class: "prompt noSelection", style: "width: 300px;"},
 		h2("Import"),
 			p({style: "text-align: left; margin: 0.5em 0;"},
-			"BeepBox songs can be exported and re-imported as .json files. You could also use other means to make .json files for BeepBox as long as they follow the same structure.",
+			"MegaBox songs can be exported and re-imported as .json files. You could also use other means to make .json files for MegaBox as long as they follow the same structure.",
 		),
 			p({style: "text-align: left; margin: 0.5em 0;"},
-			"BeepBox can also (crudely) import .mid files. There are many tools available for creating .mid files. Shorter and simpler songs are more likely to work well.",
+			"MegaBox can also (crudely) import .mid files. There are many tools available for creating .mid files. Shorter and simpler songs are more likely to work well.",
 		),
 		this._modeImportSelect,
 		this._fileInput,

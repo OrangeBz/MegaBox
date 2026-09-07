@@ -10,12 +10,7 @@ import { HTML, SVG } from "imperative-html/dist/esm/elements-strict";
 import { ChangeSequence, UndoableChange } from "./Change";
 import { ChangeVolume, FilterMoveData, ChangeTempo, ChangePan, ChangeReverb, ChangeDistortion, ChangeOperatorAmplitude, ChangeFeedbackAmplitude, ChangePulseWidth, ChangeDetune, ChangeVibratoDepth, ChangeVibratoSpeed, ChangeVibratoDelay, ChangePanDelay, ChangeChorus, ChangeEQFilterSimplePeak, ChangeNoteFilterSimplePeak, ChangeStringSustain, ChangeEnvelopeSpeed, ChangeSupersawDynamism, ChangeSupersawShape, ChangeSupersawSpread, ChangePitchShift, ChangeChannelBar, ChangeDragSelectedNotes, ChangeEnsurePatternExists, ChangeNoteTruncate, ChangeNoteAdded, ChangePatternSelection, ChangePinTime, ChangeSizeBend, ChangePitchBend, ChangePitchAdded, ChangeArpeggioSpeed, ChangeBitcrusherQuantization, ChangeBitcrusherFreq, ChangeEchoSustain, ChangeEQFilterSimpleCut, ChangeNoteFilterSimpleCut, ChangeFilterMovePoint, ChangeDuplicateSelectedReusedPatterns, ChangeHoldingModRecording, ChangeDecimalOffset } from "./changes";
 import { prettyNumber } from "./EditorConfig";
-
-function makeEmptyReplacementElement<T extends Node>(node: T): T {
-    const clone: T = <T>node.cloneNode(false);
-    node.parentNode!.replaceChild(clone, node);
-    return clone;
-}
+import { emptyElement } from "./DOMUtils";
 
 class PatternCursor {
     public valid: boolean = false;
@@ -41,7 +36,7 @@ export class PatternEditor {
     private readonly _svgModBackground: SVGPatternElement = SVG.pattern({ id: "patternEditorModBackground" + this._barOffset, x: "0", y: "0", patternUnits: "userSpaceOnUse" });
     private readonly _svgBackground: SVGRectElement = SVG.rect({ x: "0", y: "0", "pointer-events": "none", fill: "url(#patternEditorNoteBackground" + this._barOffset + ")" });
     private _svgNoteContainer: SVGSVGElement = SVG.svg();
-    private readonly _svgPlayhead: SVGRectElement = SVG.rect({ x: "0", y: "0", width: "4", fill: ColorConfig.playhead, "pointer-events": "none" });
+    private readonly _svgPlayhead: SVGRectElement = SVG.rect({ x: "0", y: "0", width: "4", fill: ColorConfig.playhead, "pointer-events": "none", style: "will-change: x, visibility;" });
     private readonly _selectionRect: SVGRectElement = SVG.rect({ class: "dashed-line dash-move", fill: ColorConfig.boxSelectionFill, stroke: ColorConfig.hoverPreview, "stroke-width": 2, "stroke-dasharray": "5, 3", "fill-opacity": "0.4", "pointer-events": "none", visibility: "hidden" });
     private readonly _svgPreview: SVGPathElement = SVG.path({ fill: "none", stroke: ColorConfig.hoverPreview, "stroke-width": "2", "pointer-events": "none" });
     public modDragValueLabel: HTMLDivElement = HTML.div({ width: "90", "text-anchor": "start", contenteditable: "true", style: "display: flex, justify-content: center; align-items:center; position:absolute; pointer-events: none;", "dominant-baseline": "central", });
@@ -2424,7 +2419,7 @@ export class PatternEditor {
     }
 
     private _redrawNotePatterns(): void {
-        this._svgNoteContainer = makeEmptyReplacementElement(this._svgNoteContainer);
+        this._svgNoteContainer = emptyElement(this._svgNoteContainer);
 
         if (this._doc.prefs.showChannels) {
             if (!this._doc.song.getChannelIsMod(this._doc.channel)) {

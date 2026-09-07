@@ -1,7 +1,7 @@
 {
-	"name": "UltraBox",
+	"name": "MegaBox",
 	"version": "2.2.17",
-	"description": "UltraBox is a mod of BeepBox that aims to combine every other beepmod into one.",
+	"description": "MegaBox is an advanced online and offline chiptune tracker.",
 	"author": "Main",
 	"contributors": [
 		"Neputendo",
@@ -16,12 +16,16 @@
 	"main": "main.js",
 	"icon": "path.join(__dirname, 'icon.ico')",
 	"scripts": {
-		"build": "npm run build-synth && npm run build-player && npm run build-editor",
-		"build-synth": "bash ./compile_beepbox_synth.sh",
-		"build-player": "bash ./compile_beepbox_player.sh",
-		"build-editor": "bash ./compile_beepbox_editor.sh",
+		"build": "node ./build/build.js all",
+		"build-synth": "node ./build/build.js synth",
+		"build-player": "node ./build/build.js player",
+		"build-editor": "node ./build/build.js editor",
+		"build-offline-html": "node ./build/build.js build-offline-html",
+		"dev": "node ./build/build.js watch",
+		"watch": "node ./build/build.js watch",
+		"typecheck": "node ./build/build.js typecheck",
+		"optimize-samples": "node ./build/convert_samples.js",
 		"build-offline": "bash ./compile_beepbox_offline.sh",
-		"build-offline-html": "bash ./compile_beepbox_offline_html.sh",
 		"deploy-files": "bash ./deploy_files.sh",
 		"start": "electron ./to_deploy",
 		"package": "electron-packager ./to_deploy --platform=darwin,linux,win32 --arch=ia32,x64 --asar --overwrite && npm run build-offline-html",
@@ -35,16 +39,20 @@
 	"devDependencies": {
 		"@electron/packager": "^18.3.5",
 		"@rollup/plugin-node-resolve": "^15.1.0",
-		"electron": "^33.0.0",
+		"@types/node": "^26.4.1",
+		"electron": "^33.4.11",
 		"rollup": "^2.79.1",
 		"rollup-plugin-sourcemaps": "^0.6.3",
 		"terser": "^5.19.2",
-		"typescript": "^5.4.5"
+		"typescript": "^5.9.3"
 	},
 	"dependencies": {
 		"@types/jquery": "^3.5.5",
 		"@types/select2": "^4.0.53",
 		"imperative-html": "^0.1.0",
 		"select2": "^4.0.13"
+	},
+	"allowScripts": {
+		"electron@33.0.0": true
 	}
 }

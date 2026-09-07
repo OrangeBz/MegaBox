@@ -2859,63 +2859,70 @@ export class ColorConfig {
 }`,
 "ultrabox dark": `
 :root {
-/*--mod-title: #CCCCCC;*/
---loop-accent: #CCCCCC;
---playhead: #CCCCCC;
-/*--primary-text: #CCCCCC;
---hover-preview: #CCCCCC;*/
---link-accent: #FF8EC5;
---indicator-primary: #FF8EC5;
-/*--indicator-primary: #CCCCCC;*/
-/*--indicator-secondary: #E856B2;*/
---white-piano-key: #CCCCCC;
-/*--black-piano-key: #444;*/
---text-selection: #932253;
---oscilloscope-line-L: #CCCCCC;
---oscilloscope-line-R: #932253;
---pitch-channel-limit: 8;
---pitch1-secondary-channel: #A83030;
---pitch1-primary-channel:   #FF7C7C;
---pitch1-secondary-note:    #B51532;
---pitch1-primary-note:      #FFA3A3;
+  --page-margin: #121214;
+  --editor-background: #121214;
+  --hover-preview: #f4f4f5;
+  --playhead: #22c55e;
+  --primary-text: #f4f4f5;
+  --secondary-text: #a1a1aa;
+  --inverted-text: #121214;
+  --text-selection: rgba(56, 189, 248, 0.9);
+  --box-selection-fill: rgba(56, 189, 248, 0.2);
+  --loop-accent: #38bdf8;
+  --link-accent: #38bdf8;
+  --ui-widget-background: #1f1f23;
+  --ui-widget-focus: #27272a;
+  --pitch-background: #18181b;
+  --tonic: #2e2e35;
+  --fifth-note: #232328;
+  --white-piano-key: #27272a;
+  --black-piano-key: #141416;
+  --white-piano-key-text: #f4f4f5;
+  --black-piano-key-text: #a1a1aa;
+  --indicator-primary: #38bdf8;
+  --indicator-secondary: #0284c7;
+  --oscilloscope-line-L: #22c55e;
+  --oscilloscope-line-R: #38bdf8;
+  --pitch-channel-limit: 8;
+  --pitch1-secondary-channel: #15803d;
+  --pitch1-primary-channel:   #22c55e;
+  --pitch1-secondary-note:    #16a34a;
+  --pitch1-primary-note:      #86efac;
 
---pitch2-secondary-channel: #C75000;
---pitch2-primary-channel:   #FF9752;
---pitch2-secondary-note:    #FF771C;
---pitch2-primary-note:      #FFCDAB;
+  --pitch2-secondary-channel: #c2410c;
+  --pitch2-primary-channel:   #f97316;
+  --pitch2-secondary-note:    #ea580c;
+  --pitch2-primary-note:      #fdba74;
 
---pitch3-secondary-channel: #A1A100;
---pitch3-primary-channel: #FFFF25;
---pitch3-secondary-note: #C7C700;
---pitch3-primary-note: #FFFF92;
+  --pitch3-secondary-channel: #a16207;
+  --pitch3-primary-channel:   #eab308;
+  --pitch3-secondary-note:    #ca8a04;
+  --pitch3-primary-note:      #fde047;
 
---pitch4-secondary-channel: #139620;
---pitch4-primary-channel:   #25ff3a;
---pitch4-secondary-note:    #21FF33;
---pitch4-primary-note:      #C0FFB5;
+  --pitch4-secondary-channel: #0e7490;
+  --pitch4-primary-channel:   #06b6d4;
+  --pitch4-secondary-note:    #0891b2;
+  --pitch4-primary-note:      #67e8f9;
 
---pitch5-secondary-channel: #0099A1;
---pitch5-primary-channel:   #25F3FF;
---pitch5-secondary-note:    #00BDC7;
---pitch5-primary-note:      #92F9FF;
+  --pitch5-secondary-channel: #0369a1;
+  --pitch5-primary-channel:   #38bdf8;
+  --pitch5-secondary-note:    #0284c7;
+  --pitch5-primary-note:      #7dd3fc;
 
---pitch6-secondary-channel: #58599E;
---pitch6-primary-channel:   #5EA3FF;
---pitch6-secondary-note:    #183AC7;
---pitch6-primary-note:      #9EC8FF;
+  --pitch6-secondary-channel: #4338ca;
+  --pitch6-primary-channel:   #6366f1;
+  --pitch6-secondary-note:    #4f46e5;
+  --pitch6-primary-note:      #a5b4fc;
 
---pitch7-secondary-channel: #6038a5;
---pitch7-primary-channel:   #C760FF;
---pitch7-secondary-note:    #5433A0;
---pitch7-primary-note:      #D99EFF;
+  --pitch7-secondary-channel: #7e22ce;
+  --pitch7-primary-channel:   #a855f7;
+  --pitch7-secondary-note:    #9333ea;
+  --pitch7-primary-note:      #d8b4fe;
 
---pitch8-secondary-channel: #932253;
---pitch8-primary-channel:   #FF60A5;
---pitch8-secondary-note:    #8E1C4E;
---pitch8-primary-note:      #FF8EC5;
-
-/*--track-editor-bg-mod: #632D45;
---track-editor-bg-mod-dim: #3F1D2C;*/
+  --pitch8-secondary-channel: #be185d;
+  --pitch8-primary-channel:   #ec4899;
+  --pitch8-secondary-note:    #db2777;
+  --pitch8-primary-note:      #f472b6;
 }`,
 		"modbox classic": `
 			:root {
@@ -5595,26 +5602,26 @@ export class ColorConfig {
 	"custom": `${localStorage.getItem("customColors") || `:root {  }`}`,
     };
 
-    public static readonly pageMargin: string = "var(--page-margin, black)";
-    public static readonly editorBackground: string = "var(--editor-background, black)";
-    public static readonly hoverPreview: string = "var(--hover-preview, white)";
-    public static readonly playhead: string = "var(--playhead, white)";
-    public static readonly primaryText: string = "var(--primary-text, white)";
-    public static readonly secondaryText: string = "var(--secondary-text, #999)";
-    public static readonly invertedText: string = "var(--inverted-text, black)";
-    public static readonly textSelection: string = "var(--text-selection, rgba(119,68,255,0.99))";
-    public static readonly boxSelectionFill: string = "var(--box-selection-fill, rgba(255,255,255,0.2))";
-    public static readonly loopAccent: string = "var(--loop-accent, #74f)";
-    public static readonly linkAccent: string = "var(--link-accent, #98f)";
-    public static readonly uiWidgetBackground: string = "var(--ui-widget-background, #444)";
-    public static readonly uiWidgetFocus: string = "var(--ui-widget-focus, #777)";
-    public static readonly pitchBackground: string = "var(--pitch-background, #444)";
-    public static readonly tonic: string = "var(--tonic, #864)";
-    public static readonly fifthNote: string = "var(--fifth-note, #468)";
-    public static readonly whitePianoKey: string = "var(--white-piano-key, #bbb)";
-    public static readonly blackPianoKey: string = "var(--black-piano-key, #444)";
-    public static readonly whitePianoKeyText: string = "var(--white-piano-key-text, #131200)";
-    public static readonly blackPianoKeyText: string = "var(--black-piano-key-text, #fff)";
+    public static readonly pageMargin: string = "var(--page-margin, #121214)";
+    public static readonly editorBackground: string = "var(--editor-background, #121214)";
+    public static readonly hoverPreview: string = "var(--hover-preview, #f4f4f5)";
+    public static readonly playhead: string = "var(--playhead, #22c55e)";
+    public static readonly primaryText: string = "var(--primary-text, #f4f4f5)";
+    public static readonly secondaryText: string = "var(--secondary-text, #a1a1aa)";
+    public static readonly invertedText: string = "var(--inverted-text, #121214)";
+    public static readonly textSelection: string = "var(--text-selection, rgba(56, 189, 248, 0.9))";
+    public static readonly boxSelectionFill: string = "var(--box-selection-fill, rgba(56, 189, 248, 0.2))";
+    public static readonly loopAccent: string = "var(--loop-accent, #38bdf8)";
+    public static readonly linkAccent: string = "var(--link-accent, #38bdf8)";
+    public static readonly uiWidgetBackground: string = "var(--ui-widget-background, #1f1f23)";
+    public static readonly uiWidgetFocus: string = "var(--ui-widget-focus, #27272a)";
+    public static readonly pitchBackground: string = "var(--pitch-background, #18181b)";
+    public static readonly tonic: string = "var(--tonic, #2e2e35)";
+    public static readonly fifthNote: string = "var(--fifth-note, #232328)";
+    public static readonly whitePianoKey: string = "var(--white-piano-key, #27272a)";
+    public static readonly blackPianoKey: string = "var(--black-piano-key, #141416)";
+    public static readonly whitePianoKeyText: string = "var(--white-piano-key-text, #f4f4f5)";
+    public static readonly blackPianoKeyText: string = "var(--black-piano-key-text, #a1a1aa)";
 	//public static readonly oscilloscopeLineL: string = "var(--oscilloscope-line-L, var(--primary-text, white))";
 	//public static readonly oscilloscopeLineR: string = "var(--oscilloscope-line-R, var(--text-selection, rgba(119,68,255,0.99)))";
 	// modTitle can stay uncommented until it's used somwhere that's not index.html

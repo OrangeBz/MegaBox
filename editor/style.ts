@@ -20,6 +20,25 @@ document.head.appendChild(HTML.style({ type: "text/css" }, `
 
 /* Note: "#" symbols need to be encoded as "%23" in SVG data urls, otherwise they are interpreted as fragment identifiers! */
 :root {
+	--pattern-area-height: 481px;
+	--settings-area-width: 192px;
+	--font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+	--font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+	--border-subtle: #2e2e33;
+	--border-default: #3f3f46;
+	--border-focus: #71717a;
+	--shadow-inset-slot: inset 0 1px 3px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(0, 0, 0, 0.4);
+	--shadow-pressed-btn: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+	--glow-green: 0 0 8px rgba(34, 197, 94, 0.4);
+	--glow-orange: 0 0 8px rgba(249, 115, 22, 0.4);
+	--glow-red: 0 0 8px rgba(239, 68, 68, 0.4);
+	--glow-amber: 0 0 8px rgba(234, 179, 8, 0.4);
+	--glow-cyan: 0 0 8px rgba(56, 189, 248, 0.4);
+	--accent-signal-green: #22c55e;
+	--accent-signal-amber: #eab308;
+	--accent-signal-red: #ef4444;
+	--accent-rec-orange: #f97316;
+	--accent-mod-cyan: #38bdf8;
 	--button-size: 26px;
 	--settings-area-width: 192px;
 	--internal-play-symbol: var(--play-symbol, url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="-13 -13 26 26"><path d="M -5 -8 L -5 8 L 8 0 z" fill="gray"/></svg>'));
@@ -36,6 +55,8 @@ document.head.appendChild(HTML.style({ type: "text/css" }, `
 	--internal-file-page-symbol: var(--file-page-symbol, url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="-5 -21 26 26"><path d="M 2 0 L 2 -16 L 10 -16 L 14 -12 L 14 0 z M 3 -1 L 13 -1 L 13 -11 L 9 -11 L 9 -15 L 3 -15 z" fill="gray"/></svg>'));
 	--internal-edit-pencil-symbol: var(--edit-pencil-symbol, url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="-5 -21 26 26"><path d="M 0 0 L 1 -4 L 4 -1 z M 2 -5 L 10 -13 L 13 -10 L 5 -2 zM 11 -14 L 13 -16 L 14 -16 L 16 -14 L 16 -13 L 14 -11 z" fill="gray"/></svg>'));
 	--internal-preferences-gear-symbol: var(--preferences-gear-symbol, url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="-13 -13 26 26"><path d="M 5.78 -1.6 L 7.93 -0.94 L 7.93 0.94 L 5.78 1.6 L 4.85 3.53 L 5.68 5.61 L 4.21 6.78 L 2.36 5.52 L 0.27 5.99 L -0.85 7.94 L -2.68 7.52 L -2.84 5.28 L -4.52 3.95 L -6.73 4.28 L -7.55 2.59 L -5.9 1.07 L -5.9 -1.07 L -7.55 -2.59 L -6.73 -4.28 L -4.52 -3.95 L -2.84 -5.28 L -2.68 -7.52 L -0.85 -7.94 L 0.27 -5.99 L 2.36 -5.52 L 4.21 -6.78 L 5.68 -5.61 L 4.85 -3.53 M 2.92 0.67 L 2.92 -0.67 L 2.35 -1.87 L 1.3 -2.7 L 0 -3 L -1.3 -2.7 L -2.35 -1.87 L -2.92 -0.67 L -2.92 0.67 L -2.35 1.87 L -1.3 2.7 L -0 3 L 1.3 2.7 L 2.35 1.87 z" fill="gray"/></svg>'));
+	--internal-help-symbol: var(--help-symbol, url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="-16 -16 32 32"><circle cx="0" cy="0" r="10" stroke="gray" stroke-width="2" fill="none"/><path d="M -3.5 -3.5 C -3.5 -7.5 3.5 -7.5 3.5 -3.5 C 3.5 -1 0 0 0 2.5" stroke="gray" stroke-width="2" fill="none"/><circle cx="0" cy="6" r="1.3" fill="gray"/></svg>'));
+	--internal-about-symbol: var(--about-symbol, url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="-16 -16 32 32"><circle cx="0" cy="0" r="10" stroke="gray" stroke-width="2" fill="none"/><circle cx="0" cy="-4.5" r="1.4" fill="gray"/><rect x="-1" y="-1.5" width="2" height="7" rx="0.5" fill="gray"/></svg>'));
 	--internal-customize-dial-symbol: var(--customize-dial-symbol, url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="-13 -13 26 26"> \
 			<g transform="translate(0,1)" fill="gray"> \
 				<circle cx="0" cy="0" r="6.5" stroke="gray" stroke-width="1" fill="none"/> \
@@ -134,33 +155,65 @@ document.head.appendChild(HTML.style({ type: "text/css" }, `
 
 html {
 	scrollbar-color: var(--scrollbar-color, ${ColorConfig.uiWidgetBackground}) var(--scrollbar-background, ${ColorConfig.editorBackground});
+	scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+*::-webkit-scrollbar-track {
+	background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+	background-color: ${ColorConfig.uiWidgetBackground};
+	border-radius: 4px;
+	border: 2px solid transparent;
+	background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+	background-color: ${ColorConfig.uiWidgetFocus};
 }
 
 .obtrusive-scrollbars, .obtrusive-scrollbars * {
 	scrollbar-width: thin;
 }
 .obtrusive-scrollbars::-webkit-scrollbar, .obtrusive-scrollbars *::-webkit-scrollbar {
-	width: 12px;
+	width: 8px;
+	height: 8px;
 }
 .obtrusive-scrollbars::-webkit-scrollbar-track, .obtrusive-scrollbars *::-webkit-scrollbar-track {
-	background: ${ColorConfig.editorBackground};
+	background: transparent;
 }
 .obtrusive-scrollbars::-webkit-scrollbar-thumb, .obtrusive-scrollbars *::-webkit-scrollbar-thumb {
 	background-color: ${ColorConfig.uiWidgetBackground};
-	border: 3px solid ${ColorConfig.editorBackground};
+	border-radius: 4px;
+	border: 2px solid transparent;
+	background-clip: padding-box;
 }
 
 .beepboxEditor {
+	font-family: var(--font-mono), monospace;
+	font-size: 12px;
+	letter-spacing: -0.2px;
 	display: grid;
-    grid-template-columns: minmax(0, 1fr) max-content;
-    grid-template-rows: max-content 1fr; /* max-content minmax(0, 1fr); Chrome 80 grid layout regression. https://bugs.chromium.org/p/chromium/issues/detail?id=1050307 */
-    grid-template-areas: "pattern-area settings-area" "track-area settings-area";
-	grid-column-gap: 6px;
-	grid-row-gap: 6px;
+    grid-template-columns: minmax(0, 1fr) 6px var(--settings-area-width, 192px);
+    grid-template-rows: max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr);
+    grid-template-areas: 
+        "menu-area menu-area menu-area" 
+        "pattern-area v-splitter settings-area" 
+        "h-splitter v-splitter settings-area" 
+        "track-area v-splitter settings-area";
+	grid-column-gap: 0;
+	grid-row-gap: 0;
+	padding: 6px;
+	gap: 6px;
+	box-sizing: border-box;
+	width: 100%;
+	height: 100vh;
 	position: relative;
 	touch-action: manipulation;
 	cursor: default;
-	font-size: 13px;
 	overflow: hidden;
 	color: ${ColorConfig.primaryText};
 	background: ${ColorConfig.editorBackground};
@@ -174,11 +227,12 @@ html {
 }
 
 .beepboxEditor .operatorRow {
-	margin: 2px 0;
-	height: 2em;
+	margin: 3px 0;
+	height: 28px;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
+	gap: 4px;
 }
 
 .beepboxEditor .operatorRow > * {
@@ -246,8 +300,6 @@ html {
     transition-delay: 0.5s;
 }
 
-
-
 .load {
     opacity: 1;
 }
@@ -267,15 +319,29 @@ html {
 
 .beepboxEditor .pattern-area {
 	grid-area: pattern-area;
-	height: 481px;
+	height: 100%;
+	min-height: 160px;
 	display: flex;
 	flex-direction: row;
 	position: relative;
+	contain: layout paint;
+	background: ${ColorConfig.editorBackground};
+	border: 1px solid var(--border-subtle, #2e2e33);
+	border-radius: 6px;
+	overflow: hidden;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 .beepboxEditor .track-area {
 	grid-area: track-area;
+	min-height: 100px;
 	background-image: url(${getLocalStorageItem("customTheme2", "")});
+	contain: layout paint;
+	background-color: ${ColorConfig.editorBackground};
+	border: 1px solid var(--border-subtle, #2e2e33);
+	border-radius: 6px;
+	overflow: hidden;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 .beepboxEditor .loopEditor {
@@ -288,18 +354,179 @@ html {
 
 .beepboxEditor .settings-area {
 	grid-area: settings-area;
-	display: grid;
-    grid-template-columns: auto;
-    grid-template-rows: min-content min-content min-content min-content min-content;
-    grid-template-areas: "version-area" "play-pause-area" "menu-area" "song-settings-area" "instrument-settings-area";
-	grid-column-gap: 6px;
+	width: var(--settings-area-width, 192px);
+	min-width: 36px;
+	contain: layout style paint;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	padding: 0 2px 8px 2px;
+	box-sizing: border-box;
+	overflow-y: auto;
+	overflow-x: hidden;
+	max-height: 100%;
+	scrollbar-width: thin;
+	scrollbar-color: #3f3f46 transparent;
+}
+.beepboxEditor .settings-area::-webkit-scrollbar {
+	width: 5px;
+}
+.beepboxEditor .settings-area::-webkit-scrollbar-track {
+	background: transparent;
+}
+.beepboxEditor .settings-area::-webkit-scrollbar-thumb {
+	background-color: #3f3f46;
+	border-radius: 3px;
+}
+.beepboxEditor .settings-area::-webkit-scrollbar-thumb:hover {
+	background-color: #71717a;
 }
 
-.beepboxEditor .version-area{ grid-area: version-area; }
-.beepboxEditor .play-pause-area{ grid-area: play-pause-area; }
-.beepboxEditor .menu-area{ grid-area: menu-area; }
-.beepboxEditor .song-settings-area{ grid-area: song-settings-area; }
-.beepboxEditor .instrument-settings-area{ grid-area: instrument-settings-area; }
+.beepboxEditor .settings-area.collapsed-sidebar > * {
+	display: none !important;
+}
+.beepboxEditor .settings-area.collapsed-sidebar {
+	overflow: hidden;
+}
+
+
+
+body.resizing-h {
+	cursor: row-resize !important;
+	user-select: none !important;
+}
+body.resizing-v {
+	cursor: col-resize !important;
+	user-select: none !important;
+}
+
+.editor-splitter-horizontal {
+	grid-area: h-splitter;
+	height: 6px;
+	cursor: row-resize;
+	background: #18181b;
+	border-top: 1px solid var(--border-subtle, #2e2e33);
+	border-bottom: 1px solid var(--border-subtle, #2e2e33);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	z-index: 10;
+	user-select: none;
+	touch-action: none;
+	transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.editor-splitter-horizontal .splitter-handle-h {
+	width: 42px;
+	height: 3px;
+	border-radius: 1.5px;
+	background: #71717a;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+	transition: width 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+.editor-splitter-horizontal:hover,
+.editor-splitter-horizontal.active {
+	background: #27272a;
+	border-color: var(--accent-mod-cyan, #38bdf8);
+}
+.editor-splitter-horizontal:hover .splitter-handle-h,
+.editor-splitter-horizontal.active .splitter-handle-h {
+	width: 60px;
+	background: var(--accent-mod-cyan, #38bdf8);
+	box-shadow: 0 0 8px rgba(56, 189, 248, 0.7);
+}
+
+.editor-splitter-vertical {
+	grid-area: v-splitter;
+	width: 6px;
+	cursor: col-resize;
+	background: #18181b;
+	border-left: 1px solid var(--border-subtle, #2e2e33);
+	border-right: 1px solid var(--border-subtle, #2e2e33);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	z-index: 10;
+	user-select: none;
+	touch-action: none;
+	transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.editor-splitter-vertical .splitter-handle-v {
+	height: 42px;
+	width: 3px;
+	border-radius: 1.5px;
+	background: #71717a;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+	transition: height 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+.editor-splitter-vertical:hover,
+.editor-splitter-vertical.active {
+	background: #27272a;
+	border-color: var(--accent-mod-cyan, #38bdf8);
+}
+.editor-splitter-vertical:hover .splitter-handle-v,
+.editor-splitter-vertical.active .splitter-handle-v {
+	height: 60px;
+	background: var(--accent-mod-cyan, #38bdf8);
+	box-shadow: 0 0 8px rgba(56, 189, 248, 0.7);
+}
+
+.collapsible-header {
+	cursor: pointer;
+	user-select: none;
+	transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
+	background: linear-gradient(180deg, #27272a 0%, #1f1f23 100%);
+	border: 1px solid var(--border-subtle, #2e2e33);
+	border-radius: 4px;
+	padding: 5px 8px;
+	margin-bottom: 6px;
+	font-weight: 700;
+	color: #e4e4e7;
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+.collapsible-header:hover {
+	background: linear-gradient(180deg, #323238 0%, #25252a 100%);
+	border-color: var(--accent-mod-cyan, #38bdf8);
+	color: #ffffff;
+	box-shadow: 0 0 6px rgba(56, 189, 248, 0.25);
+}
+.collapsible-header .fold-icon {
+	transition: transform 0.15s ease;
+	display: inline-block;
+	color: var(--accent-mod-cyan, #38bdf8);
+	font-size: 12px;
+}
+.collapsible-header.collapsed .fold-icon {
+	transform: rotate(-90deg);
+}
+.song-controls-group.collapsed,
+.instrument-settings-body.collapsed,
+.instrument-settings-area.collapsed > :not(:first-child),
+.instrument-settings-area.collapsed .editor-controls > :not(#instrumentSettingsText):not(.collapsible-header),
+.instrument-settings-area.collapsed > :not(#instrumentSettingsText):not(.collapsible-header) {
+	display: none !important;
+}
+.beepboxEditor .song-settings-area.collapsed,
+.beepboxEditor .instrument-settings-area.collapsed {
+	padding: 4px 6px;
+}
+.beepboxEditor .song-settings-area.collapsed .collapsible-header,
+.beepboxEditor .instrument-settings-area.collapsed .collapsible-header {
+	margin-bottom: 0;
+}
+
+.beepboxEditor .version-area{ flex-shrink: 0; }
+.beepboxEditor .play-pause-area{ flex-shrink: 0; }
+.beepboxEditor .menu-area{ grid-area: menu-area; flex-shrink: 0; }
+.beepboxEditor .song-settings-area{ flex-shrink: 0; }
+.beepboxEditor .instrument-settings-area{ flex-shrink: 0; }
 
 .beepboxEditor .tip {
 	cursor: help;
@@ -475,8 +702,8 @@ html {
 
 .beepboxEditor .envelope-row {
 	display: flex;
-	margin: 2px 0;
-	gap: 2px;
+	margin: 4px 0;
+	gap: 4px;
 }
 
 .beepboxEditor .add-envelope {
@@ -649,6 +876,44 @@ html {
 	mask-position: center;
 }
 
+.beepboxEditor .menu.help::before {
+	content: "";
+	flex-shrink: 0;
+	position: absolute;
+	left: 0;
+	top: 50%;
+	transform: translateY(-50%);
+	pointer-events: none;
+	width: var(--button-size);
+	height: var(--button-size);
+	background: currentColor;
+	-webkit-mask-image: var(--internal-help-symbol);
+	-webkit-mask-repeat: no-repeat;
+	-webkit-mask-position: center;
+	mask-image: var(--internal-help-symbol);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
+.beepboxEditor .menu.about::before {
+	content: "";
+	flex-shrink: 0;
+	position: absolute;
+	left: 0;
+	top: 50%;
+	transform: translateY(-50%);
+	pointer-events: none;
+	width: var(--button-size);
+	height: var(--button-size);
+	background: currentColor;
+	-webkit-mask-image: var(--internal-about-symbol);
+	-webkit-mask-repeat: no-repeat;
+	-webkit-mask-position: center;
+	mask-image: var(--internal-about-symbol);
+	mask-repeat: no-repeat;
+	mask-position: center;
+}
+
 .beepboxEditor .mute-button {
 	background: transparent;
 	border: none;
@@ -668,31 +933,38 @@ html {
 	width: 100%;
 	height: 100%;
 	display: inline-block;
-  background: var(--mute-button-normal);
+	background: var(--mute-button-normal, #f4f4f5);
 	-webkit-mask-image: var(--internal-unmuted-symbol);
 	-webkit-mask-repeat: no-repeat;
 	-webkit-mask-position: center;
 	-webkit-mask-size: cover;
-  mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
 	mask-position: center;
 	mask-size: cover;
-  mask-image: var(--internal-unmuted-symbol);
+	mask-image: var(--internal-unmuted-symbol);
+	transition: filter 0.1s ease;
+}
+
+.beepboxEditor .mute-button:hover::before {
+	filter: drop-shadow(0 0 3px var(--accent-mod-cyan, #38bdf8));
 }
 
 .beepboxEditor .mute-button.muted::before {
-  background: var(--ui-widget-background);
+	background: var(--accent-signal-red, #ef4444);
 	-webkit-mask-image: var(--internal-muted-symbol);
-  mask-image: var(--internal-muted-symbol);
+	mask-image: var(--internal-muted-symbol);
+	filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.5));
 }
 
 .beepboxEditor .mute-button.modMute.muted::before {
-  background: var(--ui-widget-background);
+	background: var(--accent-signal-red, #ef4444);
 	-webkit-mask-image: var(--internal-muted-symbol);
-  mask-image: var(--internal-muted-symbol);
+	mask-image: var(--internal-muted-symbol);
+	filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.5));
 }
 
 .beepboxEditor .mute-button.modMute::before {
-  background: var(--mute-button-mod);
+	background: var(--mute-button-mod, #38bdf8);
 }
 
 
@@ -712,14 +984,15 @@ html {
 	margin: auto;
 	text-align: center;
 	background: ${ColorConfig.editorBackground};
-	border-radius: 15px;
-	border: 4px solid ${ColorConfig.uiWidgetBackground};
+	border-radius: 12px;
+	border: 1px solid rgba(255, 255, 255, 0.15);
 	color: ${ColorConfig.primaryText};
-	padding: 20px;
+	padding: 24px;
 	display: flex;
 	flex-direction: column;
 	position: relative;
-	box-shadow: 5px 5px 20px 10px rgba(0,0,0,0.5);
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 1px rgba(255, 255, 255, 0.25);
+	max-height: 90vh;
 }
 
 .beepboxEditor .prompt > *:not(:first-child):not(.cancelButton) {
@@ -801,29 +1074,51 @@ html {
 	height: var(--button-size);
 	background: currentColor;
 	-webkit-mask-image: var(--internal-menu-down-symbol);
-	-webkit-mask-repeat: no-repeat;
-	-webkit-mask-position: center;
-	mask-image: var(--internal-menu-down-symbol);
-	mask-repeat: no-repeat;
-	mask-position: center;
+	margin: 0.5em 0;
+	font-size: 11px;
+	line-height: 1.4;
+	color: var(--secondary-text, #a1a1aa);
 }
+
+.beepboxEditor .prompt .layout-option {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	font-size: 11px;
+	margin: 4px;
+	cursor: pointer;
+}
+
+.beepboxEditor .prompt .layout-option input[type=radio] {
+	margin-bottom: 4px;
+}
+
 .beepboxEditor select {
 	margin: 0;
-	padding: 0 4px;
+	padding: 0 6px;
 	display: block;
 	height: var(--button-size);
-	border: none;
-	border-radius: 5px;
+	border: 1px solid var(--border-default, #3f3f46);
+	border-radius: 4px;
 	background: ${ColorConfig.uiWidgetBackground};
-	color: inherit;
-	font-size: inherit;
+	color: ${ColorConfig.primaryText};
+	font-size: 12px;
+	font-family: var(--font-mono, monospace);
 	cursor: pointer;
-	font-family: inherit;
-	font-weight: inherit;
-
-	-webkit-appearance:none;
+	box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+	transition: background-color 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
+}
+.beepboxEditor select:hover {
+	border-color: var(--border-focus, #71717a);
+	background: ${ColorConfig.uiWidgetFocus};
+}
+.beepboxEditor select:focus {
+	border-color: var(--accent-mod-cyan, #38bdf8);
+	box-shadow: 0 0 6px rgba(56, 189, 248, 0.35);
+	outline: none;
 }
 .beepboxEditor select option:disabled {
 	color: ${ColorConfig.linkAccent};
@@ -876,13 +1171,13 @@ html {
 	padding: 0 0.3em;
 	display: block;
 	height: 2em;
-	border: none;
-	border-radius: 0.4em;
+	border: 1px solid var(--border-default, #3f3f46);
+	border-radius: 4px;
 	background: ${ColorConfig.uiWidgetBackground};
 	color: inherit !important;
-	font-size: inherit;
+	font-size: 12px;
+	font-family: var(--font-mono, monospace);
 	cursor: pointer;
-	font-family: inherit;
 	-webkit-appearance:none;
 	-moz-appearance: none;
 	appearance: none;
@@ -893,24 +1188,29 @@ html {
 
 .select2-selection__rendered--focus {
 	background: ${ColorConfig.uiWidgetFocus};
+	border-color: var(--accent-mod-cyan, #38bdf8);
+	box-shadow: 0 0 6px rgba(56, 189, 248, 0.35);
 	outline: none;
 }
 .select2-search__field {
-    background: ${ColorConfig.uiWidgetBackground};
+    background: #141416;
     color: inherit !important;
-    font-size: small;
-    font-family: inherit;
-    border: 0px !important;
-    padding: 1px !important;
+    font-size: 12px;
+    font-family: var(--font-mono, monospace);
+    border: 1px solid var(--border-default, #3f3f46) !important;
+    padding: 2px 4px !important;
 }
 .select2-dropdown {
     box-sizing: border-box;
     display: inline-block;
     margin: 0;
-    font-size: small;
+    font-size: 12px;
+    font-family: var(--font-mono, monospace);
     position: relative;
     vertical-align: middle;
-    background-color: ${ColorConfig.uiWidgetFocus};
+    background-color: #1f1f23;
+    border: 1px solid var(--border-default, #3f3f46);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.8);
 }
 
 .select2-container--default .select2-results>.select2-results__options {
@@ -920,60 +1220,70 @@ html {
 .select2-container--default .select2-results__group {
     cursor: default;
     display: block;
-    padding: 1px;
-    background: ${ColorConfig.select2OptGroup};
+    padding: 3px 6px;
+    background: #27272a;
+    font-weight: 700;
+    color: var(--accent-mod-cyan, #38bdf8);
 }
 .select2-results__option {
-    padding: 2px;
+    padding: 3px 6px;
     user-select: none;
     -webkit-user-select: none;
 }
 .select2-container--default .select2-results__option .select2-results__option {
-    padding-left: 0.1em;
+    padding-left: 0.5em;
 }
 .select2-container--default .select2-results__option[aria-selected=true] {
-  background-color: transparent !important;
+  background-color: #27272a !important;
+  color: #f4f4f5 !important;
 }
 
 .select2-results__option--highlighted[aria-selected] {
-	color: white !important;
+	background-color: #3f3f46 !important;
+	color: #fff !important;
 }
 
 .beepboxEditor .menu select {
-	padding: 0 var(--button-size);
+	padding: 0 16px 0 24px;
 }
 .beepboxEditor select:focus {
 	background: ${ColorConfig.uiWidgetFocus};
 	outline: none;
 }
 .beepboxEditor .menu select {
-	text-align: center;
-	text-align-last: center;
+	text-align: left;
+	text-align-last: left;
 }
 .beepboxEditor .settings-area select {
        width: 100%;
 }
 
-/* This makes it look better in firefox on my computer... What about others?
-@-moz-document url-prefix() {
-	.beepboxEditor select { padding: 0 2px; }
-}
-*/
 .beepboxEditor button {
 	margin: 0;
 	position: relative;
 	height: var(--button-size);
-	border: none;
-	border-radius: 5px;
+	border: 1px solid var(--border-default, #3f3f46);
+	border-radius: 4px;
 	background: ${ColorConfig.uiWidgetBackground};
-	color: inherit;
-	font-size: inherit;
-	font-family: inherit;
-	font-weight: inherit;
+	color: ${ColorConfig.primaryText};
+	font-size: 12px;
+	font-family: var(--font-mono, monospace);
+	font-weight: 600;
 	cursor: pointer;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+	transition: background-color 0.12s ease, border-color 0.12s ease, transform 0.05s ease, box-shadow 0.12s ease;
+}
+.beepboxEditor button:hover {
+	background: ${ColorConfig.uiWidgetFocus};
+	border-color: var(--border-focus, #71717a);
+}
+.beepboxEditor button:active {
+	transform: translateY(1px);
+	box-shadow: var(--shadow-pressed-btn, inset 0 2px 4px rgba(0,0,0,0.6));
 }
 .beepboxEditor button:focus {
-	background: ${ColorConfig.uiWidgetFocus};
+	border-color: var(--accent-mod-cyan, #38bdf8);
+	box-shadow: 0 0 6px rgba(56, 189, 248, 0.35);
 	outline: none;
 }
 
@@ -986,22 +1296,61 @@ html {
 }
 
 .beepboxEditor .playback-bar-controls {
-	display: grid;
-	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
-	grid-template-rows: min-content;
-	grid-column-gap: 4px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 4px;
+	flex-shrink: 0;
 }
 
+.beepboxEditor .playback-bar-controls button {
+	height: 28px;
+	min-width: 28px;
+	padding: 0 8px;
+	font-size: 11px;
+	font-family: var(--font-mono, monospace);
+	font-weight: 600;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	box-sizing: border-box;
+}
+
+.beepboxEditor button.playButton:hover,
+.beepboxEditor button.playButton:focus {
+	border-color: var(--accent-signal-green, #22c55e);
+	box-shadow: var(--glow-green, 0 0 8px rgba(34, 197, 94, 0.4));
+	color: #22c55e;
+}
+.beepboxEditor button.pauseButton:hover,
+.beepboxEditor button.pauseButton:focus {
+	border-color: var(--accent-signal-amber, #eab308);
+	box-shadow: var(--glow-amber, 0 0 8px rgba(234, 179, 8, 0.4));
+	color: #eab308;
+}
+.beepboxEditor button.recordButton:hover,
+.beepboxEditor button.recordButton:focus {
+	border-color: var(--accent-rec-orange, #f97316);
+	box-shadow: var(--glow-orange, 0 0 8px rgba(249, 115, 22, 0.4));
+	color: #f97316;
+}
+.beepboxEditor button.stopButton:hover,
+.beepboxEditor button.stopButton:focus {
+	border-color: var(--accent-signal-red, #ef4444);
+	box-shadow: var(--glow-red, 0 0 8px rgba(239, 68, 68, 0.4));
+	color: #ef4444;
+}
 .beepboxEditor button.playButton::before {
 	content: "";
 	flex-shrink: 0;
 	position: absolute;
-	left: 0;
+	left: 8px;
 	top: 50%;
 	transform: translateY(-50%);
 	pointer-events: none;
-	width: var(--button-size);
-	height: var(--button-size);
+	width: 16px;
+	height: 16px;
 	background: currentColor;
 	-webkit-mask-image: var(--internal-play-symbol);
 	-webkit-mask-repeat: no-repeat;
@@ -1014,12 +1363,12 @@ html {
 	content: "";
 	flex-shrink: 0;
 	position: absolute;
-	left: 0;
+	left: 8px;
 	top: 50%;
 	transform: translateY(-50%);
 	pointer-events: none;
-	width: var(--button-size);
-	height: var(--button-size);
+	width: 16px;
+	height: 16px;
 	background: currentColor;
 	-webkit-mask-image: var(--internal-pause-symbol);
 	-webkit-mask-repeat: no-repeat;
@@ -1032,12 +1381,12 @@ html {
 	content: "";
 	flex-shrink: 0;
 	position: absolute;
-	left: 0;
+	left: 8px;
 	top: 50%;
 	transform: translateY(-50%);
 	pointer-events: none;
-	width: var(--button-size);
-	height: var(--button-size);
+	width: 16px;
+	height: 16px;
 	background: currentColor;
 	-webkit-mask-image: var(--internal-record-symbol);
 	-webkit-mask-repeat: no-repeat;
@@ -1050,12 +1399,12 @@ html {
 	content: "";
 	flex-shrink: 0;
 	position: absolute;
-	left: 0;
+	left: 8px;
 	top: 50%;
 	transform: translateY(-50%);
 	pointer-events: none;
-	width: var(--button-size);
-	height: var(--button-size);
+	width: 16px;
+	height: 16px;
 	background: currentColor;
 	-webkit-mask-image: var(--internal-stop-symbol);
 	-webkit-mask-repeat: no-repeat;
@@ -1073,8 +1422,8 @@ html {
 	top: 50%;
 	transform: translate(-50%, -50%);
 	pointer-events: none;
-	width: var(--button-size);
-	height: var(--button-size);
+	width: 18px;
+	height: 18px;
 	background: currentColor;
 	-webkit-mask-image: var(--internal-prev-bar-symbol);
 	-webkit-mask-repeat: no-repeat;
@@ -1092,8 +1441,8 @@ html {
 	top: 50%;
 	transform: translate(-50%, -50%);
 	pointer-events: none;
-	width: var(--button-size);
-	height: var(--button-size);
+	width: 18px;
+	height: 18px;
 	background: currentColor;
 	-webkit-mask-image: var(--internal-next-bar-symbol);
 	-webkit-mask-repeat: no-repeat;
@@ -1103,28 +1452,23 @@ html {
 	mask-position: center;
 }
 
-.beepboxEditor button.playButton, .beepboxEditor button.pauseButton, .beepboxEditor button.recordButton, .beepboxEditor button.stopButton, .beepboxEditor button.okayButton, .beepboxEditor button.exportButton {
+.beepboxEditor button.playButton, .beepboxEditor button.pauseButton, .beepboxEditor button.recordButton, .beepboxEditor button.stopButton {
+	min-width: 76px;
+	padding-left: 28px;
+	padding-right: 12px;
+}
+.beepboxEditor button.okayButton, .beepboxEditor button.exportButton {
 	padding-left: var(--button-size);
 }
-.beepboxEditor button.playButton, .beepboxEditor button.pauseButton, .beepboxEditor button.recordButton {
-	grid-column-start: 1;
-	grid-column-end: 3;
-}
-.beepboxEditor button.stopButton {
-	grid-column-start: 1;
-	grid-column-end: 5;
-}
-.beepboxEditor button.prevBarButton {
-	grid-column-start: 3;
-	grid-column-end: 4;
-}
+.beepboxEditor button.prevBarButton,
 .beepboxEditor button.nextBarButton {
-	grid-column-start: 4;
-	grid-column-end: 5;
+	width: 28px;
+	padding: 0;
 }
 
 .beepboxEditor button.playButton.shrunk, .beepboxEditor button.recordButton.shrunk {
 	padding: 0;
+	width: 28px;
 }
 .beepboxEditor button.playButton.shrunk::before, .beepboxEditor button.recordButton.shrunk::before {
 	left: 50%;
@@ -1133,14 +1477,6 @@ html {
 }
 .beepboxEditor button.playButton.shrunk span, .beepboxEditor button.recordButton.shrunk span {
 	display: none;
-}
-.beepboxEditor button.playButton.shrunk {
-	grid-column-start: 1;
-	grid-column-end: 2;
-}
-.beepboxEditor button.recordButton.shrunk {
-	grid-column-start: 2;
-	grid-column-end: 3;
 }
 
 .beepboxEditor button.cancelButton::before {
@@ -1196,7 +1532,9 @@ html {
 
 .beepboxEditor .instrument-bar {
 	display: flex;
-	gap: 2px;
+	gap: 3px;
+	margin: 4px 0 8px 0;
+	height: 28px;
 }
 
 .beepboxEditor .instrument-bar button {
@@ -1357,12 +1695,13 @@ html {
 }
 
 .beepboxEditor .selectRow, .beepboxEditor .instrumentCopyPasteRow {
-	margin: 2px 0;
-	height: var(--button-size);
+	margin: 4px 0;
+	height: 28px;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
+	gap: 6px;
 }
 
 .beepboxEditor .selectRow > :last-child {
@@ -1370,32 +1709,281 @@ html {
 	flex-shrink: 0;
 }
 
+.beepboxEditor .selectRow.key-octave-row {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 6px;
+	justify-content: space-between;
+}
+.beepboxEditor .selectRow.key-octave-row > :last-child {
+	width: auto !important;
+	flex-shrink: 0;
+}
+.beepboxEditor .selectRow.key-octave-row .key-group {
+	flex: 1;
+	min-width: 0;
+}
+.beepboxEditor .selectRow.key-octave-row .octave-group input[type="number"] {
+	width: 44px;
+	height: 24px;
+	text-align: center;
+	box-sizing: border-box;
+}
+
 .beepboxEditor .menu-area {
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 4px 16px;
+	background: #18181b;
+	border-radius: 6px;
+	border: none;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+	box-sizing: border-box;
+	width: 100%;
+	min-height: 38px;
 }
 .beepboxEditor .menu-area > * {
-	margin: 2px 0;
+	margin: 0;
+	flex-shrink: 0;
 }
-.beepboxEditor .menu-area > button {
-	padding: 0 var(--button-size);
+.beepboxEditor .menu-left-group {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 8px;
+	flex-shrink: 0;
+}
+.beepboxEditor .menu-right-group {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 18px;
+	margin-left: auto;
+	padding-right: 20px;
+	flex-shrink: 0;
+}
+.beepboxEditor .version-area {
+	display: flex;
+	align-items: center;
+	margin: 0;
+	flex-shrink: 0;
+}
+.beepboxEditor .song-title-input,
+.beepboxEditor .version-area input {
+	background: #27272a;
+	color: #f4f4f5;
+	font-family: var(--font-mono, monospace);
+	font-size: 11px;
+	font-weight: 600;
+	border: 1px solid var(--border-subtle, #3f3f46);
+	border-radius: 4px;
+	padding: 2px 8px;
+	height: 28px;
+	width: 130px;
+	box-sizing: border-box;
+	text-align: center;
+	transition: all 0.16s ease;
+}
+.beepboxEditor .song-title-input:hover,
+.beepboxEditor .version-area input:hover {
+	border-color: var(--accent-mod-cyan, #38bdf8);
+}
+.beepboxEditor .song-title-input:focus,
+.beepboxEditor .version-area input:focus {
+	outline: none;
+	border-color: var(--accent-mod-cyan, #38bdf8);
+	box-shadow: 0 0 6px rgba(56, 189, 248, 0.35);
+	background: #1f1f23;
+}
+.beepboxEditor .playback-bar-controls {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 6px;
+	flex-shrink: 0;
+}
+.beepboxEditor .playback-volume-controls {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 8px;
+	height: 28px;
+	flex-shrink: 0;
+	margin-left: 2px;
+}
+.beepboxEditor .playback-volume-controls .volume-speaker {
+	width: 18px;
+	height: 18px;
+	opacity: 0.85;
+	flex-shrink: 0;
+}
+.beepboxEditor .playback-volume-controls > span {
+	display: flex !important;
+	align-items: center;
+	width: 130px;
+}
+.beepboxEditor .playback-volume-slider,
+.beepboxEditor .playback-volume-controls input[type="range"] {
+	width: 130px !important;
+	min-width: 130px !important;
+	max-width: 130px !important;
+	height: 6px;
+	margin: 0;
+	flex-grow: 0 !important;
+}
+.beepboxEditor .playback-volume-bar {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 22px;
+	width: 120px;
+	min-width: 120px;
+	max-width: 120px;
+	flex-shrink: 0;
+	padding: 0 4px;
+	background: #141416;
+	border: 1px solid var(--border-subtle, #2e2e33);
+	border-radius: 4px;
+	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.7);
+	box-sizing: border-box;
+	margin-left: 6px;
+	margin-right: 20px;
+}
+.beepboxEditor .global-oscilloscope-container {
+	display: flex;
+	align-items: center;
+	height: 28px;
+	flex-shrink: 0;
+	margin-right: 12px;
+}
+.beepboxEditor .global-oscilloscope-container canvas {
+	height: 26px !important;
+	width: 90px !important;
+	border-radius: 4px;
+	border: 1px solid var(--border-subtle, #3f3f46) !important;
+	background: #121214;
+}
+.beepboxEditor .menu-area .selectContainer.menu {
+	width: 112px;
+	min-width: 112px;
+	position: relative;
+}
+.beepboxEditor .menu-area .selectContainer.menu.preferences {
+	width: 144px;
+	min-width: 144px;
+}
+.beepboxEditor .menu-area select {
+	width: 100%;
+	height: 28px;
+	padding: 0 6px;
+	font-weight: 600;
+	font-size: 12px;
+	font-family: var(--font-mono, monospace);
+	border: 1px solid var(--border-subtle, #2e2e33);
+	background: linear-gradient(180deg, #27272a 0%, #1f1f23 100%);
+	border-radius: 5px;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+	color: #e4e4e7;
+	text-align: center;
+	text-align-last: center;
 	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	cursor: pointer;
+	transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.beepboxEditor .menu-area select:hover {
+	background: linear-gradient(180deg, #323238 0%, #27272c 100%);
+	border-color: var(--accent-mod-cyan, #38bdf8);
+	color: #ffffff;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5), 0 0 8px rgba(56, 189, 248, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+.beepboxEditor .menu-area select:focus,
+.beepboxEditor .menu-area select:active {
+	background: #1f1f23;
+	border-color: var(--accent-mod-cyan, #38bdf8);
+	color: #ffffff;
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 0 6px rgba(56, 189, 248, 0.3);
+}
+.beepboxEditor .menu-area .selectContainer.menu::after,
+.beepboxEditor .selectContainer.menu::after {
+	display: none !important;
+}
+.beepboxEditor .menu-area .menu.file::before,
+.beepboxEditor .menu-area .menu.edit::before,
+.beepboxEditor .menu-area .menu.preferences::before,
+.beepboxEditor .menu-area .menu.help::before,
+.beepboxEditor .menu-area .menu.about::before {
+	left: 6px;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 18px;
+	height: 18px;
+	z-index: 2;
+	pointer-events: none;
+	opacity: 0.85;
+	background: #e4e4e7;
+	transition: opacity 0.15s ease, background-color 0.15s ease;
+}
+.beepboxEditor .menu-area .selectContainer.menu:hover::before {
+	opacity: 1;
+	background: var(--accent-mod-cyan, #38bdf8);
+}
+.beepboxEditor select option,
+.beepboxEditor select optgroup,
+.beepboxEditor .menu-area select option,
+.beepboxEditor .menu-area select optgroup {
+	text-align: left;
+	font-family: var(--font-mono), monospace;
+	white-space: pre;
+	background: #18181b;
+	color: #f4f4f5;
+	font-weight: normal;
+	padding: 3px 4px 3px 0px;
+	margin: 0;
+	text-indent: 0;
+}
+.beepboxEditor select optgroup,
+.beepboxEditor .menu-area select optgroup {
+	font-weight: bold;
+	color: var(--accent-mod-cyan, #38bdf8);
+	background: #1f1f23;
+	padding: 4px 4px 4px 0px;
 }
 
 .beepboxEditor .song-settings-area {
 	display: flex;
 	flex-direction: column;
+	background: #18181b;
+	border: 1px solid var(--border-subtle, #2e2e33);
+	border-radius: 6px;
+	padding: 8px 10px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+	flex-shrink: 0;
+	box-sizing: border-box;
 }
 
 .beepboxEditor .editor-controls {
 	flex-shrink: 0;
 	display: flex;
 	flex-direction: column;
+	gap: 2px;
 }
 
 .beepboxEditor .instrument-settings-area {
 	display: flex;
 	flex-direction: column;
+	background: #18181b;
+	border: 1px solid var(--border-subtle, #2e2e33);
+	border-radius: 6px;
+	padding: 8px 10px;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+	flex-shrink: 0;
+	box-sizing: border-box;
 }
 
 .beepboxEditor .editor-right-side-top > *, .beepboxEditor .editor-right-side-bottom > * {
@@ -1430,13 +2018,23 @@ html {
 }
 
 .beepboxEditor input[type=text], .beepboxEditor input[type=number] {
-	font-size: inherit;
-	font-weight: inherit;
-	font-family: inherit;
-	background: transparent;
+	font-size: 12px;
+	font-weight: 600;
+	font-family: var(--font-mono, monospace);
+	background: #141416;
 	text-align: center;
-	border: 1px solid ${ColorConfig.inputBoxOutline};
+	border: 1px solid var(--border-default, #3f3f46);
+	border-radius: 3px;
 	color: ${ColorConfig.primaryText};
+	padding: 2px 4px;
+	box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);
+	transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+.beepboxEditor input[type=text]:focus, .beepboxEditor input[type=number]:focus {
+	border-color: var(--accent-mod-cyan, #38bdf8);
+	box-shadow: inset 0 1px 2px rgba(0,0,0,0.6), 0 0 6px rgba(56, 189, 248, 0.3);
+	outline: none;
 }
 
 .beepboxEditor input[type=text]::selection, .beepboxEditor input[type=number]::selection {
@@ -1445,7 +2043,8 @@ html {
 }
 
 .beepboxEditor input[type=checkbox] {
-  transform: scale(1.5);
+  transform: scale(1.3);
+  accent-color: var(--accent-mod-cyan, #38bdf8);
 }
 
 .beepboxEditor input[type=range] {
@@ -1458,7 +2057,7 @@ html {
 	cursor: pointer;
 	background: none;
 	touch-action: pan-y;
-  position: relative;
+	position: relative;
 }
 .beepboxEditor input[type=range]:focus {
 	outline: none;
@@ -1467,7 +2066,10 @@ html {
 	width: 100%;
 	height: 6px;
 	cursor: pointer;
-	background: ${ColorConfig.uiWidgetBackground};
+	background: #27272c;
+	border-radius: 3px;
+	border: 1px solid #3f3f46;
+	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .modTarget:hover {
@@ -1479,77 +2081,90 @@ html {
     display:inline-block;
     position: absolute;
     background: currentColor;
-    width: 2%;
-    left: 49%;
-    height: 0.5em;
-    top: 32%;
+    width: 2px;
+    left: calc(50% - 1px);
+    height: 0.6em;
+    top: 30%;
     z-index: 1;
-		pointer-events: none;
+	pointer-events: none;
 }
 .beepboxEditor span.modSlider {
 	--mod-position: 20%;
 	--mod-color: ${ColorConfig.overwritingModSlider};
-  --mod-border-radius: 0%;
+	--mod-border-radius: 2px;
 }
 .beepboxEditor span.modSlider:before {
 	content: "";
     display:inline-block;
     position: absolute;
     background: var(--mod-color);
-    width: 4%;
+    width: 4px;
     left: var(--mod-position);
-    height: 0.8em;
-    top: 28%;
+    height: 14px;
+    top: 24%;
     z-index: 2;
-		transform: translate(-50%, 0%);
-		pointer-events: none;
-		border: 40%;
-		border-radius: var(--mod-border-radius);
+	transform: translate(-50%, 0%);
+	pointer-events: none;
+	border: 1px solid rgba(255,255,255,0.4);
+	border-radius: var(--mod-border-radius);
+	box-shadow: 0 0 4px var(--mod-color);
 }
 .beepboxEditor input[type=range]::-webkit-slider-thumb {
-	height: var(--button-size);
-	width: 6px;
-	border-radius: 3px;
-	background: currentColor;
+	height: 18px;
+	width: 9px;
+	border-radius: 2px;
+	background: linear-gradient(180deg, #52525b 0%, #3f3f46 50%, #27272a 100%);
+	border: 1px solid #71717a;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.3);
 	cursor: pointer;
 	-webkit-appearance: none;
-	margin-top: -10px;
+	margin-top: -6.5px;
+	transition: border-color 0.1s ease, box-shadow 0.1s ease;
 }
-.beepboxEditor input[type=range]:focus::-webkit-slider-runnable-track {
-	background: ${ColorConfig.uiWidgetFocus};
+.beepboxEditor input[type=range]:hover::-webkit-slider-thumb {
+	border-color: var(--accent-mod-cyan, #38bdf8);
+	box-shadow: 0 0 6px rgba(56, 189, 248, 0.6), inset 0 1px 0 rgba(255,255,255,0.4);
+}
+.beepboxEditor input[type=range]:focus::-webkit-slider-thumb {
+	border-color: var(--accent-mod-cyan, #38bdf8);
+	box-shadow: 0 0 8px rgba(56, 189, 248, 0.8), inset 0 1px 0 rgba(255,255,255,0.4);
 }
 .beepboxEditor input[type=range]::-moz-range-track {
 	width: 100%;
 	height: 6px;
 	cursor: pointer;
-	background: ${ColorConfig.uiWidgetBackground};
-}
-.beepboxEditor input[type=range]:focus::-moz-range-track {
-	background: ${ColorConfig.uiWidgetFocus};
+	background: #27272c;
+	border-radius: 3px;
+	border: 1px solid #3f3f46;
+	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 .beepboxEditor input[type=range]::-moz-range-thumb {
-	height: var(--button-size);
-	width: 6px;
-	border-radius: 3px;
-	border: none;
-	background: currentColor;
+	height: 18px;
+	width: 9px;
+	border-radius: 2px;
+	border: 1px solid #71717a;
+	background: linear-gradient(180deg, #52525b 0%, #3f3f46 50%, #27272a 100%);
+	box-shadow: 0 1px 3px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.3);
 	cursor: pointer;
+}
+.beepboxEditor input[type=range]:hover::-moz-range-thumb {
+	border-color: var(--accent-mod-cyan, #38bdf8);
+	box-shadow: 0 0 6px rgba(56, 189, 248, 0.6), inset 0 1px 0 rgba(255,255,255,0.4);
 }
 .beepboxEditor input[type=range]::-ms-track {
 	width: 100%;
 	height: 6px;
 	cursor: pointer;
-	background: ${ColorConfig.uiWidgetBackground};
+	background: #27272c;
 	border-color: transparent;
-}
-.beepboxEditor input[type=range]:focus::-ms-track {
-	background: ${ColorConfig.uiWidgetFocus};
+	color: transparent;
 }
 .beepboxEditor input[type=range]::-ms-thumb {
-	height: var(--button-size);
-	width: 6px;
-	border-radius: 3px;
-	background: currentColor;
+	height: 18px;
+	width: 9px;
+	border-radius: 2px;
+	background: linear-gradient(180deg, #52525b 0%, #3f3f46 50%, #27272a 100%);
+	border: 1px solid #71717a;
 	cursor: pointer;
 }
 
@@ -1578,19 +2193,6 @@ li.select2-results__option[role=group] > strong:hover {
     .beepboxEditor .muteButtonSelectBox {
 		display: none;
 	}
-	.beepboxEditor .play-pause-area {
-		display: flex;
-		flex-direction: column;
-	}
-	.beepboxEditor .playback-bar-controls {
-		margin: 2px 0;
-	}
-	.beepboxEditor .playback-volume-controls {
-		display: flex;
-		flex-direction: row;
-		margin: 2px 0;
-		align-items: center;
-	}
 	.beepboxEditor .settings-area {
 		width: var(--settings-area-width);
 	}
@@ -1600,20 +2202,33 @@ li.select2-results__option[role=group] > strong:hover {
 @media (max-width: 710px) {
 	.beepboxEditor {
 		grid-template-columns: minmax(0, 1fr);
-		grid-template-rows: min-content 6px min-content min-content;
-		grid-template-areas: "pattern-area" "." "track-area" "settings-area";
+		grid-template-rows: max-content min-content 6px min-content min-content;
+		grid-template-areas: 
+			"menu-area"
+			"pattern-area" 
+			"." 
+			"track-area" 
+			"settings-area";
 		grid-row-gap: 0;
 	}
 	.beepboxEditor .settings-area {
+		display: grid;
 		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-		grid-template-rows: min-content min-content 1fr min-content;
+		grid-template-rows: min-content;
 		grid-template-areas:
-			"play-pause-area play-pause-area"
-			"menu-area instrument-settings-area"
-			"song-settings-area instrument-settings-area"
-			"version-area version-area";
+			"song-settings-area instrument-settings-area";
 		grid-column-gap: 8px;
 		margin: 0 4px;
+		width: auto;
+		overflow-y: visible;
+	}
+	.beepboxEditor .instrument-settings-area {
+		position: relative;
+		overflow: visible;
+	}
+	.beepboxEditor .instrument-settings-area > .editor-controls {
+		position: relative;
+		width: 100%;
 	}
 	.beepboxEditor:focus-within {
 		outline: none;
@@ -1626,21 +2241,6 @@ li.select2-results__option[role=group] > strong:hover {
 	}
 	.beepboxEditor .barScrollBar {
 		display: none;
-	}
-	.beepboxEditor .play-pause-area {
-		display: grid;
-		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-		grid-column-gap: 8px;
-		margin: 2px 0;
-	}
-	.beepboxEditor .playback-bar-controls {
-		flex-grow: 1;
-	}
-	.beepboxEditor .playback-volume-controls {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		flex-grow: 1;
 	}
 	
 	.beepboxEditor .soundIcon {

@@ -14,38 +14,8 @@ declare global {
     }
 }
 
-const epsilon: number = (1.0e-24); // For detecting and avoiding float denormals, which have poor performance.
-
-// For performance debugging:
-//let samplesAccumulated: number = 0;
-//let samplePerformance: number = 0;
-
-export function clamp(min: number, max: number, val: number): number {
-    max = max - 1;
-    if (val <= max) {
-        if (val >= min) return val;
-        else return min;
-    } else {
-        return max;
-    }
-}
-
-function validateRange(min: number, max: number, val: number): number {
-    if (min <= val && val <= max) return val;
-    throw new Error(`Value ${val} not in range [${min}, ${max}]`);
-}
-
-export function parseFloatWithDefault<T>(s: string, defaultValue: T): number | T {
-    let result: number | T = parseFloat(s);
-    if (Number.isNaN(result)) result = defaultValue;
-    return result;
-}
-
-export function parseIntWithDefault<T>(s: string, defaultValue: T): number | T {
-    let result: number | T = parseInt(s);
-    if (Number.isNaN(result)) result = defaultValue;
-    return result;
-}
+import { epsilon, clamp, validateRange, parseFloatWithDefault, parseIntWithDefault, fittingPowerOfTwo } from "./DSPUtils";
+export { epsilon, clamp, validateRange, parseFloatWithDefault, parseIntWithDefault, fittingPowerOfTwo };
 
 function encode32BitNumber(buffer: number[], x: number): void {
     // 0b11_
@@ -8900,7 +8870,7 @@ export class Synth {
         if (this.audioCtx != null && this.scriptNode != null) {
             this.scriptNode.disconnect(this.audioCtx.destination);
             this.scriptNode = null;
-            if (this.audioCtx.close) this.audioCtx.close(); // firefox is missing this function?
+            if (this.audioCtx.close) this.audioCtx.close();
             this.audioCtx = null;
         }
     }

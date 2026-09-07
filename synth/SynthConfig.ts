@@ -433,91 +433,91 @@ declare global {
     const getDirname: () => Promise<string>; // for UB offline
     const pathJoin: (...parts: string[]) => Promise<string>; // for UB offline
     const toggleElectronMenu: () => Promise<void>; // for UB offline
-    const kicksample: number[];
-    const snaresample: number[];
-    const pianosample: number[];
-    const WOWsample: number[];
-    const overdrivesample: number[];
-    const trumpetsample: number[];
-    const saxophonesample: number[];
-    const orchhitsample: number[];
-    const detatchedviolinsample: number[];
-    const synthsample: number[];
-    const sonic3snaresample: number[];
-    const comeonsample: number[];
-    const choirsample: number[];
-    const overdrivensample: number[];
-    const flutesample: number[];
-    const legatoviolinsample: number[];
-    const tremoloviolinsample: number[];
-    const amenbreaksample: number[];
-    const pizzicatoviolinsample: number[];
-    const timallengruntsample: number[];
-    const tubasample: number[];
-    const loopingcymbalsample: number[];
-    const kickdrumsample: number[];
-    const snaredrumsample: number[];
-    const closedhihatsample: number[];
-    const foothihatsample: number[];
-    const openhihatsample: number[];
-    const crashsample: number[];
-    const pianoC4sample: number[];
-    const liverpadsample: number[];
-    const marimbasample: number[];
-    const susdotwavsample: number[];
-    const wackyboxttssample: number[];
-    const peppersteak1: number[];
-    const peppersteak2: number[];
-    const vinyl: number[];
-    const slapbass: number[];
-    const hdeboverdrive: number[];
-    const sunsoftbass: number[];
-    const masculinechoir: number[];
-    const femininechoir: number[];
-    const southtololoche: number[];
-    const harp: number[];
-    const panflute: number[];
-    const krumhorn: number[];
-    const timpani: number[];
-    const crowdhey: number[];
-    const warioland4brass: number[];
-    const warioland4organ: number[];
-    const warioland4daow: number[];
-    const warioland4hourchime: number[];
-    const warioland4tick: number[];
-    const kirbykick: number[];
-    const kirbysnare: number[];
-    const kirbybongo: number[];
-    const kirbyclick: number[];
-    const funkkick: number[];
-    const funksnare: number[];
-    const funksnareleft: number[];
-    const funksnareright: number[];
-    const funktomhigh: number[];
-    const funktomlow: number[];
-    const funkhihatclosed: number[];
-    const funkhihathalfopen: number[];
-    const funkhihatopen: number[];
-    const funkhihatopentip: number[];
-    const funkhihatfoot: number[];
-    const funkcrash: number[];
-    const funkcrashtip: number[];
-    const funkride: number[];
-    const chronoperc1finalsample: number[];
-    const synthkickfmsample: number[];
-    const woodclicksample: number[];
-    const acousticsnaresample: number[];
-    const catpaintboxsample: number[];
-    const gameboypaintboxsample: number[];
-    const mariopaintboxsample: number[];
-    const drumpaintboxsample: number[];
-    const yoshipaintboxsample: number[];
-    const starpaintboxsample: number[];
-    const fireflowerpaintboxsample: number[];
-    const dogpaintbox: number[];
-    const oinkpaintbox: number[];
-    const swanpaintboxsample: number[];
-    const facepaintboxsample: number[];
+    const kicksample: Float32Array | number[];
+    const snaresample: Float32Array | number[];
+    const pianosample: Float32Array | number[];
+    const WOWsample: Float32Array | number[];
+    const overdrivesample: Float32Array | number[];
+    const trumpetsample: Float32Array | number[];
+    const saxophonesample: Float32Array | number[];
+    const orchhitsample: Float32Array | number[];
+    const detatchedviolinsample: Float32Array | number[];
+    const synthsample: Float32Array | number[];
+    const sonic3snaresample: Float32Array | number[];
+    const comeonsample: Float32Array | number[];
+    const choirsample: Float32Array | number[];
+    const overdrivensample: Float32Array | number[];
+    const flutesample: Float32Array | number[];
+    const legatoviolinsample: Float32Array | number[];
+    const tremoloviolinsample: Float32Array | number[];
+    const amenbreaksample: Float32Array | number[];
+    const pizzicatoviolinsample: Float32Array | number[];
+    const timallengruntsample: Float32Array | number[];
+    const tubasample: Float32Array | number[];
+    const loopingcymbalsample: Float32Array | number[];
+    const kickdrumsample: Float32Array | number[];
+    const snaredrumsample: Float32Array | number[];
+    const closedhihatsample: Float32Array | number[];
+    const foothihatsample: Float32Array | number[];
+    const openhihatsample: Float32Array | number[];
+    const crashsample: Float32Array | number[];
+    const pianoC4sample: Float32Array | number[];
+    const liverpadsample: Float32Array | number[];
+    const marimbasample: Float32Array | number[];
+    const susdotwavsample: Float32Array | number[];
+    const wackyboxttssample: Float32Array | number[];
+    const peppersteak1: Float32Array | number[];
+    const peppersteak2: Float32Array | number[];
+    const vinyl: Float32Array | number[];
+    const slapbass: Float32Array | number[];
+    const hdeboverdrive: Float32Array | number[];
+    const sunsoftbass: Float32Array | number[];
+    const masculinechoir: Float32Array | number[];
+    const femininechoir: Float32Array | number[];
+    const southtololoche: Float32Array | number[];
+    const harp: Float32Array | number[];
+    const panflute: Float32Array | number[];
+    const krumhorn: Float32Array | number[];
+    const timpani: Float32Array | number[];
+    const crowdhey: Float32Array | number[];
+    const warioland4brass: Float32Array | number[];
+    const warioland4organ: Float32Array | number[];
+    const warioland4daow: Float32Array | number[];
+    const warioland4hourchime: Float32Array | number[];
+    const warioland4tick: Float32Array | number[];
+    const kirbykick: Float32Array | number[];
+    const kirbysnare: Float32Array | number[];
+    const kirbybongo: Float32Array | number[];
+    const kirbyclick: Float32Array | number[];
+    const funkkick: Float32Array | number[];
+    const funksnare: Float32Array | number[];
+    const funksnareleft: Float32Array | number[];
+    const funksnareright: Float32Array | number[];
+    const funktomhigh: Float32Array | number[];
+    const funktomlow: Float32Array | number[];
+    const funkhihatclosed: Float32Array | number[];
+    const funkhihathalfopen: Float32Array | number[];
+    const funkhihatopen: Float32Array | number[];
+    const funkhihatopentip: Float32Array | number[];
+    const funkhihatfoot: Float32Array | number[];
+    const funkcrash: Float32Array | number[];
+    const funkcrashtip: Float32Array | number[];
+    const funkride: Float32Array | number[];
+    const chronoperc1finalsample: Float32Array | number[];
+    const synthkickfmsample: Float32Array | number[];
+    const woodclicksample: Float32Array | number[];
+    const acousticsnaresample: Float32Array | number[];
+    const catpaintboxsample: Float32Array | number[];
+    const gameboypaintboxsample: Float32Array | number[];
+    const mariopaintboxsample: Float32Array | number[];
+    const drumpaintboxsample: Float32Array | number[];
+    const yoshipaintboxsample: Float32Array | number[];
+    const starpaintboxsample: Float32Array | number[];
+    const fireflowerpaintboxsample: Float32Array | number[];
+    const dogpaintbox: Float32Array | number[];
+    const oinkpaintbox: Float32Array | number[];
+    const swanpaintboxsample: Float32Array | number[];
+    const facepaintboxsample: Float32Array | number[];
 }
 
 function loadScript(url: string): Promise<void> {
@@ -1589,33 +1589,32 @@ export class Config {
     ]);
 }
 
-function centerWave(wave: Array<number>): Float32Array {
+function centerWave(wave: Array<number> | Float32Array): Float32Array {
     let sum: number = 0.0;
-    for (let i: number = 0; i < wave.length; i++) sum += wave[i];
-    const average: number = sum / wave.length;
-    for (let i: number = 0; i < wave.length; i++) wave[i] -= average;
-    performIntegral(wave);
-    // The first sample should be zero, and we'll duplicate it at the end for easier interpolation.
-    wave.push(0);
-    return new Float32Array(wave);
+    const len: number = wave.length;
+    for (let i: number = 0; i < len; i++) sum += wave[i];
+    const average: number = sum / len;
+    const result: Float32Array = new Float32Array(len + 1);
+    for (let i: number = 0; i < len; i++) {
+        result[i] = wave[i] - average;
+    }
+    result[len] = 0;
+    return result;
 }
-function centerAndNormalizeWave(wave: Array<number>): Float32Array {
+function centerAndNormalizeWave(wave: Array<number> | Float32Array): Float32Array {
+    const centered: Float32Array = centerWave(wave);
     let magn: number = 0.0;
-
-    centerWave(wave);
-
-    // Going to length-1 because an extra 0 sample is added on the end as part of centerWave, which shouldn't impact magnitude calculation.
-    for (let i: number = 0; i < wave.length - 1; i++) {
-        magn += Math.abs(wave[i]);
+    const len: number = centered.length - 1;
+    for (let i: number = 0; i < len; i++) {
+        magn += Math.abs(centered[i]);
     }
-    const magnAvg: number = magn / (wave.length - 1);
-
-    for (let i: number = 0; i < wave.length - 1; i++) {
-        wave[i] = wave[i] / magnAvg;
+    const magnAvg: number = len > 0 ? (magn / len) : 1.0;
+    if (magnAvg > 0.0) {
+        for (let i: number = 0; i < len; i++) {
+            centered[i] = centered[i] / magnAvg;
+        }
     }
-
-    return new Float32Array(wave);
-
+    return centered;
 }
 export function performIntegral(wave: { length: number, [index: number]: number }): Float32Array {
     // Perform the integral on the wave. The synth function will perform the derivative to get the original wave back but with antialiasing.

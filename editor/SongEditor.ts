@@ -11,7 +11,7 @@ import { CustomChipPrompt } from "./CustomChipPrompt";
 import { CustomFilterPrompt } from "./CustomFilterPrompt";
 import { InstrumentExportPrompt } from "./InstrumentExportPrompt";
 import { InstrumentImportPrompt } from "./InstrumentImportPrompt";
-import { EditorConfig, isMobile, prettyNumber, Preset, PresetCategory } from "./EditorConfig";
+import { EditorConfig, prettyNumber, Preset, PresetCategory } from "./EditorConfig";
 import { EuclideanRhythmPrompt } from "./EuclidgenRhythmPrompt";
 import { ExportPrompt } from "./ExportPrompt";
 import "./Layout"; // Imported here for the sake of ensuring this code is transpiled early.
@@ -54,6 +54,8 @@ import { VisualLoopControlsPrompt } from "./VisualLoopControlsPrompt";
 import { SampleLoadingStatusPrompt } from "./SampleLoadingStatusPrompt";
 import { AddSamplesPrompt } from "./AddSamplesPrompt";
 import { ShortenerConfigPrompt } from "./ShortenerConfigPrompt";
+import { HelpPrompt } from "./HelpPrompt";
+import { AboutPrompt } from "./AboutPrompt";
 
 const { button, div, input, select, span, optgroup, option, canvas } = HTML;
 
@@ -62,6 +64,21 @@ function buildOptions(menu: HTMLSelectElement, items: ReadonlyArray<string | num
         menu.appendChild(option({ value: index }, items[index]));
     }
     return menu;
+}
+
+function formatMenuOption(label: string, shortcut: string = "", targetWidth: number = 38): string {
+    if (!shortcut) return label;
+    const padLength = Math.max(2, targetWidth - label.length - shortcut.length);
+    return label + "\u00A0".repeat(padLength) + shortcut;
+}
+
+function formatPreferenceOption(label: string, enabled: boolean | null, targetWidth: number = 38): string {
+    if (enabled === null) {
+        return label;
+    }
+    const checkmark = enabled ? "✓" : "";
+    const padLength = Math.max(2, targetWidth - label.length - checkmark.length);
+    return label + "\u00A0".repeat(padLength) + checkmark;
 }
 
 // Similar to the above, but adds a non-interactive header to the list.
@@ -742,63 +759,63 @@ export class SongEditor {
     private readonly _stopButton: HTMLButtonElement = button({ class: "stopButton", style: "display: none;", type: "button", title: "Stop Recording (Space)" }, "Stop Recording");
     private readonly _prevBarButton: HTMLButtonElement = button({ class: "prevBarButton", type: "button", title: "Previous Bar (left bracket)" });
     private readonly _nextBarButton: HTMLButtonElement = button({ class: "nextBarButton", type: "button", title: "Next Bar (right bracket)" });
-    private readonly _volumeSlider: Slider = new Slider(input({ title: "main volume", style: "width: 5em; flex-grow: 1; margin: 0;", type: "range", min: "0", max: "75", value: "50", step: "1" }), this._doc, null, false);
+    private readonly _volumeSlider: Slider = new Slider(input({ title: "main volume", class: "playback-volume-slider", type: "range", min: "0", max: "75", value: "50", step: "1" }), this._doc, null, false);
     private readonly _outVolumeBarBg: SVGRectElement = SVG.rect({ "pointer-events": "none", width: "90%", height: "50%", x: "5%", y: "25%", fill: ColorConfig.uiWidgetBackground });
     private readonly _outVolumeBar: SVGRectElement = SVG.rect({ "pointer-events": "none", height: "50%", width: "0%", x: "5%", y: "25%", fill: "url('#volumeGrad2')" });
     private readonly _outVolumeCap: SVGRectElement = SVG.rect({ "pointer-events": "none", width: "2px", height: "50%", x: "5%", y: "25%", fill: ColorConfig.uiWidgetFocus });
-    private readonly _stop1: SVGStopElement = SVG.stop({ "stop-color": "lime", offset: "60%" });
-    private readonly _stop2: SVGStopElement = SVG.stop({ "stop-color": "orange", offset: "90%" });
-    private readonly _stop3: SVGStopElement = SVG.stop({ "stop-color": "red", offset: "100%" });
+    private readonly _stop1: SVGStopElement = SVG.stop({ "stop-color": "#22c55e", offset: "65%" });
+    private readonly _stop2: SVGStopElement = SVG.stop({ "stop-color": "#eab308", offset: "85%" });
+    private readonly _stop3: SVGStopElement = SVG.stop({ "stop-color": "#ef4444", offset: "100%" });
     private readonly _gradient: SVGGradientElement = SVG.linearGradient({ id: "volumeGrad2", gradientUnits: "userSpaceOnUse" }, this._stop1, this._stop2, this._stop3);
     private readonly _defs: SVGDefsElement = SVG.defs({}, this._gradient);
-    private readonly _volumeBarContainer: SVGSVGElement = SVG.svg({ style: `touch-action: none; overflow: visible; margin: auto; max-width: 20vw;`, width: "160px", height: "100%", preserveAspectRatio: "none", viewBox: "0 0 160 12" },
+    private readonly _volumeBarContainer: SVGSVGElement = SVG.svg({ style: `touch-action: none; overflow: visible; display: block;`, width: "120px", height: "12px", preserveAspectRatio: "none", viewBox: "0 0 160 12" },
         this._defs,
         this._outVolumeBarBg,
         this._outVolumeBar,
         this._outVolumeCap,
     );
-    private readonly _volumeBarBox: HTMLDivElement = div({ class: "playback-volume-bar", style: "height: 12px; align-self: center;" },
+    private readonly _volumeBarBox: HTMLDivElement = div({ class: "playback-volume-bar" },
         this._volumeBarContainer,
     );
     private readonly _fileMenu: HTMLSelectElement = select({ style: "width: 100%;" },
-        option({ selected: true, disabled: true, hidden: false }, "File"), // todo: "hidden" should be true but looks wrong on mac chrome, adds checkmark next to first visible option even though it's not selected. :(
-        option({ value: "new" }, "+ New Blank Song (⇧`)"),
-        option({ value: "import" }, "↑ Import Song... (" + EditorConfig.ctrlSymbol + "O)"),
-        option({ value: "export" }, "↓ Export Song... (" + EditorConfig.ctrlSymbol + "S)"),
-        option({ value: "copyUrl" }, "⎘ Copy Song URL"),
-        option({ value: "shareUrl" }, "⤳ Share Song URL"),
-        option({ value: "configureShortener" }, "🛠 Customize Url Shortener..."),
-        option({ value: "shortenUrl" }, "… Shorten Song URL"),
-        option({ value: "viewPlayer" }, "▶ View in Song Player (⇧P)"),
-        option({ value: "copyEmbed" }, "⎘ Copy HTML Embed Code"),
-        option({ value: "songRecovery" }, "⚠ Recover Recent Song... (`)"),
+        option({ selected: true, disabled: true, hidden: true }, "File"),
+        option({ value: "new" }, formatMenuOption("New Blank Song", "(⇧`)", 38)),
+        option({ value: "import" }, formatMenuOption("Import Song...", "(" + EditorConfig.ctrlSymbol + "O)", 38)),
+        option({ value: "export" }, formatMenuOption("Export Song...", "(" + EditorConfig.ctrlSymbol + "S)", 38)),
+        option({ value: "copyUrl" }, "Copy Song URL"),
+        option({ value: "shareUrl" }, "Share Song URL"),
+        option({ value: "configureShortener" }, "Customize Url Shortener..."),
+        option({ value: "shortenUrl" }, "Shorten Song URL"),
+        option({ value: "viewPlayer" }, formatMenuOption("View in Song Player", "(⇧P)", 38)),
+        option({ value: "copyEmbed" }, "Copy HTML Embed Code"),
+        option({ value: "songRecovery" }, formatMenuOption("Recover Recent Song...", "(`)", 38)),
     );
     private readonly _editMenu: HTMLSelectElement = select({ style: "width: 100%;" },
-        option({ selected: true, disabled: true, hidden: false }, "Edit"), // todo: "hidden" should be true but looks wrong on mac chrome, adds checkmark next to first visible option even though it's not selected. :(
-        option({ value: "undo" }, "Undo (Z)"),
-        option({ value: "redo" }, "Redo (Y)"),
-        option({ value: "copy" }, "Copy Pattern (C)"),
-        option({ value: "pasteNotes" }, "Paste Pattern Notes (V)"),
-        option({ value: "pasteNumbers" }, "Paste Pattern Numbers (" + EditorConfig.ctrlSymbol + "⇧V)"),
-        option({ value: "insertBars" }, "Insert Bar (⏎)"),
-        option({ value: "deleteBars" }, "Delete Selected Bars (⌫)"),
-        option({ value: "insertChannel" }, "Insert Channel (" + EditorConfig.ctrlSymbol + "⏎)"),
-        option({ value: "deleteChannel" }, "Delete Selected Channels (" + EditorConfig.ctrlSymbol + "⌫)"),
-        option({ value: "selectChannel" }, "Select Channel (⇧A)"),
-        option({ value: "selectAll" }, "Select All (A)"),
-        option({ value: "duplicatePatterns" }, "Duplicate Reused Patterns (D)"),
-        option({ value: "transposeUp" }, "Move Notes Up (+ or ⇧+)"),
-        option({ value: "transposeDown" }, "Move Notes Down (- or ⇧-)"),
-        option({ value: "moveNotesSideways" }, "Move All Notes Sideways... (W)"),
-	    option({ value: "generateEuclideanRhythm" }, "Generate Euclidean Rhythm... (E)"),
-        option({ value: "beatsPerBar" }, "Change Beats Per Bar... (⇧B)"),
-        option({ value: "barCount" }, "Change Song Length... (L)"),
-        option({ value: "channelSettings" }, "Channel Settings... (Q)"),
-        option({ value: "limiterSettings" }, "Limiter Settings... (⇧L)"),
-	    option({ value: "addExternal" }, "Add Custom Samples... (⇧Q)"),
+        option({ selected: true, disabled: true, hidden: true }, "Edit"),
+        option({ value: "undo" }, formatMenuOption("Undo", "(Z)", 38)),
+        option({ value: "redo" }, formatMenuOption("Redo", "(Y)", 38)),
+        option({ value: "copy" }, formatMenuOption("Copy Pattern", "(C)", 38)),
+        option({ value: "pasteNotes" }, formatMenuOption("Paste Pattern Notes", "(V)", 38)),
+        option({ value: "pasteNumbers" }, formatMenuOption("Paste Pattern Numbers", "(" + EditorConfig.ctrlSymbol + "⇧V)", 38)),
+        option({ value: "insertBars" }, formatMenuOption("Insert Bar", "(⏎)", 38)),
+        option({ value: "deleteBars" }, formatMenuOption("Delete Selected Bars", "(⌫)", 38)),
+        option({ value: "insertChannel" }, formatMenuOption("Insert Channel", "(" + EditorConfig.ctrlSymbol + "⏎)", 38)),
+        option({ value: "deleteChannel" }, formatMenuOption("Delete Selected Channels", "(" + EditorConfig.ctrlSymbol + "⌫)", 38)),
+        option({ value: "selectChannel" }, formatMenuOption("Select Channel", "(⇧A)", 38)),
+        option({ value: "selectAll" }, formatMenuOption("Select All", "(A)", 38)),
+        option({ value: "duplicatePatterns" }, formatMenuOption("Duplicate Reused Patterns", "(D)", 38)),
+        option({ value: "transposeUp" }, formatMenuOption("Move Notes Up", "(+ or ⇧+)", 38)),
+        option({ value: "transposeDown" }, formatMenuOption("Move Notes Down", "(- or ⇧-)", 38)),
+        option({ value: "moveNotesSideways" }, formatMenuOption("Move All Notes Sideways...", "(W)", 38)),
+	    option({ value: "generateEuclideanRhythm" }, formatMenuOption("Generate Euclidean Rhythm...", "(E)", 38)),
+        option({ value: "beatsPerBar" }, formatMenuOption("Change Beats Per Bar...", "(⇧B)", 38)),
+        option({ value: "barCount" }, formatMenuOption("Change Song Length...", "(L)", 38)),
+        option({ value: "channelSettings" }, formatMenuOption("Channel Settings...", "(Q)", 38)),
+        option({ value: "limiterSettings" }, formatMenuOption("Limiter Settings...", "(⇧L)", 38)),
+	    option({ value: "addExternal" }, formatMenuOption("Add Custom Samples...", "(⇧Q)", 38)),
     );
     private readonly _optionsMenu: HTMLSelectElement = select({ style: "width: 100%;" },
-        option({ selected: true, disabled: true, hidden: false }, "Preferences"), // todo: "hidden" should be true but looks wrong on mac chrome, adds checkmark next to first visible option even though it's not selected. :(
+        option({ selected: true, disabled: true, hidden: true }, "Preferences"),
         optgroup({ label: "Technical" },
         option({ value: "autoPlay" }, "Auto Play on Load"),
         option({ value: "autoFollow" }, "Auto Follow Playhead"),
@@ -820,7 +837,7 @@ export class SongEditor {
         option({ value: "frostedGlassBackground" }, "Frosted Glass Prompt Backdrop"),
         option({ value: "showChannels" }, "Show All Channels"),
         option({ value: "showScrollBar" }, "Show Octave Scroll Bar"),
-        option({ value: "showInstrumentScrollbars" }, "Show Intsrument Scrollbars"),
+        option({ value: "showInstrumentScrollbars" }, "Show Instrument Scrollbars"),
         option({ value: "showLetters" }, "Show Piano Keys"),
         option({ value: "displayVolumeBar" }, "Show Playback Volume"),
         option({ value: "showOscilloscope" }, "Show Oscilloscope"),
@@ -831,9 +848,21 @@ export class SongEditor {
 	    option({ value: "customTheme" }, "Custom Theme..."),
         ),
     );
+    private readonly _helpMenu: HTMLSelectElement = select({ style: "width: 100%;" },
+        option({ selected: true, disabled: true, hidden: true }, "Help"),
+        option({ value: "help" }, formatMenuOption("Instructions & Shortcuts", "(F1)", 38)),
+    );
+    private readonly _aboutMenu: HTMLSelectElement = select({ style: "width: 100%;" },
+        option({ selected: true, disabled: true, hidden: true }, "About"),
+        option({ value: "about" }, "About MegaBox"),
+        option({ value: "credits" }, "Credits"),
+        option({ value: "faq" }, "FAQ"),
+        option({ value: "patchNotes" }, "Patch Notes"),
+        option({ value: "archive" }, "Online Archive"),
+    );
     private readonly _scaleSelect: HTMLSelectElement = buildOptions(select(), Config.scales.map(scale => scale.name));
     private readonly _keySelect: HTMLSelectElement = buildOptions(select(), Config.keys.map(key => key.name).reverse());
-    private readonly _octaveStepper: HTMLInputElement = input({ style: "width: 59.5%;", type: "number", min: Config.octaveMin, max: Config.octaveMax, value: "0" });
+    private readonly _octaveStepper: HTMLInputElement = input({ style: "width: 44px; text-align: center;", type: "number", min: Config.octaveMin, max: Config.octaveMax, value: "0" });
     private readonly _tempoSlider: Slider = new Slider(input({ style: "margin: 0; vertical-align: middle;", type: "range", min: "1", max: "500", value: "160", step: "1" }), this._doc, (oldValue: number, newValue: number) => new ChangeTempo(this._doc, oldValue, newValue), false);
     private readonly _tempoStepper: HTMLInputElement = input({ style: "width: 4em; font-size: 80%; margin-left: 0.4em; vertical-align: middle;", type: "number", step: "1" });
     private readonly _chorusSlider: Slider = new Slider(input({ style: "margin: 0;", type: "range", min: "0", max: Config.chorusRange - 1, value: "0", step: "1" }), this._doc, (oldValue: number, newValue: number) => new ChangeChorus(this._doc, oldValue, newValue), false);
@@ -1093,7 +1122,7 @@ export class SongEditor {
     ]);
 
     public readonly _globalOscscope: oscilloscopeCanvas = new oscilloscopeCanvas(canvas({ width: 144, height: 32, style: `border: 2px solid ${ColorConfig.uiWidgetBackground}; position: static;`, id: "oscilloscopeAll" }), 1);
-    private readonly _globalOscscopeContainer: HTMLDivElement = div({ style: "height: 38px; margin-left: auto; margin-right: auto;" },
+    private readonly _globalOscscopeContainer: HTMLDivElement = div({ class: "global-oscilloscope-container" },
         this._globalOscscope.canvas
     );
     private readonly _customWaveDrawCanvas: CustomChipCanvas = new CustomChipCanvas(canvas({ width: 128, height: 52, style: "border:2px solid " + ColorConfig.uiWidgetBackground, id: "customWaveDrawCanvas" }), this._doc, (newArray: Float32Array) => new ChangeCustomWave(this._doc, newArray));
@@ -1107,7 +1136,7 @@ export class SongEditor {
         div({ style: "margin-top:5px; display:flex; justify-content:center;" }, [this._customWavePresetDrop, this._customWaveZoom]),
     ]);
 
-    private readonly _songTitleInputBox: InputBox = new InputBox(input({ style: "font-weight:bold; border:none; width: 98%; background-color:${ColorConfig.editorBackground}; color:${ColorConfig.primaryText}; text-align:center", maxlength: "30", type: "text", value: EditorConfig.versionDisplayName }), this._doc, (oldValue: string, newValue: string) => new ChangeSongTitle(this._doc, oldValue, newValue));
+    private readonly _songTitleInputBox: InputBox = new InputBox(input({ class: "song-title-input", maxlength: "30", type: "text", value: EditorConfig.versionDisplayName }), this._doc, (oldValue: string, newValue: string) => new ChangeSongTitle(this._doc, oldValue, newValue));
 
 
     private readonly _feedbackAmplitudeSlider: Slider = new Slider(input({ type: "range", min: "0", max: Config.operatorAmplitudeMax, value: "0", step: "1", title: "Feedback Amplitude" }), this._doc, (oldValue: number, newValue: number) => new ChangeFeedbackAmplitude(this._doc, oldValue, newValue), false);
@@ -1200,8 +1229,10 @@ export class SongEditor {
             this._instrumentImportButton,
         ),
     );
-    private readonly _instrumentSettingsTextRow: HTMLDivElement = div({ id: "instrumentSettingsText", style: `padding: 3px 0; max-width: 15em; text-align: center; color: ${ColorConfig.secondaryText};` },
-        "Instrument Settings"
+    private readonly _instrumentSettingsFoldIcon: HTMLSpanElement = span({ class: "fold-icon", style: "margin-left: 6px; pointer-events: none;" }, "▾");
+    private readonly _instrumentSettingsTextRow: HTMLDivElement = div({ id: "instrumentSettingsText", class: "collapsible-header", style: `padding: 3px 0; max-width: 15em; text-align: center; color: ${ColorConfig.secondaryText}; display: flex; align-items: center; justify-content: center;` },
+        span({ class: "instrument-header-text" }, "Instrument Settings"),
+        this._instrumentSettingsFoldIcon,
     );
     private readonly _instrumentTypeSelectRow: HTMLDivElement = div({ class: "selectRow", id: "typeSelectRow" },
         span({ class: "tip", onclick: () => this._openPrompt("instrumentType") }, "Type:"),
@@ -1263,14 +1294,41 @@ export class SongEditor {
     );
 
     private readonly _menuArea: HTMLDivElement = div({ class: "menu-area" },
-        div({ class: "selectContainer menu file" },
-            this._fileMenu,
+        div({ class: "menu-left-group" },
+            div({ class: "selectContainer menu file" },
+                this._fileMenu,
+            ),
+            div({ class: "selectContainer menu edit" },
+                this._editMenu,
+            ),
+            div({ class: "selectContainer menu preferences" },
+                this._optionsMenu,
+            ),
+            div({ class: "selectContainer menu help" },
+                this._helpMenu,
+            ),
+            div({ class: "selectContainer menu about" },
+                this._aboutMenu,
+            ),
         ),
-        div({ class: "selectContainer menu edit" },
-            this._editMenu,
-        ),
-        div({ class: "selectContainer menu preferences" },
-            this._optionsMenu,
+        div({ class: "menu-right-group" },
+            div({ class: "version-area" },
+                this._songTitleInputBox.input,
+            ),
+            div({ class: "playback-bar-controls" },
+                this._prevBarButton,
+                this._playButton,
+                this._pauseButton,
+                this._recordButton,
+                this._stopButton,
+                this._nextBarButton,
+            ),
+            div({ class: "playback-volume-controls" },
+                span({ class: "volume-speaker" }),
+                this._volumeSlider.container,
+            ),
+            this._volumeBarBox,
+            this._globalOscscopeContainer,
         ),
     );
 
@@ -1284,83 +1342,81 @@ export class SongEditor {
         ),
     );
 
-    private readonly _songSettingsArea: HTMLDivElement = div({ class: "song-settings-area" },
-        div({ class: "editor-controls" },
-            div({ class: "editor-song-settings" },
-                div({ style: "margin: 3px 0; position: relative; text-align: center; color: ${ColorConfig.secondaryText};" },
-                    div({ class: "tip", style: "flex-shrink: 0; position:absolute; left: 0; top: 0; width: 12px; height: 12px", onclick: () => this._openPrompt("usedPattern") },
-                        SVG.svg({ style: "flex-shrink: 0; position: absolute; left: 0; top: 0; pointer-events: none;", width: "12px", height: "12px", "margin-right": "0.5em", viewBox: "-6 -6 12 12" },
-                            this._usedPatternIndicator,
-                        ),
-                    ),
-                    div({ class: "tip", style: "flex-shrink: 0; position: absolute; left: 14px; top: 0; width: 12px; height: 12px", onclick: () => this._openPrompt("usedInstrument") },
-                        SVG.svg({ style: "flex-shrink: 0; position: absolute; left: 0; top: 0; pointer-events: none;", width: "12px", height: "12px", "margin-right": "1em", viewBox: "-6 -6 12 12" },
-                            this._usedInstrumentIndicator,
-                        ),
-                    ),
-                    "Song Settings",
-                    div({ style: "width: 100%; left: 0; top: -1px; position:absolute; overflow-x:clip;" }, this._jumpToModIndicator),
+    private readonly _songSettingsFoldIcon: HTMLSpanElement = span({ class: "fold-icon", style: "margin-left: 6px; pointer-events: none;" }, "▾");
+    private readonly _songSettingsHeader: HTMLDivElement = div({ class: "editor-song-settings collapsible-header" },
+        div({ style: "width: 100%; margin: 3px 0; position: relative; text-align: center; color: ${ColorConfig.secondaryText}; display: flex; align-items: center; justify-content: center;" },
+            div({ class: "tip", style: "flex-shrink: 0; position:absolute; left: 0; top: 0; width: 12px; height: 12px", onclick: (e: MouseEvent) => { e.stopPropagation(); this._openPrompt("usedPattern"); } },
+                SVG.svg({ style: "flex-shrink: 0; position: absolute; left: 0; top: 0; pointer-events: none;", width: "12px", height: "12px", "margin-right": "0.5em", viewBox: "-6 -6 12 12" },
+                    this._usedPatternIndicator,
                 ),
             ),
-            div({ class: "selectRow" },
-                span({ class: "tip", onclick: () => this._openPrompt("scale") }, "Scale: "),
-                div({ class: "selectContainer" }, this._scaleSelect),
+            div({ class: "tip", style: "flex-shrink: 0; position: absolute; left: 14px; top: 0; width: 12px; height: 12px", onclick: (e: MouseEvent) => { e.stopPropagation(); this._openPrompt("usedInstrument"); } },
+                SVG.svg({ style: "flex-shrink: 0; position: absolute; left: 0; top: 0; pointer-events: none;", width: "12px", height: "12px", "margin-right": "1em", viewBox: "-6 -6 12 12" },
+                    this._usedInstrumentIndicator,
+                ),
             ),
-            div({ class: "selectRow" },
-                span({ class: "tip", onclick: () => this._openPrompt("key") }, "Key: "),
-                div({ class: "selectContainer" }, this._keySelect),
+            span({ style: "flex-grow: 1; text-align: center;" }, "Song Settings"),
+            this._songSettingsFoldIcon,
+            div({ style: "width: 100%; left: 0; top: -1px; position:absolute; overflow-x:clip;" }, this._jumpToModIndicator),
+        ),
+    );
+    private readonly _songSettingsControls: HTMLDivElement = div({ class: "song-controls-group" },
+        div({ class: "selectRow" },
+            span({ class: "tip", onclick: () => this._openPrompt("scale") }, "Scale: "),
+            div({ class: "selectContainer" }, this._scaleSelect),
+        ),
+        div({ class: "selectRow key-octave-row" },
+            div({ class: "key-group", style: "display: flex; align-items: center; gap: 4px; flex: 1; min-width: 0;" },
+                span({ class: "tip", onclick: () => this._openPrompt("key") }, "Key:"),
+                div({ class: "selectContainer", style: "flex: 1; min-width: 0;" }, this._keySelect),
             ),
-            div({ class: "selectRow" },
-                span({ class: "tip", onclick: () => this._openPrompt("key_octave") }, "Octave: "),
+            div({ class: "octave-group", style: "display: flex; align-items: center; gap: 4px; flex-shrink: 0;" },
+                span({ class: "tip", onclick: () => this._openPrompt("key_octave") }, "Oct:"),
                 this._octaveStepper,
             ),
-            div({ class: "selectRow" },
-                span({ class: "tip", onclick: () => this._openPrompt("tempo") }, "Tempo: "),
-                span({ style: "display: flex;" },
-                    this._tempoSlider.container,
-                    this._tempoStepper,
-                ),
+        ),
+        div({ class: "selectRow" },
+            span({ class: "tip", onclick: () => this._openPrompt("tempo") }, "Tempo: "),
+            span({ style: "display: flex;" },
+                this._tempoSlider.container,
+                this._tempoStepper,
             ),
-            div({ class: "selectRow" },
-                span({ class: "tip", onclick: () => this._openPrompt("rhythm") }, "Rhythm: "),
-                div({ class: "selectContainer" }, this._rhythmSelect),
-            ),
-            this._sampleLoadingStatusContainer,
+        ),
+        div({ class: "selectRow" },
+            span({ class: "tip", onclick: () => this._openPrompt("rhythm") }, "Rhythm: "),
+            div({ class: "selectContainer" }, this._rhythmSelect),
+        ),
+        this._sampleLoadingStatusContainer,
+    );
+
+    private readonly _songSettingsArea: HTMLDivElement = div({ class: "song-settings-area" },
+        div({ class: "editor-controls" },
+            this._songSettingsHeader,
+            this._songSettingsControls,
         ),
     );
     private readonly _instrumentSettingsArea: HTMLDivElement = div({ class: "instrument-settings-area" },
         this._instrumentSettingsGroup,
         this._modulatorGroup);
+
     public readonly _settingsArea: HTMLDivElement = div({ class: "settings-area noSelection" },
-        div({ class: "version-area" },
-            div({ style: `text-align: center; margin: 3px 0; color: ${ColorConfig.secondaryText};` },
-                this._songTitleInputBox.input,
-            ),
-        ),
-        div({ class: "play-pause-area" },
-            this._volumeBarBox,
-            div({ class: "playback-bar-controls" },
-                this._playButton,
-                this._pauseButton,
-                this._recordButton,
-                this._stopButton,
-                this._prevBarButton,
-                this._nextBarButton,
-            ),
-            div({ class: "playback-volume-controls" },
-                span({ class: "volume-speaker" }),
-                this._volumeSlider.container,
-            ),
-            this._globalOscscopeContainer,
-        ),
-        this._menuArea,
         this._songSettingsArea,
         this._instrumentSettingsArea,
     );
 
+    private readonly _horizontalSplitter: HTMLDivElement = div({ class: "editor-splitter-horizontal", title: "Arrastrar para redimensionar pista / Clic para plegar" },
+        div({ class: "splitter-handle-h" })
+    );
+    private readonly _verticalSplitter: HTMLDivElement = div({ class: "editor-splitter-vertical", title: "Arrastrar para redimensionar panel lateral / Clic para plegar" },
+        div({ class: "splitter-handle-v" })
+    );
+
     public readonly mainLayer: HTMLDivElement = div({ class: "beepboxEditor", tabIndex: "0" },
+        this._menuArea,
         this._patternArea,
+        this._horizontalSplitter,
         this._trackArea,
+        this._verticalSplitter,
         this._settingsArea,
         this._promptContainer,
     );
@@ -1571,6 +1627,8 @@ export class SongEditor {
         this._fileMenu.addEventListener("change", this._fileMenuHandler);
         this._editMenu.addEventListener("change", this._editMenuHandler);
         this._optionsMenu.addEventListener("change", this._optionsMenuHandler);
+        this._helpMenu.addEventListener("change", this._helpMenuHandler);
+        this._aboutMenu.addEventListener("change", this._aboutMenuHandler);
         this._customWavePresetDrop.addEventListener("change", this._customWavePresetHandler);
         this._tempoStepper.addEventListener("change", this._whenSetTempo);
         this._scaleSelect.addEventListener("change", this._whenSetScale);
@@ -1626,12 +1684,7 @@ export class SongEditor {
         this._patternArea.addEventListener("mousedown", this._refocusStageNotEditing);
         this._trackArea.addEventListener("mousedown", this.refocusStage);
 
-        // The song volume slider is styled slightly different than the class' default.
-        this._volumeSlider.container.style.setProperty("flex-grow", "1");
         this._volumeSlider.container.style.setProperty("display", "flex");
-
-        this._volumeBarContainer.style.setProperty("flex-grow", "1");
-        this._volumeBarContainer.style.setProperty("display", "flex");
 
         // Also, any slider with a multiplicative effect instead of a replacement effect gets a different mod color, and a round slider.
         this._volumeSlider.container.style.setProperty("--mod-color", ColorConfig.multiplicativeModSlider);
@@ -1706,11 +1759,141 @@ export class SongEditor {
 		//this._trackAndMuteContainer.addEventListener("scroll", this._onTrackAreaScroll, {capture: false, passive: true});
 		(<Function>this._trackAndMuteContainer.addEventListener)("scroll", this._onTrackAreaScroll, {capture: false, passive: true});
 
-        if (isMobile) {
-            const autoPlayOption: HTMLOptionElement = <HTMLOptionElement>this._optionsMenu.querySelector("[value=autoPlay]");
-            autoPlayOption.disabled = true;
-            autoPlayOption.setAttribute("hidden", "");
-        }
+        // Horizontal splitter drag and click-to-fold
+        let hDragging = false;
+        let hStartY = 0;
+        let hStartHeight = 0;
+        let hMoved = false;
+        let hLastExpandedHeight = 460;
+
+        const onHPointerMove = (e: MouseEvent | TouchEvent) => {
+            if (!hDragging) return;
+            const clientY = "touches" in e ? (e as TouchEvent).touches[0].clientY : (e as MouseEvent).clientY;
+            const deltaY = clientY - hStartY;
+            if (Math.abs(deltaY) > 3) hMoved = true;
+            const maxH = Math.max(200, window.innerHeight - 200);
+            const newHeight = Math.max(160, Math.min(maxH, hStartHeight + deltaY));
+            document.documentElement.style.setProperty("--pattern-area-height", `${newHeight}px`);
+            hLastExpandedHeight = newHeight;
+            this.whenUpdated();
+        };
+
+        const onHPointerUp = (e: MouseEvent | TouchEvent) => {
+            if (!hDragging) return;
+            hDragging = false;
+            this._horizontalSplitter.classList.remove("active");
+            document.body.classList.remove("resizing-h");
+            window.removeEventListener("mousemove", onHPointerMove);
+            window.removeEventListener("mouseup", onHPointerUp);
+            window.removeEventListener("touchmove", onHPointerMove);
+            window.removeEventListener("touchend", onHPointerUp);
+
+            if (!hMoved) {
+                const currentH = this._patternArea.clientHeight;
+                if (currentH <= 170) {
+                    const targetH = Math.max(300, hLastExpandedHeight);
+                    document.documentElement.style.setProperty("--pattern-area-height", `${targetH}px`);
+                } else {
+                    hLastExpandedHeight = currentH;
+                    document.documentElement.style.setProperty("--pattern-area-height", "160px");
+                }
+                this.whenUpdated();
+            }
+        };
+
+        const onHPointerDown = (e: MouseEvent | TouchEvent) => {
+            e.preventDefault();
+            hDragging = true;
+            hMoved = false;
+            hStartY = "touches" in e ? (e as TouchEvent).touches[0].clientY : (e as MouseEvent).clientY;
+            hStartHeight = this._patternArea.clientHeight;
+            this._horizontalSplitter.classList.add("active");
+            document.body.classList.add("resizing-h");
+            window.addEventListener("mousemove", onHPointerMove);
+            window.addEventListener("mouseup", onHPointerUp);
+            window.addEventListener("touchmove", onHPointerMove, { passive: false });
+            window.addEventListener("touchend", onHPointerUp);
+        };
+
+        this._horizontalSplitter.addEventListener("mousedown", onHPointerDown);
+        this._horizontalSplitter.addEventListener("touchstart", onHPointerDown, { passive: false });
+
+        // Vertical splitter drag and click-to-fold
+        let vDragging = false;
+        let vStartX = 0;
+        let vStartWidth = 0;
+        let vMoved = false;
+        let vLastExpandedWidth = 220;
+
+        const onVPointerMove = (e: MouseEvent | TouchEvent) => {
+            if (!vDragging) return;
+            const clientX = "touches" in e ? (e as TouchEvent).touches[0].clientX : (e as MouseEvent).clientX;
+            const deltaX = clientX - vStartX;
+            if (Math.abs(deltaX) > 3) vMoved = true;
+            const maxW = Math.max(220, Math.min(500, window.innerWidth - 320));
+            const newWidth = Math.max(160, Math.min(maxW, vStartWidth - deltaX));
+            document.documentElement.style.setProperty("--settings-area-width", `${newWidth}px`);
+            vLastExpandedWidth = newWidth;
+            if (this._settingsArea.classList.contains("collapsed-sidebar")) {
+                this._settingsArea.classList.remove("collapsed-sidebar");
+            }
+            this.whenUpdated();
+        };
+
+        const onVPointerUp = (e: MouseEvent | TouchEvent) => {
+            if (!vDragging) return;
+            vDragging = false;
+            this._verticalSplitter.classList.remove("active");
+            document.body.classList.remove("resizing-v");
+            window.removeEventListener("mousemove", onVPointerMove);
+            window.removeEventListener("mouseup", onVPointerUp);
+            window.removeEventListener("touchmove", onVPointerMove);
+            window.removeEventListener("touchend", onVPointerUp);
+
+            if (!vMoved) {
+                if (this._settingsArea.classList.contains("collapsed-sidebar")) {
+                    this._settingsArea.classList.remove("collapsed-sidebar");
+                    document.documentElement.style.setProperty("--settings-area-width", `${Math.max(192, vLastExpandedWidth)}px`);
+                } else {
+                    vLastExpandedWidth = this._settingsArea.clientWidth;
+                    this._settingsArea.classList.add("collapsed-sidebar");
+                    document.documentElement.style.setProperty("--settings-area-width", "36px");
+                }
+                this.whenUpdated();
+            }
+        };
+
+        const onVPointerDown = (e: MouseEvent | TouchEvent) => {
+            e.preventDefault();
+            vDragging = true;
+            vMoved = false;
+            vStartX = "touches" in e ? (e as TouchEvent).touches[0].clientX : (e as MouseEvent).clientX;
+            vStartWidth = this._settingsArea.clientWidth;
+            this._verticalSplitter.classList.add("active");
+            document.body.classList.add("resizing-v");
+            window.addEventListener("mousemove", onVPointerMove);
+            window.addEventListener("mouseup", onVPointerUp);
+            window.addEventListener("touchmove", onVPointerMove, { passive: false });
+            window.addEventListener("touchend", onVPointerUp);
+        };
+
+        this._verticalSplitter.addEventListener("mousedown", onVPointerDown);
+        this._verticalSplitter.addEventListener("touchstart", onVPointerDown, { passive: false });
+
+        // Song Settings collapse toggle
+        this._songSettingsHeader.addEventListener("click", () => {
+            const isCollapsed = this._songSettingsControls.classList.toggle("collapsed");
+            this._songSettingsArea.classList.toggle("collapsed", isCollapsed);
+            this._songSettingsHeader.classList.toggle("collapsed", isCollapsed);
+            this._songSettingsFoldIcon.innerText = isCollapsed ? "▸" : "▾";
+        });
+
+        // Instrument Settings collapse toggle
+        this._instrumentSettingsTextRow.addEventListener("click", () => {
+            const isCollapsed = this._instrumentSettingsArea.classList.toggle("collapsed");
+            this._instrumentSettingsTextRow.classList.toggle("collapsed", isCollapsed);
+            this._instrumentSettingsFoldIcon.innerText = isCollapsed ? "▸" : "▾";
+        });
 
         // Beepbox uses availHeight too, but I have a display that fails the check even when one of the other layouts would look better on it. -jummbus
         if (window.screen.availWidth < 710 /*|| window.screen.availHeight < 710*/) {
@@ -1718,6 +1901,11 @@ export class SongEditor {
             layoutOption.disabled = true;
             layoutOption.setAttribute("hidden", "");
         }
+    }
+
+    private _setInstrumentSettingsText(title: string): void {
+        this._instrumentSettingsTextRow.textContent = title;
+        this._instrumentSettingsTextRow.appendChild(this._instrumentSettingsFoldIcon);
     }
 
     private _whenSampleLoadingStatusClicked = (): void => {
@@ -2106,6 +2294,12 @@ export class SongEditor {
                 case "configureShortener":
                     this.prompt = new ShortenerConfigPrompt(this._doc);
                     break;
+                case "help":
+                    this.prompt = new HelpPrompt(this._doc);
+                    break;
+                case "about":
+                    this.prompt = new AboutPrompt(this._doc);
+                    break;
                 default:
                     this.prompt = new TipPrompt(this._doc, promptName);
                     break;
@@ -2239,37 +2433,36 @@ export class SongEditor {
         // the theme variables are named "icon" to prevent people getting confused and thinking they're svg
         const textOnIcon: string = ColorConfig.getComputed("--text-enabled-icon");
         const textOffIcon: string = ColorConfig.getComputed("--text-disabled-icon");
-        const textSpacingIcon: string = ColorConfig.getComputed("--text-spacing-icon");
         const optionCommands: ReadonlyArray<string> = [
             "Technical",
-            (prefs.autoPlay ? textOnIcon : textOffIcon) + "Auto Play on Load",
-            (prefs.autoFollow ? textOnIcon : textOffIcon) + "Auto Follow Playhead",
-            (prefs.enableNotePreview ? textOnIcon : textOffIcon) + "Hear Added Notes",
-            (prefs.notesOutsideScale ? textOnIcon : textOffIcon) + "Place Notes Out of Scale",
-            (prefs.defaultScale == this._doc.song.scale ? textOnIcon : textOffIcon) + "Set Current Scale as Default",
-            (prefs.alwaysFineNoteVol ? textOnIcon : textOffIcon) + "Always Fine Note Volume",
-            (prefs.enableChannelMuting ? textOnIcon : textOffIcon) + "Enable Channel Muting",
-            (prefs.instrumentCopyPaste ? textOnIcon : textOffIcon) + "Enable Copy/Paste Buttons",
-            (prefs.instrumentImportExport ? textOnIcon : textOffIcon) + "Enable Import/Export Buttons",
-            (prefs.displayBrowserUrl ? textOnIcon : textOffIcon) + "Enable Song Data in URL",
-            (prefs.closePromptByClickoff ? textOnIcon : textOffIcon) + "Close Prompts on Click Off",
-            textSpacingIcon + "Note Recording...",
-            textSpacingIcon + "Appearance",
-            (prefs.showFifth ? textOnIcon : textOffIcon) + 'Highlight "Fifth" Note',
-            (prefs.notesFlashWhenPlayed ? textOnIcon : textOffIcon) + "Notes Flash When Played",
-            (prefs.instrumentButtonsAtTop ? textOnIcon : textOffIcon) + "Instrument Buttons at Top",
-            (prefs.frostedGlassBackground ? textOnIcon : textOffIcon) + "Frosted Glass Prompt Backdrop",
-            (prefs.showChannels ? textOnIcon : textOffIcon) + "Show All Channels",
-            (prefs.showScrollBar ? textOnIcon : textOffIcon) + "Show Octave Scroll Bar",
-            (prefs.showInstrumentScrollbars ? textOnIcon : textOffIcon) + "Show Instrument Scrollbars",
-            (prefs.showLetters ? textOnIcon : textOffIcon) + "Show Piano Keys",
-            (prefs.displayVolumeBar ? textOnIcon : textOffIcon) + "Show Playback Volume",
-            (prefs.showOscilloscope ? textOnIcon : textOffIcon) + "Show Oscilloscope",
-            (prefs.showSampleLoadingStatus ? textOnIcon : textOffIcon) + "Show Sample Loading Status",
-            (prefs.showDescription ? textOnIcon : textOffIcon) + "Show Description",
-            textSpacingIcon + "Set Layout...",
-            textSpacingIcon + "Set Theme...",
-	        textSpacingIcon + "Custom Theme...",
+            formatPreferenceOption("Auto Play on Load", prefs.autoPlay, 38),
+            formatPreferenceOption("Auto Follow Playhead", prefs.autoFollow, 38),
+            formatPreferenceOption("Hear Added Notes", prefs.enableNotePreview, 38),
+            formatPreferenceOption("Place Notes Out of Scale", prefs.notesOutsideScale, 38),
+            formatPreferenceOption("Set Current Scale as Default", prefs.defaultScale == this._doc.song.scale, 38),
+            formatPreferenceOption("Always Fine Note Volume", prefs.alwaysFineNoteVol, 38),
+            formatPreferenceOption("Enable Channel Muting", prefs.enableChannelMuting, 38),
+            formatPreferenceOption("Enable Copy/Paste Buttons", prefs.instrumentCopyPaste, 38),
+            formatPreferenceOption("Enable Import/Export Buttons", prefs.instrumentImportExport, 38),
+            formatPreferenceOption("Enable Song Data in URL", prefs.displayBrowserUrl, 38),
+            formatPreferenceOption("Close Prompts on Click Off", prefs.closePromptByClickoff, 38),
+            formatPreferenceOption("Note Recording...", null, 38),
+            "Appearance",
+            formatPreferenceOption('Highlight "Fifth" Note', prefs.showFifth, 38),
+            formatPreferenceOption("Notes Flash When Played", prefs.notesFlashWhenPlayed, 38),
+            formatPreferenceOption("Instrument Buttons at Top", prefs.instrumentButtonsAtTop, 38),
+            formatPreferenceOption("Frosted Glass Prompt Backdrop", prefs.frostedGlassBackground, 38),
+            formatPreferenceOption("Show All Channels", prefs.showChannels, 38),
+            formatPreferenceOption("Show Octave Scroll Bar", prefs.showScrollBar, 38),
+            formatPreferenceOption("Show Instrument Scrollbars", prefs.showInstrumentScrollbars, 38),
+            formatPreferenceOption("Show Piano Keys", prefs.showLetters, 38),
+            formatPreferenceOption("Show Playback Volume", prefs.displayVolumeBar, 38),
+            formatPreferenceOption("Show Oscilloscope", prefs.showOscilloscope, 38),
+            formatPreferenceOption("Show Sample Loading Status", prefs.showSampleLoadingStatus, 38),
+            formatPreferenceOption("Show Description", prefs.showDescription, 38),
+            formatPreferenceOption("Set Layout...", null, 38),
+            formatPreferenceOption("Set Theme...", null, 38),
+	        formatPreferenceOption("Custom Theme...", null, 38),
         ];
         // Technical dropdown
         const technicalOptionGroup: HTMLOptGroupElement = <HTMLOptGroupElement>this._optionsMenu.children[1];
@@ -2354,10 +2547,10 @@ export class SongEditor {
             this._instrumentSettingsGroup.insertBefore(this._instrumentSettingsTextRow, this._instrumentSettingsGroup.firstChild);
 
             if (this._doc.song.channels[this._doc.channel].name == "") {
-                this._instrumentSettingsTextRow.textContent = "Instrument Settings";
+                this._setInstrumentSettingsText("Instrument Settings");
             }
             else {
-                this._instrumentSettingsTextRow.textContent = this._doc.song.channels[this._doc.channel].name;
+                this._setInstrumentSettingsText(this._doc.song.channels[this._doc.channel].name);
             }
 
             this._modulatorGroup.style.display = "none";
@@ -2842,10 +3035,10 @@ export class SongEditor {
             this._modulatorGroup.insertBefore(this._instrumentsButtonRow, this._modulatorGroup.firstChild);
             this._modulatorGroup.insertBefore(this._instrumentSettingsTextRow, this._modulatorGroup.firstChild);
             if (this._doc.song.channels[this._doc.channel].name == "") {
-                this._instrumentSettingsTextRow.textContent = "Modulator Settings";
+                this._setInstrumentSettingsText("Modulator Settings");
             }
             else {
-                this._instrumentSettingsTextRow.textContent = this._doc.song.channels[this._doc.channel].name;
+                this._setInstrumentSettingsText(this._doc.song.channels[this._doc.channel].name);
             }
 
             this._chipNoiseSelectRow.style.display = "none";
@@ -3808,6 +4001,10 @@ export class SongEditor {
                     new ChangePatternSelection(this._doc, 0, 0);
                     this._doc.selection.resetBoxSelection();
                 }
+                break;
+            case 112: // F1
+                this._openPrompt("help");
+                event.preventDefault();
                 break;
             case 16: // Shift
                 this._patternEditor.shiftMode = true;
@@ -5168,6 +5365,36 @@ export class SongEditor {
         this._optionsMenu.selectedIndex = 0;
         this._doc.notifier.changed();
         this._doc.prefs.save();
+    }
+
+    private _helpMenuHandler = (event: Event): void => {
+        switch (this._helpMenu.value) {
+            case "help":
+                this._openPrompt("help");
+                break;
+        }
+        this._helpMenu.selectedIndex = 0;
+    }
+
+    private _aboutMenuHandler = (event: Event): void => {
+        switch (this._aboutMenu.value) {
+            case "about":
+                this._openPrompt("about");
+                break;
+            case "credits":
+                window.open("./credits.html", "_blank");
+                break;
+            case "faq":
+                window.open("./faq.html", "_blank");
+                break;
+            case "patchNotes":
+                window.open("./patch_notes.html", "_blank");
+                break;
+            case "archive":
+                window.open("https://twitter-archive.beepbox.co/", "_blank");
+                break;
+        }
+        this._aboutMenu.selectedIndex = 0;
     }
 
     private _customWavePresetHandler = (event: Event): void => {

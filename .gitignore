@@ -14,5 +14,6 @@
 /synth/*.js.map
 /**/*.ts.bak
 /**/*.html.bak
+/**/*.js.bak
 /build
 /to_deploy/

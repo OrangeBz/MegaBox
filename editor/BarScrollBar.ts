@@ -8,7 +8,7 @@ import { ColorConfig } from "./ColorConfig";
 export class BarScrollBar {
 	private readonly _editorWidth: number = 512;
 	private readonly _editorHeight: number = 20;
-	private readonly _playhead: SVGRectElement = SVG.rect("rect", { fill: ColorConfig.playhead, x: 0, y: 0, width: 2, height: this._editorHeight });
+	private readonly _playhead: SVGRectElement = SVG.rect("rect", { fill: ColorConfig.playhead, x: 0, y: 0, width: 2, height: this._editorHeight, style: "will-change: x, visibility;" });
 		private readonly _notches: SVGSVGElement = SVG.svg({"pointer-events": "none"});
 		private readonly _handle: SVGRectElement = SVG.rect({fill: ColorConfig.uiWidgetBackground, x: 0, y: 2, width: 10, height: this._editorHeight - 4});
 		private readonly _handleHighlight: SVGRectElement = SVG.rect({fill: "none", stroke: ColorConfig.hoverPreview, "stroke-width": 2, "pointer-events": "none", x: 0, y: 1, width: 10, height: this._editorHeight - 2});

@@ -18,9 +18,16 @@ export class Layout {
 				.beepboxEditor {
 					width: 100%;
 					height: 100vh;
-					grid-template-columns: minmax(0, 1fr) 390px; /* minmax(0, 1fr) min-content; Chrome 80 grid layout regression. https://bugs.chromium.org/p/chromium/issues/detail?id=1050307 */
-					grid-template-rows: minmax(481px, 1fr) minmax(0, min-content);
-					grid-template-areas: "pattern-area settings-area" "track-area track-area";
+					padding: 6px;
+					gap: 6px;
+					box-sizing: border-box;
+					grid-template-columns: minmax(0, 1fr) 6px var(--settings-area-width, 390px);
+					grid-template-rows: max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr);
+					grid-template-areas: 
+						"menu-area menu-area menu-area" 
+						"pattern-area v-splitter settings-area" 
+						"h-splitter v-splitter settings-area" 
+						"track-area v-splitter settings-area";
 				}
 				.beepboxEditor .pattern-area {
 					width: 100%;
@@ -39,26 +46,22 @@ export class Layout {
 					max-height: 97.5vh;
 				}
 				.beepboxEditor .instrument-settings-area {
-					overflow-y: auto;
 					position: relative;
 				}
 				.beepboxEditor .instrument-settings-area > .editor-controls {
-					position: absolute;
+					position: relative;
 					width: 100%;
 				}
 				.beepboxEditor .song-settings-area {
-					overflow-y: auto;
+					position: relative;
 				}
 				
 				.beepboxEditor .settings-area {
-					width: 390px;
-					grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-					grid-template-rows: auto auto auto minmax(0, 1fr);
-					grid-template-areas:
-						"instrument-settings-area version-area"
-						"instrument-settings-area play-pause-area"
-						"instrument-settings-area menu-area"
-						"instrument-settings-area song-settings-area";
+					width: var(--settings-area-width, 390px);
+					display: flex;
+					flex-direction: column;
+					gap: 8px;
+					overflow-y: auto;
 				}
 				
 				.beepboxEditor .barScrollBar {
@@ -104,9 +107,12 @@ export class Layout {
 				.beepboxEditor {
 					width: 100%;
 					height: 100vh;
-					grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 192px;
-					grid-template-rows: 1fr;
-					grid-template-areas: "track-area pattern-area settings-area";
+					padding: 6px;
+					gap: 6px;
+					box-sizing: border-box;
+					grid-template-columns: minmax(0, 1fr) 6px minmax(0, 1fr) 6px var(--settings-area-width, 192px);
+					grid-template-rows: max-content 1fr;
+					grid-template-areas: "menu-area menu-area menu-area menu-area menu-area" "track-area h-splitter pattern-area v-splitter settings-area";
 				}
 				.beepboxEditor .pattern-area {
 					width: 100%;
@@ -128,41 +134,22 @@ export class Layout {
 					flex-grow: 0;
 					max-height: 97.5vh;
 				}
+				.beepboxEditor .instrument-settings-area {
+					position: relative;
+					overflow: visible;
+				}
 				.beepboxEditor .instrument-settings-area > .editor-controls {
-					position: absolute;
+					position: relative;
 					width: 100%;
 				}
 				
 				.beepboxEditor .settings-area {
-					width: 192px;
+					width: var(--settings-area-width, 192px);
 					position: relative;
 					overflow-y: auto;
-					grid-template-columns: minmax(0, 1fr);
-					grid-template-rows: auto auto auto auto minmax(0, 1fr);
-					grid-template-areas:
-						"version-area"
-						"play-pause-area"
-						"menu-area"
-						"song-settings-area"
-						"instrument-settings-area";
-				}
-				.beepboxEditor .version-area {
-					position: sticky;
-					top: 0;
-					z-index: 1;
-					background: ${ColorConfig.editorBackground};
-				}
-				.beepboxEditor .play-pause-area {
-					position: sticky;
-					top: 22px;
-					z-index: 1;
-					background: ${ColorConfig.editorBackground};
-				}
-				.beepboxEditor .menu-area {
-					position: sticky;
-					top: 82px;
-					z-index: 1;
-					background: ${ColorConfig.editorBackground};
+					display: flex;
+					flex-direction: column;
+					gap: 8px;
 				}
 				
 				.beepboxEditor .barScrollBar {
@@ -191,7 +178,7 @@ export class Layout {
 			}
 		`,
 		"wide": `\
-			/* wide (JB) layout */
+			/* wide layout */
 			@media (min-width: 1001px) {
 				#beepboxEditorContainer {
 					max-width: initial;
@@ -201,9 +188,12 @@ export class Layout {
 				.beepboxEditor {
 					width: 100%;
 					height: 100vh;
-					grid-template-columns: 512px minmax(0, 1fr) 30em;
-					grid-template-rows: minmax(481px, 1fr) min-content;
-					grid-template-areas: "track-area pattern-area settings-area";
+					padding: 6px;
+					gap: 6px;
+					box-sizing: border-box;
+					grid-template-columns: 512px 6px minmax(0, 1fr) 6px var(--settings-area-width, 30em);
+					grid-template-rows: max-content minmax(481px, 1fr);
+					grid-template-areas: "menu-area menu-area menu-area menu-area menu-area" "track-area h-splitter pattern-area v-splitter settings-area";
 				}
 				.beepboxEditor .pattern-area {
 					width: 100%;
@@ -226,45 +216,23 @@ export class Layout {
 					max-height: 97.5vh;
 				}
 				.beepboxEditor .instrument-settings-area {
-					overflow-y: auto;
 					position: relative;
 				}
 				.beepboxEditor .instrument-settings-area > .editor-controls {
-					position: absolute;
+					position: relative;
 					width: 100%;
 				}
 				
 				.beepboxEditor .song-settings-area {
-					overflow-y: auto;
+					position: relative;
 				}
 				
 				.beepboxEditor .settings-area {
-					width: 30em;
-					grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-					grid-template-rows: auto auto auto minmax(0, 1fr);
-					grid-template-areas:
-						"instrument-settings-area version-area"
-						"instrument-settings-area play-pause-area"
-						"instrument-settings-area menu-area"
-						"instrument-settings-area song-settings-area";
-				}
-				.beepboxEditor .version-area {
-					position: sticky;
-					top: 0;
-					z-index: 1;
-					background: ${ColorConfig.editorBackground};
-				}
-				.beepboxEditor .play-pause-area {
-					position: sticky;
-					top: 22px;
-					z-index: 1;
-					background: ${ColorConfig.editorBackground};
-				}
-				.beepboxEditor .menu-area {
-					position: sticky;
-					top: 82px;
-					z-index: 1;
-					background: ${ColorConfig.editorBackground};
+					width: var(--settings-area-width, 30em);
+					display: flex;
+					flex-direction: column;
+					gap: 8px;
+					overflow-y: auto;
 				}
 				
 				.beepboxEditor .trackContainer {
@@ -284,9 +252,16 @@ export class Layout {
 				.beepboxEditor {
 					width: 100%;
 					height: 100vh;
-					grid-template-columns: 390px minmax(0, 1fr);
-					grid-template-rows: minmax(481px, 1fr) minmax(0, min-content);
-					grid-template-areas: "settings-area pattern-area" "track-area track-area";
+					padding: 6px;
+					gap: 6px;
+					box-sizing: border-box;
+					grid-template-columns: var(--settings-area-width, 390px) 6px minmax(0, 1fr);
+					grid-template-rows: max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr);
+					grid-template-areas: 
+						"menu-area menu-area menu-area" 
+						"settings-area v-splitter pattern-area" 
+						"settings-area v-splitter h-splitter" 
+						"settings-area v-splitter track-area";
 				}
 				.beepboxEditor .pattern-area {
 					width: 100%;
@@ -305,26 +280,22 @@ export class Layout {
 					max-height: 97.5vh;
 				}
 				.beepboxEditor .instrument-settings-area {
-					overflow-y: auto;
 					position: relative;
 				}
 				.beepboxEditor .instrument-settings-area > .editor-controls {
-					position: absolute;
+					position: relative;
 					width: 100%;
 				}
 				.beepboxEditor .song-settings-area {
-					overflow-y: auto;
+					position: relative;
 				}
 				
 				.beepboxEditor .settings-area {
-					width: 30em;
-					grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-					grid-template-rows: auto auto auto minmax(0, 1fr);
-					grid-template-areas:
-						"version-area instrument-settings-area"
-						"play-pause-area instrument-settings-area"
-						"menu-area instrument-settings-area"
-						"song-settings-area instrument-settings-area";
+					width: var(--settings-area-width, 30em);
+					display: flex;
+					flex-direction: column;
+					gap: 8px;
+					overflow-y: auto;
 				}
 				
 				.beepboxEditor .barScrollBar {
@@ -370,9 +341,16 @@ export class Layout {
 				.beepboxEditor {
 					width: 100%;
 					height: 100vh;
-					grid-template-columns: minmax(0, 1fr) 390px; /* minmax(0, 1fr) min-content; Chrome 80 grid layout regression. https://bugs.chromium.org/p/chromium/issues/detail?id=1050307 */
-					grid-template-rows: minmax(481px, 1fr) minmax(0, min-content);
-					grid-template-areas: "pattern-area settings-area" "track-area settings-area";
+					padding: 6px;
+					gap: 6px;
+					box-sizing: border-box;
+					grid-template-columns: minmax(0, 1fr) 6px var(--settings-area-width, 30em);
+					grid-template-rows: max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr);
+					grid-template-areas: 
+						"menu-area menu-area menu-area" 
+						"pattern-area v-splitter settings-area" 
+						"h-splitter v-splitter settings-area" 
+						"track-area v-splitter settings-area";
 				}
 				.beepboxEditor .pattern-area {
 					width: 100%;
@@ -389,27 +367,23 @@ export class Layout {
 					max-height: 97.5vh;
 				}
 				.beepboxEditor .instrument-settings-area {
-					overflow-y: auto;
 					position: relative;
 				}
 				.beepboxEditor .instrument-settings-area > .editor-controls {
-					position: absolute;
+					position: relative;
 					width: 100%;
 				}
 				
 				.beepboxEditor .song-settings-area {
-					overflow-y: auto;
+					position: relative;
 				}
 				
 				.beepboxEditor .settings-area {
-					width: 30em;
-					grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-					grid-template-rows: auto auto auto minmax(0, 1fr);
-					grid-template-areas:
-						"instrument-settings-area version-area"
-						"instrument-settings-area play-pause-area"
-						"instrument-settings-area menu-area"
-						"instrument-settings-area song-settings-area";
+					width: var(--settings-area-width, 30em);
+					display: flex;
+					flex-direction: column;
+					gap: 8px;
+					overflow-y: auto;
 				}				
 				.beepboxEditor .barScrollBar {
 					display: none;
@@ -443,7 +417,7 @@ export class Layout {
 				}
 			}
 		`,
-			"focused long": `\
+		"focused long": `\
 
 			/* focused long layout */
 			@media (min-width: 711px) {
@@ -455,9 +429,16 @@ export class Layout {
 				.beepboxEditor {
 					width: 100%;
 					height: 100vh;
-					grid-template-columns: minmax(0, 1fr) 190px; 
-					grid-template-rows: minmax(481px, 1fr) minmax(0, min-content);
-					grid-template-areas: "pattern-area settings-area" "track-area settings-area";
+					padding: 6px;
+					gap: 6px;
+					box-sizing: border-box;
+					grid-template-columns: minmax(0, 1fr) 6px var(--settings-area-width, 190px); 
+					grid-template-rows: max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr);
+					grid-template-areas: 
+						"menu-area menu-area menu-area" 
+						"pattern-area v-splitter settings-area" 
+						"h-splitter v-splitter settings-area" 
+						"track-area v-splitter settings-area";
 				}
 				.beepboxEditor .pattern-area {
 					width: 100%;
@@ -474,31 +455,21 @@ export class Layout {
 					max-height: 97.5vh;
 				}
 				.beepboxEditor .instrument-settings-area {
-					overflow-y: auto;
 					position: relative;
+					overflow: visible;
 				}
 				.beepboxEditor .instrument-settings-area > .editor-controls {
-					position: absolute;
-					width: 100%;
-				}
-				
-				.beepboxEditor .instrument-settings-area > .editor-controls {
-					position: absolute;
+					position: relative;
 					width: 100%;
 				}
 
 				.beepboxEditor .settings-area {
-					width: 100%;
+					width: var(--settings-area-width, 100%);
 					position: relative;
 					overflow-y: auto;
-					grid-template-columns: minmax(0, 1fr);
-					grid-template-rows: auto auto auto auto minmax(0, 1fr);
-					grid-template-areas:
-						"version-area"
-						"play-pause-area"
-						"menu-area"
-						"song-settings-area"
-						"instrument-settings-area";
+					display: flex;
+					flex-direction: column;
+					gap: 8px;
 				}
 				.beepboxEditor .barScrollBar {
 					display: none;
@@ -535,7 +506,7 @@ export class Layout {
 
 	}
 		
-		private static readonly _styleElement: HTMLStyleElement = document.head.appendChild(HTML.style({type: "text/css"}));
+	private static readonly _styleElement: HTMLStyleElement = document.head.appendChild(HTML.style({type: "text/css"}));
 		
 	public static setLayout(layout: string): void {
 		this._styleElement.textContent = this._layoutMap[layout];
