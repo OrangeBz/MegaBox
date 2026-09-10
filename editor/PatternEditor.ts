@@ -2139,10 +2139,15 @@ export class PatternEditor {
                 // Need to re-sort the notes by start time as they might change order if user drags them around.
                 if (this._pattern != null && this._doc.song.getChannelIsMod(this._doc.channel)) this._pattern.notes.sort(function (a, b) { return (a.start == b.start) ? a.pitches[0] - b.pitches[0] : a.start - b.start; });
 
-                if (this._doc.prefs.enableNotePreview && !this._doc.synth.playing && this._cursor.valid && this._mouseDragging && this._dragVisible) {
-                    const pitchToPlay = (this._cursor.curNote != null) ? this._cursor.curNote.pitches : [this._cursor.pitch];
-                    const duration: number = Math.max(Config.partsPerBeat * 6, 24);
-                    this._doc.performance.setTemporaryPitches(pitchToPlay, duration);
+                if (this._doc.prefs.enableNotePreview) {
+                    if (!this._doc.synth.playing && this._cursor.valid && this._mouseDragging && this._dragVisible) {
+                        const pitchToPlay = (this._cursor.curNote != null) ? this._cursor.curNote.pitches : [this._cursor.pitch];
+                        const duration: number = Math.max(Config.partsPerBeat * 6, 24);
+                        this._doc.performance.setTemporaryPitches(pitchToPlay, duration);
+                    } else if (this._mouseDragging && !this._dragVisible) {
+                        this._doc.performance.clearAllPitches();
+                        this._doc.performance.clearAllBassPitches();
+                    }
                 }
             } else {
 
@@ -2167,6 +2172,10 @@ export class PatternEditor {
                         sequence.append(new ChangeNoteAdded(this._doc, this._pattern, this._cursor.curNote, this._cursor.curIndex, true));
                     } else {
                         sequence.append(new ChangePitchAdded(this._doc, this._cursor.curNote, this._cursor.pitch, this._cursor.curNote.pitches.indexOf(this._cursor.pitch), true));
+                    }
+                    if (this._doc.prefs.enableNotePreview) {
+                        this._doc.performance.clearAllPitches();
+                        this._doc.performance.clearAllBassPitches();
                     }
                 }
 
