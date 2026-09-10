@@ -1,7 +1,7 @@
 {
-	"name": "MegaBox Digital Audio Workstation",
-	"short_name": "MegaBox",
-	"description": "MegaBox is an advanced online digital audio workstation for sketching, composing, and sharing chiptune and sampled music.",
+	"name": "MegaBox Beta Digital Audio Workstation",
+	"short_name": "MegaBox Beta",
+	"description": "MegaBox Beta is an advanced online digital audio workstation for sketching, composing, and sharing chiptune and sampled music.",
 	"scope": "./",
 	"start_url": "./",
 	"display": "standalone",
@@ -10,7 +10,7 @@
 	"background_color": "#0a0a0c",
 	"categories": ["music", "audio", "multimedia", "productivity"],
 	"icons": [
-		{ "src": "./icon_shadow_192.png",   "sizes": "192x192", "type": "image/png", "purpose": "any" },
-		{ "src": "./icon_maskable_192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" }
+		{ "src": "./icon_maskable_192.png?v=beta", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+		{ "src": "./apple-touch-icon.png?v=beta", "sizes": "180x180", "type": "image/png", "purpose": "any" }
 	]
 }

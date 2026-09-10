@@ -84,7 +84,7 @@ export class SongDocument {
 				setDefaultInstruments(this.song);
 				this.song.scale = this.prefs.defaultScale;
 			}
-			const updateDocumentTitle = () => document.title = this.song.title + " - " + EditorConfig.versionDisplayName;
+			const updateDocumentTitle = () => document.title = this.song.title ? (this.song.title + " - " + EditorConfig.versionDisplayName) : EditorConfig.versionDisplayName;
 			this.song.titleNotifier.push(updateDocumentTitle);
 			updateDocumentTitle();
 		} catch (error) {
