@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link rel="icon" type="image/x-icon" href="./favicon.ico" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="theme-color" content="#CCCCCC"/>
+	<meta property="og:image" content="/icon_maskable_192.png" />
+	<meta name="description" content="MegaBox is an online music workstation for sketching and composing instrumental music." />
+    <title>MegaBox Patch Notes</title>
+    <style type="text/css">
+        html {
+            background: var(--page-margin, #0d0d11);
+            overflow-x: hidden;
+            font-size: 16px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, 'B612';
+            line-height: 1.5;
+            color: var(--primary-text, #e2e8f0);
+        }
+
+        body {
+            max-width: 860px;
+            margin: auto;
+            padding: 24px 20px 60px 20px;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        h1 {
+            font-size: 2rem;
+            text-align: center;
+            width: 100%;
+            margin-top: 0.5em;
+            margin-bottom: 0.8em;
+            color: #38bdf8;
+            letter-spacing: -0.5px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-top: 1.2em;
+            margin-bottom: 0.3em;
+            color: #f472b6;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            padding-bottom: 4px;
+        }
+
+		h3 {
+            font-size: 1.05rem;
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+            font-weight: normal;
+            line-height: 1.6;
+        }
+
+        ul {
+            padding-left: 24px;
+            margin: 8px 0;
+        }
+
+        p.date {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-top: 4px;
+            margin-bottom: 1.5em;
+        }
+
+        a {
+            color: var(--link-accent, #38bdf8);
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>MegaBox Patch Notes</h1>
+
+    <h2>Version 1.0</h2>
+    <h3>
+        <ul>
+            <li><b>Nuevo formato de proyecto .mgb (MegaBox Project Bundle):</b>
+                <ul>
+                    <li>Empaquetado completo de canciones y samples de audio en un único archivo comprimido <code>.mgb</code> / <code>.zip</code>.</li>
+                    <li>Base de datos local <code>IndexedDB</code> integrada (<code>SampleDatabase</code>) para almacenamiento y persistencia de samples personalizados sin pérdida entre sesiones.</li>
+                    <li>Soporte de arrastrar y soltar (Drag & Drop) directo al editor para archivos <code>.mgb</code>, <code>.json</code> y samples de audio (<code>.wav</code>, <code>.mp3</code>, <code>.ogg</code>, <code>.flac</code>).</li>
+                    <li>Compresor y descompresor ZIP nativo sin dependencias externas (<code>ZipArchive</code>).</li>
+                </ul>
+            </li>
+            <li><b>Rediseño moderno de interfaz y barra superior (DAW Layout):</b>
+                <ul>
+                    <li>Nueva barra de menú superior estilo estación de audio digital con menús desplegables: <code>File</code>, <code>Edit</code>, <code>Preferences</code>, <code>Help</code> y <code>About</code>.</li>
+                    <li>Alineación a la derecha de atajos de teclado y casillas de verificación (✓) en todos los submenús.</li>
+                    <li>Caja de texto para el título de la canción integrada de forma dinámica en la cabecera.</li>
+                    <li>Medidor de nivel de volumen estéreo (dB Meter dinámico) y osciloscopio en tiempo real integrados en los controles de reproducción.</li>
+                    <li>Paleta de colores moderna con efectos de desenfoque translúcido (<code>backdrop-filter</code>), bordes sutiles y sombras elevadas.</li>
+                </ul>
+            </li>
+            <li><b>Sistema de paneles modulares y acoplamiento flexible (Docking):</b>
+                <ul>
+                    <li>Posicionamiento independiente para <code>Song Settings</code> e <code>Instrument Settings</code> (izquierda, derecha o abajo).</li>
+                    <li>Modo de apilamiento vertical (<code>column</code>) o lado a lado (<code>row</code>) para paneles en el mismo lateral.</li>
+                    <li>Separadores interactivos (<code>splitters</code>) con tiradores de cápsula, resaltado activo (glow cian) y colapso/expansión rápida con un clic.</li>
+                    <li>Persistencia automática de la disposición de paneles en <code>localStorage</code>.</li>
+                </ul>
+            </li>
+            <li><b>Layout optimizado para dispositivos móviles y PWA (Landscape):</b>
+                <ul>
+                    <li>Distribución horizontal dividida: Piano Roll a la izquierda y Secuenciador a la derecha ocupando el 100% de la altura de pantalla, sin franjas negras.</li>
+                    <li>Barra de acción inferior flotante que unifica los controles de reproducción, medidor de volumen, osciloscopio y botones compactos <code>Song S.</code> e <code>Instrument S.</code>.</li>
+                    <li>Botón sándwich (<code>≡</code>) flotante en la esquina superior izquierda con cajón lateral deslizante para título de canción y menús.</li>
+                    <li>Desplazamiento táctil inteligente en el secuenciador (<code>TrackEditor</code>): arrastre fluido para scroll (>6px) y pulsación limpia (tap) para cambiar patrones con debounce anti-doble pulsación.</li>
+                    <li>Aviso modal de rotación de pantalla descartable con botón "Continuar" y persistencia en <code>localStorage</code>.</li>
+                    <li>Ocultación automática de candados de bloqueo en pantallas táctiles y dispositivos móviles.</li>
+                    <li>Soporte PWA completo con <code>manifest.webmanifest</code>, service worker e instalación como aplicación independiente.</li>
+                </ul>
+            </li>
+            <li><b>Mejoras en síntesis, importación/exportación y compatibilidad MIDI:</b>
+                <ul>
+                    <li>Manejo seguro de permisos MIDI (<code>MidiInput</code>) sin excepciones no controladas.</li>
+                    <li>Menú de importación renovado con opciones específicas para JSON, MGB y MIDI mejorado.</li>
+                    <li>Corrección de atributos de dimensiones negativas en elementos SVG en <code>BarScrollBar</code>, <code>TrackEditor</code> y <code>PatternEditor</code>.</li>
+                    <li>Optimización de síntesis FM de 6 operadores (<code>FM6Op</code>), PWM, Supersaw y controles de looping avanzados para Custom Chip Waves.</li>
+                </ul>
+            </li>
+        </ul>
+    </h3>
+    <p class="date">09/09/2026</p>
+</body>
+</html>
