@@ -1,11 +1,12 @@
 
-const cacheName = "UltraBox";
+const cacheName = "MegaBox-v1";
 
 self.addEventListener("install", function(event) {
 	event.waitUntil(
 		caches.open(cacheName).then(function(cache) {
 			return cache.addAll([
 				"/",
+				"/manifest.webmanifest",
 				"/beepbox_editor.min.js",
 				"/player/",
 				"/player/beepbox_player.min.js",

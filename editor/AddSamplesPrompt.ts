@@ -4,6 +4,7 @@ import { clamp, parseFloatWithDefault, parseIntWithDefault } from "../synth/synt
 import { ColorConfig } from "./ColorConfig";
 import { EditorConfig } from "./EditorConfig";
 import { SongDocument } from "./SongDocument";
+import { SampleDatabase } from "./SampleDatabase";
 
 const { div, input, button, a, code, textarea, details, summary, span, ul, li, select, option, h2, p } = HTML;
 
@@ -39,11 +40,15 @@ export class AddSamplesPrompt {
     private readonly _cancelButton: HTMLButtonElement = button({ class: "cancelButton" });
     private readonly _okayButton: HTMLButtonElement = button({ class: "okayButton", style: "width: 45%;" }, "Okay");
     private readonly _addSampleButton: HTMLButtonElement = button({ style: "height: auto; min-height: var(--button-size);" }, "Add sample");
+    private readonly _loadLocalSamplesButton: HTMLButtonElement = button({ style: "height: auto; min-height: var(--button-size); margin-left: 0.5em;" }, "Load local sample(s)");
+    private readonly _localFileInput: HTMLInputElement = input({ type: "file", multiple: "multiple", accept: "audio/*,.wav,.mp3,.ogg,.flac", style: "display: none;" });
     private readonly _entryContainer: HTMLDivElement = div();
     private readonly _addMultipleSamplesButton: HTMLButtonElement = button({ style: "height: auto; min-height: var(--button-size); margin-left: 0.5em;" }, "Add multiple samples");
-    private readonly _addSamplesAreaBottom: HTMLDivElement = div({ style: "margin-top: 0.5em;" },
+    private readonly _addSamplesAreaBottom: HTMLDivElement = div({ style: "margin-top: 0.5em; display: flex; flex-wrap: wrap; gap: 4px;" },
         this._addSampleButton,
-        this._addMultipleSamplesButton
+        this._loadLocalSamplesButton,
+        this._addMultipleSamplesButton,
+        this._localFileInput
     );
     private readonly _instructionsLink: HTMLAnchorElement = a({ href: "#", style:"color:var(--loop-accent, red); font-weight:bold;"}, "> Click Here for instructions on adding samples <");
     private readonly _description: HTMLDivElement = div(
@@ -155,12 +160,16 @@ export class AddSamplesPrompt {
             this._entries = parsed.entries;
         }
         this._addSampleButton.addEventListener("click", this._whenAddSampleClicked);
+        this._loadLocalSamplesButton.addEventListener("click", this._whenLoadLocalSamplesClicked);
+        this._localFileInput.addEventListener("change", this._whenLocalFileSelected);
         this._addMultipleSamplesButton.addEventListener("click", this._whenAddMultipleSamplesClicked);
         this._bulkAddConfirmButton.addEventListener("click", this._whenBulkAddConfirmClicked);
         this._okayButton.addEventListener("click", this._saveChanges);
         this._cancelButton.addEventListener("click", this._close);
         this._instructionsLink.addEventListener("click", this._whenInstructionsLinkClicked);
         this._closeInstructionsButton.addEventListener("click", this._whenCloseInstructionsButtonClicked);
+        this.container.addEventListener("dragover", this._whenDragOver);
+        this.container.addEventListener("drop", this._whenDrop);
         this._reconfigureAddSampleButton();
         this._render(false);
     }
@@ -170,12 +179,75 @@ export class AddSamplesPrompt {
             this._entryContainer.removeChild(this._entryContainer.firstChild);
         }
         this._addSampleButton.removeEventListener("click", this._whenAddSampleClicked);
+        this._loadLocalSamplesButton.removeEventListener("click", this._whenLoadLocalSamplesClicked);
+        this._localFileInput.removeEventListener("change", this._whenLocalFileSelected);
         this._addMultipleSamplesButton.removeEventListener("click", this._whenAddMultipleSamplesClicked);
         this._bulkAddConfirmButton.removeEventListener("click", this._whenBulkAddConfirmClicked);
         this._okayButton.removeEventListener("click", this._saveChanges);
         this._cancelButton.removeEventListener("click", this._close);
         this._instructionsLink.removeEventListener("click", this._whenInstructionsLinkClicked);
         this._closeInstructionsButton.removeEventListener("click", this._whenCloseInstructionsButtonClicked);
+        this.container.removeEventListener("dragover", this._whenDragOver);
+        this.container.removeEventListener("drop", this._whenDrop);
+    }
+
+    private _whenDragOver = (event: DragEvent): void => {
+        event.preventDefault();
+        if (event.dataTransfer) {
+            event.dataTransfer.dropEffect = "copy";
+        }
+    }
+
+    private _whenDrop = (event: DragEvent): void => {
+        event.preventDefault();
+        if (event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files.length > 0) {
+            this._processLocalAudioFiles(event.dataTransfer.files);
+        }
+    }
+
+    private _whenLoadLocalSamplesClicked = (event: Event): void => {
+        this._localFileInput.value = "";
+        this._localFileInput.click();
+    }
+
+    private _whenLocalFileSelected = (event: Event): void => {
+        if (this._localFileInput.files && this._localFileInput.files.length > 0) {
+            this._processLocalAudioFiles(this._localFileInput.files);
+        }
+    }
+
+    private _processLocalAudioFiles = async (files: FileList | File[]): Promise<void> => {
+        for (let i = 0; i < files.length; i++) {
+            if (this._entries.length >= this._maxSamples) break;
+            const file = files[i];
+            const buffer = await file.arrayBuffer();
+            await SampleDatabase.saveSample({
+                name: file.name,
+                fileName: file.name,
+                data: buffer,
+                type: file.type || undefined,
+                size: file.size,
+            });
+            const sampleUrl = `indexeddb:${file.name}`;
+            const existingIndex = this._entries.findIndex(e => e.url === sampleUrl);
+            if (existingIndex === -1) {
+                const entryIndex: number = this._entries.length;
+                this._entries.push({
+                    url: sampleUrl,
+                    sampleRate: 44100,
+                    rootKey: 60,
+                    percussion: false,
+                    chipWaveLoopStart: null,
+                    chipWaveLoopEnd: null,
+                    chipWaveStartOffset: null,
+                    chipWaveLoopMode: null,
+                    chipWavePlayBackwards: false,
+                });
+                this._entryOptionsDisplayStates[entryIndex] = false;
+            }
+        }
+        this._reconfigureAddSampleButton();
+        this._render(true);
     }
 
     private _close = (): void => {
@@ -617,6 +689,10 @@ export class AddSamplesPrompt {
     }
 
     private _getSampleName = (entry: SampleEntry): string => {
+        if (entry.url.startsWith("indexeddb:") || entry.url.startsWith("local:")) {
+            const cleanName = entry.url.replace(/^indexeddb:/, "").replace(/^local:/, "");
+            return decodeURIComponent(cleanName) + " (Local)";
+        }
         try {
             const parsedUrl: URL = new URL(entry.url);
             return decodeURIComponent(parsedUrl.pathname.replace(/^([^\/]*\/)+/, ""));

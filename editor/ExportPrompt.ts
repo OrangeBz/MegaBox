@@ -9,6 +9,8 @@ import { Prompt } from "./Prompt";
 import { HTML } from "imperative-html/dist/esm/elements-strict";
 import { ArrayBufferWriter } from "./ArrayBufferWriter";
 import { MidiChunkType, MidiFileFormat, MidiControlEventMessage, MidiEventType, MidiMetaEventMessage, MidiRegisteredParameterNumberMSB, MidiRegisteredParameterNumberLSB, volumeMultToMidiVolume, volumeMultToMidiExpression, defaultMidiPitchBend, defaultMidiExpression } from "./Midi";
+import { SampleDatabase } from "./SampleDatabase";
+import { ZipArchive, ZipFileEntry } from "./ZipArchive";
 
 const { button, div, h2, input, select, option } = HTML;
 
@@ -59,6 +61,7 @@ export class ExportPrompt implements Prompt {
 	//option({ value: "ogg" }, "Export to .ogg file."),
         option({ value: "midi" }, "Export to .mid file."),
         option({ value: "json" }, "Export to .json file."),
+        option({ value: "mgb" }, "Export to .mgb (MegaBox Project Bundle)."),
         option({ value: "html" }, "Export to .html file."),
     );
     private readonly _removeWhitespace: HTMLInputElement = input({ type: "checkbox" });
@@ -144,7 +147,7 @@ export class ExportPrompt implements Prompt {
             this._removeWhitespace.checked = lastExportWhitespace;
         }
 
-        if (this._formatSelect.value == "json") {
+        if (this._formatSelect.value == "json" || this._formatSelect.value == "megabox") {
             this._removeWhitespaceDiv.style.display = "block";
         } else {
             this._removeWhitespaceDiv.style.display = "none";
@@ -160,7 +163,7 @@ export class ExportPrompt implements Prompt {
         this._enableOutro.addEventListener("click", () => { (this._computedSamplesLabel.firstChild as Text).textContent = this.samplesToTime(this._doc.synth.getTotalSamples(this._enableIntro.checked, this._enableOutro.checked, +this._loopDropDown.value - 1)); });
         this._enableIntro.addEventListener("click", () => { (this._computedSamplesLabel.firstChild as Text).textContent = this.samplesToTime(this._doc.synth.getTotalSamples(this._enableIntro.checked, this._enableOutro.checked, +this._loopDropDown.value - 1)); });
         this._loopDropDown.addEventListener("change", () => { (this._computedSamplesLabel.firstChild as Text).textContent = this.samplesToTime(this._doc.synth.getTotalSamples(this._enableIntro.checked, this._enableOutro.checked, +this._loopDropDown.value - 1)); });
-        this._formatSelect.addEventListener("change", () => { if (this._formatSelect.value == "json") { this._removeWhitespaceDiv.style.display = "block"; } else {  this._removeWhitespaceDiv.style.display = "none"; } });
+        this._formatSelect.addEventListener("change", () => { if (this._formatSelect.value == "json" || this._formatSelect.value == "megabox") { this._removeWhitespaceDiv.style.display = "block"; } else {  this._removeWhitespaceDiv.style.display = "none"; } });
         this.container.addEventListener("keydown", this._whenKeyPressed);
 
         this._fileName.value = _doc.song.title;
@@ -248,6 +251,11 @@ export class ExportPrompt implements Prompt {
             case "json":
                 this.outputStarted = true;
                 this._exportToJson();
+                break;
+            case "mgb":
+            case "megabox":
+                this.outputStarted = true;
+                this._exportToMegaboxBundle();
                 break;
             case "html":
                 this._exportToHtml();
@@ -896,6 +904,40 @@ export class ExportPrompt implements Prompt {
 		const blob: Blob = new Blob([jsonString], {type: "application/json"});
 		save(blob, this._fileName.value.trim() + ".json");
 		this._close();
+    }
+
+    private async _exportToMegaboxBundle(): Promise<void> {
+        try {
+            const jsonObject: any = this._doc.song.toJsonObject(this._enableIntro.checked, Number(this._loopDropDown.value), this._enableOutro.checked);
+            if (EditorConfig.customSamples && EditorConfig.customSamples.length > 0) {
+                jsonObject.customSamples = EditorConfig.customSamples;
+            }
+            const whiteSpaceParam: string | undefined = this._removeWhitespace.checked ? undefined : '\t';
+            const jsonString: string = JSON.stringify(jsonObject, null, whiteSpaceParam);
+
+            const zipEntries: ZipFileEntry[] = [
+                { name: "project.json", data: jsonString }
+            ];
+
+            const samples = await SampleDatabase.getAllSamples();
+            const seenSampleNames = new Set<string>();
+            for (const sample of samples) {
+                const cleanName = sample.name.replace(/^indexeddb:/, "").replace(/^local:/, "");
+                if (seenSampleNames.has(cleanName)) continue;
+                seenSampleNames.add(cleanName);
+                zipEntries.push({
+                    name: "samples/" + cleanName,
+                    data: sample.data
+                });
+            }
+
+            const zipBlob = await ZipArchive.createZip(zipEntries);
+            save(zipBlob, this._fileName.value.trim() + ".mgb");
+        } catch (err) {
+            console.error("Failed to export MegaBox bundle:", err);
+        } finally {
+            this._close();
+        }
     }
 
     private _exportToHtml(): void {

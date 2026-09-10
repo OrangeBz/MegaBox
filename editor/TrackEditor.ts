@@ -64,6 +64,11 @@ export class TrackEditor {
 	private _touchMode: boolean = isMobile;
 	private _barDropDownBar: number = 0;
 	private _lastScrollTime: number = 0;
+	private _touchStartX: number = 0;
+	private _touchStartY: number = 0;
+	private _touchInitialScrollPos: number = 0;
+	private _touchIsDraggingScroll: boolean = false;
+	private _lastTouchTime: number = 0;
 		
 	constructor(private _doc: SongDocument, private _songEditor: SongEditor) {
 		window.requestAnimationFrame(this._animatePlayhead);
@@ -72,6 +77,10 @@ export class TrackEditor {
 		document.addEventListener("mouseup", this._whenMouseReleased);
 		this._svg.addEventListener("mouseover", this._whenMouseOver);
 		this._svg.addEventListener("mouseout", this._whenMouseOut);
+		this._svg.addEventListener("touchstart", this._whenTouchPressed, { passive: false });
+		this._svg.addEventListener("touchmove", this._whenTouchMoved, { passive: false });
+		this._svg.addEventListener("touchend", this._whenTouchReleased);
+		this._svg.addEventListener("touchcancel", this._whenTouchReleased);
 			
 		this._select.addEventListener("change", this._whenSelectChanged);
 		this._select.addEventListener("touchstart", this._whenSelectPressed);
@@ -205,6 +214,67 @@ export class TrackEditor {
 		this._updatePreview();
 	}
 		
+	private _whenTouchPressed = (event: TouchEvent): void => {
+		if (event.touches.length != 1) return;
+		this._lastTouchTime = Date.now();
+		this._touchMode = true;
+		const touch = event.touches[0];
+		this._touchStartX = touch.clientX;
+		this._touchStartY = touch.clientY;
+		this._touchInitialScrollPos = this._doc.barScrollPos;
+		this._touchIsDraggingScroll = false;
+		
+		const boundingRect: ClientRect = this._svg.getBoundingClientRect();
+		this._mouseX = touch.clientX - boundingRect.left;
+		this._mouseY = touch.clientY - boundingRect.top;
+		if (isNaN(this._mouseX)) this._mouseX = 0;
+		if (isNaN(this._mouseY)) this._mouseY = 0;
+		this._mouseBar = Math.floor(Math.min(this._doc.song.barCount - 1, Math.max(0, this._mouseX / this._barWidth)));
+		this._mouseChannel = Math.floor(Math.min(this._doc.song.getChannelCount() - 1, Math.max(0, (this._mouseY - Config.barEditorHeight) / ChannelRow.patternHeight)));
+	};
+
+	private _whenTouchMoved = (event: TouchEvent): void => {
+		if (event.touches.length != 1) return;
+		this._lastTouchTime = Date.now();
+		const touch = event.touches[0];
+		const deltaX = touch.clientX - this._touchStartX;
+		const deltaY = touch.clientY - this._touchStartY;
+
+		if (!this._touchIsDraggingScroll && (Math.abs(deltaX) > 6 || Math.abs(deltaY) > 6)) {
+			this._touchIsDraggingScroll = true;
+		}
+
+		if (this._touchIsDraggingScroll) {
+			if (event.cancelable) event.preventDefault();
+			const barDelta = Math.round(-deltaX / (this._barWidth * 0.75));
+			const maxScroll = Math.max(0, this._doc.song.barCount - this._doc.trackVisibleBars);
+			const targetScrollPos = Math.max(0, Math.min(maxScroll, this._touchInitialScrollPos + barDelta));
+			if (targetScrollPos != this._doc.barScrollPos) {
+				this._songEditor.changeBarScrollPos(targetScrollPos - this._doc.barScrollPos);
+			}
+		}
+	};
+
+	private _whenTouchReleased = (event: TouchEvent): void => {
+		this._lastTouchTime = Date.now();
+		if (!this._touchIsDraggingScroll) {
+			if (event.cancelable) event.preventDefault();
+			// Clean tap on a box
+			if (this._mouseChannel >= 0 && this._mouseChannel < this._doc.song.getChannelCount() && this._mouseBar >= 0 && this._mouseBar < this._doc.song.barCount) {
+				if (this._doc.channel == this._mouseChannel && this._doc.bar == this._mouseBar) {
+					const up: boolean = ((this._mouseY - Config.barEditorHeight) % ChannelRow.patternHeight) < ChannelRow.patternHeight / 2;
+					const patternCount: number = this._doc.song.patternsPerChannel;
+					this._doc.selection.setPattern((this._doc.song.channels[this._mouseChannel].bars[this._mouseBar] + (up ? 1 : patternCount)) % (patternCount + 1));
+				} else {
+					this._doc.selection.setChannelBar(this._mouseChannel, this._mouseBar);
+					this._doc.selection.resetBoxSelection();
+				}
+			}
+		}
+		this._touchIsDraggingScroll = false;
+		this._updatePreview();
+	};
+
 	private _whenSelectReleased = (event: TouchEvent): void => {
 		this._mousePressed = false;
 		this._mouseDragging = false;
@@ -230,6 +300,7 @@ export class TrackEditor {
 	}
 		
 	private _whenMousePressed = (event: MouseEvent): void => {
+		if (Date.now() - this._lastTouchTime < 600) return;
 		event.preventDefault();
 		this._mousePressed = true;
 		this._updateMousePos(event);
@@ -255,6 +326,7 @@ export class TrackEditor {
 	}
 		
 	private _whenMouseMoved = (event: MouseEvent): void => {
+		if (Date.now() - this._lastTouchTime < 600) return;
 		this._updateMousePos(event);
 		if (this._mousePressed) {
 			if (this._mouseStartBar != this._mouseBar || this._mouseStartChannel != this._mouseChannel) {
@@ -266,6 +338,11 @@ export class TrackEditor {
 	}
 		
 	private _whenMouseReleased = (event: MouseEvent): void => {
+		if (Date.now() - this._lastTouchTime < 600) {
+			this._mousePressed = false;
+			this._mouseDragging = false;
+			return;
+		}
 		if (this._mousePressed && !this._mouseDragging) {
 			if (this._doc.channel == this._mouseChannel && this._doc.bar == this._mouseBar) {
 				const up: boolean = ((this._mouseY - Config.barEditorHeight) % ChannelRow.patternHeight) < ChannelRow.patternHeight / 2;
@@ -315,8 +392,8 @@ export class TrackEditor {
 		if (this._mouseOver && !this._mousePressed && !selected && overTrackEditor) {
 			this._boxHighlight.setAttribute("x", "" + (1 + this._barWidth * bar));
 			this._boxHighlight.setAttribute("y", "" + (1 + Config.barEditorHeight + ChannelRow.patternHeight * channel));
-			this._boxHighlight.setAttribute("height", "" + (ChannelRow.patternHeight - 2));
-			this._boxHighlight.setAttribute("width", "" + (this._barWidth - 2));
+			this._boxHighlight.setAttribute("height", "" + Math.max(0, ChannelRow.patternHeight - 2));
+			this._boxHighlight.setAttribute("width", "" + Math.max(0, this._barWidth - 2));
 			this._boxHighlight.style.visibility = "visible";
 		} else if ((this._mouseOver || ((this._mouseX >= bar * this._barWidth) && (this._mouseX < bar * this._barWidth + this._barWidth) && (this._mouseY > 0))) && (!overTrackEditor)) {
 			this._boxHighlight.setAttribute("x", "" + (1 + this._barWidth * bar));
@@ -462,7 +539,7 @@ export class TrackEditor {
 			this.container.style.height = (editorHeight + Config.barEditorHeight) + "px";
 		}
 			
-		this._select.style.display = this._touchMode ? "" : "none";
+		this._select.style.display = "none";
 		
 		if (this._doc.selection.boxSelectionActive) {
 			// TODO: This causes the selection rectangle to repaint every time the
@@ -470,8 +547,8 @@ export class TrackEditor {
 			// before overwriting the attributes?
 			this._selectionRect.setAttribute("x", String(this._barWidth * this._doc.selection.boxSelectionBar + 1));
 			this._selectionRect.setAttribute("y", String(Config.barEditorHeight + ChannelRow.patternHeight * this._doc.selection.boxSelectionChannel + 1));
-			this._selectionRect.setAttribute("width", String(this._barWidth * this._doc.selection.boxSelectionWidth - 2));
-			this._selectionRect.setAttribute("height", String(ChannelRow.patternHeight * this._doc.selection.boxSelectionHeight - 2));
+			this._selectionRect.setAttribute("width", String(Math.max(0, this._barWidth * this._doc.selection.boxSelectionWidth - 2)));
+			this._selectionRect.setAttribute("height", String(Math.max(0, ChannelRow.patternHeight * this._doc.selection.boxSelectionHeight - 2)));
 			this._selectionRect.setAttribute("visibility", "visible");
 		} else {
 			this._selectionRect.setAttribute("visibility", "hidden");

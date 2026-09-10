@@ -21,9 +21,10 @@ document.head.appendChild(HTML.style({ type: "text/css" }, `
 /* Note: "#" symbols need to be encoded as "%23" in SVG data urls, otherwise they are interpreted as fragment identifiers! */
 :root {
 	--pattern-area-height: 481px;
+	--primary-left-width: 1fr;
 	--settings-area-width: 192px;
 	--font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
-	--font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+	--font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
 	--border-subtle: #2e2e33;
 	--border-default: #3f3f46;
 	--border-focus: #71717a;
@@ -193,9 +194,10 @@ html {
 }
 
 .beepboxEditor {
-	font-family: var(--font-mono), monospace;
+	font-family: var(--font-sans);
+	font-feature-settings: "cv02", "cv03", "cv04", "cv11", "tnum";
 	font-size: 12px;
-	letter-spacing: -0.2px;
+	letter-spacing: -0.1px;
 	display: grid;
     grid-template-columns: minmax(0, 1fr) 6px var(--settings-area-width, 192px);
     grid-template-rows: max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr);
@@ -217,13 +219,7 @@ html {
 	overflow: hidden;
 	color: ${ColorConfig.primaryText};
 	background: ${ColorConfig.editorBackground};
-    opacity: 0;
-    -webkit-transition: opacity 0.2s ease-in;
-    -moz-transition: opacity 0.2s ease-in;
-    -o-transition: opacity 0.2s ease-in;
-    -ms-transition: opacity 0.2s ease-in;
-    transition: opacity 0.2s ease-in;
-    transition-delay: 0s;
+	opacity: 1;
 }
 
 .beepboxEditor .operatorRow {
@@ -240,66 +236,13 @@ html {
 	flex-shrink: 1;
 }
 
-.pattern-area {
-     opacity: 0;
-    -webkit-transition: opacity 0.5s ease-in;
-    -moz-transition: opacity 0.5s ease-in;
-    -o-transition: opacity 0.5s ease-in;
-    -ms-transition: opacity 0.5s ease-in;
-    transition: opacity 0.5s ease-in;
-    transition-delay: 0s;
-}
-
-.settings-area {
-    opacity: 0;
-    -webkit-transition: opacity 0.5s ease-in;
-    -moz-transition: opacity 0.5s ease-in;
-    -o-transition: opacity 0.5s ease-in;
-    -ms-transition: opacity 0.5s ease-in;
-    transition: opacity 0.5s ease-in;
-    transition-delay: 0.15s;
-}
-
-.editor-song-settings {
-    opacity: 0;
-    -webkit-transition: opacity 0.5s ease-in;
-    -moz-transition: opacity 0.5s ease-in;
-    -o-transition: opacity 0.5s ease-in;
-    -ms-transition: opacity 0.5s ease-in;
-    transition: opacity 0.5s ease-in;
-    transition-delay: 0.35s;
-}
-
-.instrument-settings-area {
-    opacity: 0;
-    -webkit-transition: opacity 0.5s ease-in;
-    -moz-transition: opacity 0.5s ease-in;
-    -o-transition: opacity 0.5s ease-in;
-    -ms-transition: opacity 0.5s ease-in;
-    transition: opacity 0.5s ease-in;
-    transition-delay: 0.45s;
-}
-
-.trackAndMuteContainer {
-    opacity: 0;
-    -webkit-transition: opacity 0.5s ease-in;
-    -moz-transition: opacity 0.5s ease-in;
-    -o-transition: opacity 0.5s ease-in;
-    -ms-transition: opacity 0.5s ease-in;
-    transition: opacity 0.5s ease-in;
-    transition-delay: 0.4s;
-}
-
-.barScrollBar {
-    opacity: 0;
-    -webkit-transition: opacity 0.5s ease-in;
-    -moz-transition: opacity 0.5s ease-in;
-    -o-transition: opacity 0.5s ease-in;
-    -ms-transition: opacity 0.5s ease-in;
-    transition: opacity 0.5s ease-in;
-    transition-delay: 0.5s;
-}
-
+.beepboxEditor,
+.pattern-area,
+.song-settings-area,
+.editor-song-settings,
+.instrument-settings-area,
+.trackAndMuteContainer,
+.barScrollBar,
 .load {
     opacity: 1;
 }
@@ -400,11 +343,13 @@ body.resizing-v {
 	user-select: none !important;
 }
 
-.editor-splitter-horizontal {
+.editor-splitter-horizontal,
+.editor-splitter-mid-h,
+.editor-splitter-bottom {
 	grid-area: h-splitter;
 	height: 6px;
 	cursor: row-resize;
-	background: #18181b;
+	background: ${ColorConfig.editorBackground};
 	border-top: 1px solid var(--border-subtle, #2e2e33);
 	border-bottom: 1px solid var(--border-subtle, #2e2e33);
 	display: flex;
@@ -416,7 +361,9 @@ body.resizing-v {
 	touch-action: none;
 	transition: background-color 0.15s ease, border-color 0.15s ease;
 }
-.editor-splitter-horizontal .splitter-handle-h {
+.editor-splitter-horizontal .splitter-handle-h,
+.editor-splitter-mid-h .splitter-handle-h,
+.editor-splitter-bottom .splitter-handle-h {
 	width: 42px;
 	height: 3px;
 	border-radius: 1.5px;
@@ -425,22 +372,33 @@ body.resizing-v {
 	transition: width 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
 }
 .editor-splitter-horizontal:hover,
-.editor-splitter-horizontal.active {
-	background: #27272a;
+.editor-splitter-horizontal.active,
+.editor-splitter-mid-h:hover,
+.editor-splitter-mid-h.active,
+.editor-splitter-bottom:hover,
+.editor-splitter-bottom.active {
+	background: ${ColorConfig.uiWidgetBackground};
 	border-color: var(--accent-mod-cyan, #38bdf8);
 }
 .editor-splitter-horizontal:hover .splitter-handle-h,
-.editor-splitter-horizontal.active .splitter-handle-h {
+.editor-splitter-horizontal.active .splitter-handle-h,
+.editor-splitter-mid-h:hover .splitter-handle-h,
+.editor-splitter-mid-h.active .splitter-handle-h,
+.editor-splitter-bottom:hover .splitter-handle-h,
+.editor-splitter-bottom.active .splitter-handle-h {
 	width: 60px;
 	background: var(--accent-mod-cyan, #38bdf8);
 	box-shadow: 0 0 8px rgba(56, 189, 248, 0.7);
 }
 
-.editor-splitter-vertical {
+.editor-splitter-vertical,
+.editor-splitter-left,
+.editor-splitter-right,
+.editor-splitter-mid {
 	grid-area: v-splitter;
 	width: 6px;
 	cursor: col-resize;
-	background: #18181b;
+	background: ${ColorConfig.editorBackground};
 	border-left: 1px solid var(--border-subtle, #2e2e33);
 	border-right: 1px solid var(--border-subtle, #2e2e33);
 	display: flex;
@@ -452,7 +410,10 @@ body.resizing-v {
 	touch-action: none;
 	transition: background-color 0.15s ease, border-color 0.15s ease;
 }
-.editor-splitter-vertical .splitter-handle-v {
+.editor-splitter-vertical .splitter-handle-v,
+.editor-splitter-left .splitter-handle-v,
+.editor-splitter-right .splitter-handle-v,
+.editor-splitter-mid .splitter-handle-v {
 	height: 42px;
 	width: 3px;
 	border-radius: 1.5px;
@@ -461,12 +422,24 @@ body.resizing-v {
 	transition: height 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
 }
 .editor-splitter-vertical:hover,
-.editor-splitter-vertical.active {
-	background: #27272a;
+.editor-splitter-vertical.active,
+.editor-splitter-left:hover,
+.editor-splitter-left.active,
+.editor-splitter-right:hover,
+.editor-splitter-right.active,
+.editor-splitter-mid:hover,
+.editor-splitter-mid.active {
+	background: ${ColorConfig.uiWidgetBackground};
 	border-color: var(--accent-mod-cyan, #38bdf8);
 }
 .editor-splitter-vertical:hover .splitter-handle-v,
-.editor-splitter-vertical.active .splitter-handle-v {
+.editor-splitter-vertical.active .splitter-handle-v,
+.editor-splitter-left:hover .splitter-handle-v,
+.editor-splitter-left.active .splitter-handle-v,
+.editor-splitter-right:hover .splitter-handle-v,
+.editor-splitter-right.active .splitter-handle-v,
+.editor-splitter-mid:hover .splitter-handle-v,
+.editor-splitter-mid.active .splitter-handle-v {
 	height: 60px;
 	background: var(--accent-mod-cyan, #38bdf8);
 	box-shadow: 0 0 8px rgba(56, 189, 248, 0.7);
@@ -498,19 +471,94 @@ body.resizing-v {
 	box-shadow: 0 0 6px rgba(56, 189, 248, 0.25);
 }
 .collapsible-header .fold-icon {
-	transition: transform 0.15s ease;
 	display: inline-block;
 	color: var(--accent-mod-cyan, #38bdf8);
 	font-size: 12px;
 }
-.collapsible-header.collapsed .fold-icon {
-	transform: rotate(-90deg);
+
+.panel-lock-button {
+	cursor: pointer;
+	user-select: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 18px;
+	height: 18px;
+	padding: 2px;
+	margin-left: 6px;
+	border-radius: 4px;
+	background: var(--ui-widget-background, ${ColorConfig.uiWidgetBackground});
+	border: 1px solid var(--secondary-text, ${ColorConfig.secondaryText});
+	color: var(--secondary-text, ${ColorConfig.secondaryText});
+	box-sizing: border-box;
+	transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+	pointer-events: auto;
+	z-index: 10;
+}
+.panel-lock-button:hover {
+	background: var(--ui-widget-focus, ${ColorConfig.uiWidgetFocus});
+	border-color: var(--indicator-primary, ${ColorConfig.indicatorPrimary});
+	color: var(--primary-text, ${ColorConfig.primaryText});
+}
+.panel-lock-button.unlocked {
+	background: var(--ui-widget-focus, ${ColorConfig.uiWidgetFocus});
+	border-color: var(--indicator-primary, ${ColorConfig.indicatorPrimary});
+	color: var(--indicator-primary, ${ColorConfig.indicatorPrimary});
+	cursor: grab;
+}
+.panel-lock-button.unlocked:active {
+	cursor: grabbing;
+}
+.panel-floating-lock {
+	position: absolute;
+	top: 6px;
+	right: 6px;
+	z-index: 20;
+	background: var(--editor-background, ${ColorConfig.editorBackground});
+	backdrop-filter: blur(4px);
+	pointer-events: auto;
+}
+.beepboxEditor .pattern-area .panel-floating-lock {
+	right: 70px;
+}
+.panel-lock-button.unlocked,
+.collapsible-header.panel-unlocked {
+	cursor: grab;
+}
+.panel-lock-button.unlocked:active,
+.collapsible-header.panel-unlocked:active {
+	cursor: grabbing;
+}
+.panel-dragging {
+	opacity: 0.6 !important;
+	outline: 2px dashed var(--accent-mod-cyan, #38bdf8) !important;
+	box-shadow: 0 0 16px rgba(56, 189, 248, 0.5) !important;
+}
+.panel-drop-indicator {
+	position: fixed;
+	background: rgba(56, 189, 248, 0.18);
+	border: 2px dashed var(--accent-mod-cyan, #38bdf8);
+	border-radius: 6px;
+	z-index: 9999;
+	pointer-events: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #38bdf8;
+	font-weight: bold;
+	font-size: 13px;
+	text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+	box-shadow: inset 0 0 12px rgba(56, 189, 248, 0.3);
+	transition: left 0.08s ease-out, top 0.08s ease-out, width 0.08s ease-out, height 0.08s ease-out;
+	animation: pulse-drop-hint 1s infinite alternate ease-in-out;
+}
+@keyframes pulse-drop-hint {
+	from { background: rgba(56, 189, 248, 0.1); border-color: rgba(56, 189, 248, 0.6); }
+	to { background: rgba(56, 189, 248, 0.25); border-color: rgba(56, 189, 248, 1); }
 }
 .song-controls-group.collapsed,
-.instrument-settings-body.collapsed,
-.instrument-settings-area.collapsed > :not(:first-child),
 .instrument-settings-area.collapsed .editor-controls > :not(#instrumentSettingsText):not(.collapsible-header),
-.instrument-settings-area.collapsed > :not(#instrumentSettingsText):not(.collapsible-header) {
+.instrument-settings-area.collapsed > :not(.editor-controls) {
 	display: none !important;
 }
 .beepboxEditor .song-settings-area.collapsed,
@@ -1099,25 +1147,32 @@ body.resizing-v {
 	display: block;
 	height: var(--button-size);
 	border: 1px solid var(--border-default, #3f3f46);
-	border-radius: 4px;
+	border-radius: 5px;
 	background: ${ColorConfig.uiWidgetBackground};
+	background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(0, 0, 0, 0.12) 100%);
 	color: ${ColorConfig.primaryText};
 	font-size: 12px;
-	font-family: var(--font-mono, monospace);
+	font-family: var(--font-sans);
+	font-weight: 500;
 	cursor: pointer;
-	box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
-	transition: background-color 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+	transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
 }
 .beepboxEditor select:hover {
-	border-color: var(--border-focus, #71717a);
-	background: ${ColorConfig.uiWidgetFocus};
-}
-.beepboxEditor select:focus {
 	border-color: var(--accent-mod-cyan, #38bdf8);
-	box-shadow: 0 0 6px rgba(56, 189, 248, 0.35);
+	background: ${ColorConfig.uiWidgetFocus};
+	background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.08) 100%);
+	color: #ffffff;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5), 0 0 8px rgba(56, 189, 248, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+.beepboxEditor select:focus,
+.beepboxEditor select:active {
+	border-color: var(--accent-mod-cyan, #38bdf8);
+	background: #1f1f23;
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 0 6px rgba(56, 189, 248, 0.3);
 	outline: none;
 }
 .beepboxEditor select option:disabled {
@@ -1168,35 +1223,45 @@ body.resizing-v {
 }
 .select2-selection__rendered {
 	margin: 0;
-	padding: 0 0.3em;
-	display: block;
-	height: 2em;
+	padding: 0 0.4em;
+	display: flex;
+	align-items: center;
+	height: var(--button-size, 26px);
 	border: 1px solid var(--border-default, #3f3f46);
-	border-radius: 4px;
+	border-radius: 5px;
 	background: ${ColorConfig.uiWidgetBackground};
+	background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(0, 0, 0, 0.12) 100%);
 	color: inherit !important;
 	font-size: 12px;
-	font-family: var(--font-mono, monospace);
+	font-family: var(--font-sans);
+	font-weight: 500;
 	cursor: pointer;
-	-webkit-appearance:none;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+	transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
+}
+.select2-selection__rendered:hover {
+	border-color: var(--accent-mod-cyan, #38bdf8);
+	color: #ffffff !important;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5), 0 0 8px rgba(56, 189, 248, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+.select2-selection__rendered--focus {
+	background: #1f1f23;
+	border-color: var(--accent-mod-cyan, #38bdf8);
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 0 6px rgba(56, 189, 248, 0.3);
+	outline: none;
 }
 .select2-selection__arrow b{
     display:none !important;
 }
 
-.select2-selection__rendered--focus {
-	background: ${ColorConfig.uiWidgetFocus};
-	border-color: var(--accent-mod-cyan, #38bdf8);
-	box-shadow: 0 0 6px rgba(56, 189, 248, 0.35);
-	outline: none;
-}
 .select2-search__field {
     background: #141416;
     color: inherit !important;
     font-size: 12px;
-    font-family: var(--font-mono, monospace);
+    font-family: var(--font-sans);
     border: 1px solid var(--border-default, #3f3f46) !important;
     padding: 2px 4px !important;
 }
@@ -1205,7 +1270,7 @@ body.resizing-v {
     display: inline-block;
     margin: 0;
     font-size: 12px;
-    font-family: var(--font-mono, monospace);
+    font-family: var(--font-sans);
     position: relative;
     vertical-align: middle;
     background-color: #1f1f23;
@@ -1263,23 +1328,29 @@ body.resizing-v {
 	position: relative;
 	height: var(--button-size);
 	border: 1px solid var(--border-default, #3f3f46);
-	border-radius: 4px;
+	border-radius: 5px;
 	background: ${ColorConfig.uiWidgetBackground};
+	background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(0, 0, 0, 0.12) 100%);
 	color: ${ColorConfig.primaryText};
 	font-size: 12px;
-	font-family: var(--font-mono, monospace);
+	font-family: var(--font-sans);
 	font-weight: 600;
 	cursor: pointer;
-	box-shadow: 0 1px 2px rgba(0,0,0,0.4);
-	transition: background-color 0.12s ease, border-color 0.12s ease, transform 0.05s ease, box-shadow 0.12s ease;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+	transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .beepboxEditor button:hover {
 	background: ${ColorConfig.uiWidgetFocus};
-	border-color: var(--border-focus, #71717a);
+	background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.08) 100%);
+	border-color: var(--accent-mod-cyan, #38bdf8);
+	color: #ffffff;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), 0 0 8px rgba(56, 189, 248, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 .beepboxEditor button:active {
-	transform: translateY(1px);
-	box-shadow: var(--shadow-pressed-btn, inset 0 2px 4px rgba(0,0,0,0.6));
+	transform: translateY(0.5px);
+	background: #1f1f23;
+	border-color: var(--accent-mod-cyan, #38bdf8);
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 0 6px rgba(56, 189, 248, 0.3);
 }
 .beepboxEditor button:focus {
 	border-color: var(--accent-mod-cyan, #38bdf8);
@@ -1546,6 +1617,13 @@ body.resizing-v {
 	align-items: center;
 	justify-content: center;
 	color: var(--text-color-lit);
+	background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(0, 0, 0, 0.15) 100%);
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+	transition: all 0.15s ease;
+}
+.beepboxEditor .instrument-bar button:hover {
+	filter: brightness(1.15);
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), 0 0 8px rgba(56, 189, 248, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 .beepboxEditor .instrument-bar .remove-instrument, .beepboxEditor .instrument-bar .add-instrument {
@@ -1566,7 +1644,10 @@ body.resizing-v {
 
 .beepboxEditor .instrument-bar .selected-instrument {
 	background: var(--background-color-lit);
+	background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(0, 0, 0, 0.2) 100%);
 	color: ${ColorConfig.invertedText};
+	border-color: var(--accent-mod-cyan, #38bdf8);
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4), 0 0 10px rgba(56, 189, 248, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 .beepboxEditor .instrument-bar .deactivated {
@@ -1577,7 +1658,9 @@ body.resizing-v {
 
 .beepboxEditor .instrument-bar .deactivated.selected-instrument {
 	background: var(--background-color-dim);
+	background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(0, 0, 0, 0.2) 100%);
 	color: ${ColorConfig.invertedText};
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4), 0 0 6px rgba(56, 189, 248, 0.3);
 }
 
 .beepboxEditor .instrument-bar .remove-instrument {
@@ -1702,11 +1785,20 @@ body.resizing-v {
 	align-items: center;
 	justify-content: space-between;
 	gap: 6px;
+	width: 100%;
+	box-sizing: border-box;
 }
 
 .beepboxEditor .selectRow > :last-child {
-	width: 62.5%;
-	flex-shrink: 0;
+	flex: 1;
+	min-width: 0;
+}
+.beepboxEditor .selectRow .selectContainer {
+	width: 100%;
+}
+.beepboxEditor .selectRow .selectContainer select {
+	width: 100%;
+	box-sizing: border-box;
 }
 
 .beepboxEditor .selectRow.key-octave-row {
@@ -1715,6 +1807,7 @@ body.resizing-v {
 	align-items: center;
 	gap: 6px;
 	justify-content: space-between;
+	width: 100%;
 }
 .beepboxEditor .selectRow.key-octave-row > :last-child {
 	width: auto !important;
@@ -1723,6 +1816,14 @@ body.resizing-v {
 .beepboxEditor .selectRow.key-octave-row .key-group {
 	flex: 1;
 	min-width: 0;
+	display: flex;
+	align-items: center;
+	gap: 4px;
+}
+.beepboxEditor .selectRow.key-octave-row .key-group .selectContainer {
+	flex: 1;
+	min-width: 0;
+	max-width: 95px;
 }
 .beepboxEditor .selectRow.key-octave-row .octave-group input[type="number"] {
 	width: 44px;
@@ -1738,10 +1839,11 @@ body.resizing-v {
 	justify-content: space-between;
 	gap: 12px;
 	padding: 4px 16px;
-	background: #18181b;
+	background: ${ColorConfig.uiWidgetBackground};
+	background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(0, 0, 0, 0.12) 100%);
 	border-radius: 6px;
-	border: none;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+	border: 1px solid var(--border-subtle, #2e2e33);
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 	box-sizing: border-box;
 	width: 100%;
 	min-height: 38px;
@@ -1757,13 +1859,18 @@ body.resizing-v {
 	gap: 8px;
 	flex-shrink: 0;
 }
+.beepboxEditor .menu-left-header {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	order: 6;
+}
 .beepboxEditor .menu-right-group {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	gap: 18px;
 	margin-left: auto;
-	padding-right: 20px;
 	flex-shrink: 0;
 }
 .beepboxEditor .version-area {
@@ -1774,9 +1881,10 @@ body.resizing-v {
 }
 .beepboxEditor .song-title-input,
 .beepboxEditor .version-area input {
-	background: #27272a;
-	color: #f4f4f5;
-	font-family: var(--font-mono, monospace);
+	background: ${ColorConfig.uiWidgetBackground};
+	background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(0, 0, 0, 0.1) 100%);
+	color: ${ColorConfig.primaryText};
+	font-family: var(--font-sans);
 	font-size: 11px;
 	font-weight: 600;
 	border: 1px solid var(--border-subtle, #3f3f46);
@@ -1786,6 +1894,7 @@ body.resizing-v {
 	width: 130px;
 	box-sizing: border-box;
 	text-align: center;
+	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
 	transition: all 0.16s ease;
 }
 .beepboxEditor .song-title-input:hover,
@@ -1797,7 +1906,7 @@ body.resizing-v {
 	outline: none;
 	border-color: var(--accent-mod-cyan, #38bdf8);
 	box-shadow: 0 0 6px rgba(56, 189, 248, 0.35);
-	background: #1f1f23;
+	background: ${ColorConfig.uiWidgetFocus};
 }
 .beepboxEditor .playback-bar-controls {
 	display: flex;
@@ -1839,33 +1948,30 @@ body.resizing-v {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	height: 22px;
-	width: 120px;
-	min-width: 120px;
-	max-width: 120px;
+	height: 24px;
+	width: 180px;
+	min-width: 140px;
 	flex-shrink: 0;
 	padding: 0 4px;
-	background: #141416;
+	background: ${ColorConfig.editorBackground};
 	border: 1px solid var(--border-subtle, #2e2e33);
 	border-radius: 4px;
 	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.7);
 	box-sizing: border-box;
 	margin-left: 6px;
-	margin-right: 20px;
 }
 .beepboxEditor .global-oscilloscope-container {
 	display: flex;
 	align-items: center;
 	height: 28px;
 	flex-shrink: 0;
-	margin-right: 12px;
 }
 .beepboxEditor .global-oscilloscope-container canvas {
 	height: 26px !important;
 	width: 90px !important;
 	border-radius: 4px;
 	border: 1px solid var(--border-subtle, #3f3f46) !important;
-	background: #121214;
+	background: ${ColorConfig.editorBackground};
 }
 .beepboxEditor .menu-area .selectContainer.menu {
 	width: 112px;
@@ -1882,12 +1988,13 @@ body.resizing-v {
 	padding: 0 6px;
 	font-weight: 600;
 	font-size: 12px;
-	font-family: var(--font-mono, monospace);
+	font-family: var(--font-sans);
 	border: 1px solid var(--border-subtle, #2e2e33);
-	background: linear-gradient(180deg, #27272a 0%, #1f1f23 100%);
+	background: ${ColorConfig.uiWidgetBackground};
+	background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(0, 0, 0, 0.12) 100%);
 	border-radius: 5px;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
-	color: #e4e4e7;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+	color: ${ColorConfig.primaryText};
 	text-align: center;
 	text-align-last: center;
 	white-space: nowrap;
@@ -1897,16 +2004,17 @@ body.resizing-v {
 	transition: all 0.16s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .beepboxEditor .menu-area select:hover {
-	background: linear-gradient(180deg, #323238 0%, #27272c 100%);
+	background: ${ColorConfig.uiWidgetFocus};
+	background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(0, 0, 0, 0.08) 100%);
 	border-color: var(--accent-mod-cyan, #38bdf8);
-	color: #ffffff;
-	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5), 0 0 8px rgba(56, 189, 248, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+	color: ${ColorConfig.primaryText};
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5), 0 0 8px rgba(56, 189, 248, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.14);
 }
 .beepboxEditor .menu-area select:focus,
 .beepboxEditor .menu-area select:active {
-	background: #1f1f23;
+	background: ${ColorConfig.uiWidgetFocus};
 	border-color: var(--accent-mod-cyan, #38bdf8);
-	color: #ffffff;
+	color: ${ColorConfig.primaryText};
 	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 0 6px rgba(56, 189, 248, 0.3);
 }
 .beepboxEditor .menu-area .selectContainer.menu::after,
@@ -1926,7 +2034,7 @@ body.resizing-v {
 	z-index: 2;
 	pointer-events: none;
 	opacity: 0.85;
-	background: #e4e4e7;
+	background: ${ColorConfig.primaryText};
 	transition: opacity 0.15s ease, background-color 0.15s ease;
 }
 .beepboxEditor .menu-area .selectContainer.menu:hover::before {
@@ -1936,35 +2044,59 @@ body.resizing-v {
 .beepboxEditor select option,
 .beepboxEditor select optgroup,
 .beepboxEditor .menu-area select option,
-.beepboxEditor .menu-area select optgroup {
+.beepboxEditor .menu-area select optgroup,
+.beepboxEditor .menu-left-group select option,
+.beepboxEditor .menu-left-group select optgroup {
 	text-align: left;
-	font-family: var(--font-mono), monospace;
-	white-space: pre;
-	background: #18181b;
-	color: #f4f4f5;
+	font-family: Consolas, "Liberation Mono", "Courier New", Courier, monospace;
+	font-variant-numeric: tabular-nums;
+	font-size: 11px;
 	font-weight: normal;
-	padding: 3px 4px 3px 0px;
+	padding: 3px 6px;
 	margin: 0;
 	text-indent: 0;
+	background: ${ColorConfig.uiWidgetBackground};
+	color: ${ColorConfig.primaryText};
 }
 .beepboxEditor select optgroup,
-.beepboxEditor .menu-area select optgroup {
-	font-weight: bold;
+.beepboxEditor .menu-area select optgroup,
+.beepboxEditor .menu-left-group select optgroup {
+	font-weight: 700;
+	font-family: var(--font-sans);
 	color: var(--accent-mod-cyan, #38bdf8);
-	background: #1f1f23;
-	padding: 4px 4px 4px 0px;
+	background: ${ColorConfig.uiWidgetFocus};
+	padding: 4px 6px;
 }
 
 .beepboxEditor .song-settings-area {
 	display: flex;
 	flex-direction: column;
-	background: #18181b;
+	background: ${ColorConfig.editorBackground};
 	border: 1px solid var(--border-subtle, #2e2e33);
 	border-radius: 6px;
 	padding: 8px 10px;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
 	flex-shrink: 0;
+	min-width: 192px;
+	max-height: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
 	box-sizing: border-box;
+	scrollbar-width: thin;
+	scrollbar-color: #3f3f46 transparent;
+}
+.beepboxEditor .song-settings-area::-webkit-scrollbar {
+	width: 5px;
+}
+.beepboxEditor .song-settings-area::-webkit-scrollbar-track {
+	background: transparent;
+}
+.beepboxEditor .song-settings-area::-webkit-scrollbar-thumb {
+	background-color: #3f3f46;
+	border-radius: 3px;
+}
+.beepboxEditor .song-settings-area::-webkit-scrollbar-thumb:hover {
+	background-color: #71717a;
 }
 
 .beepboxEditor .editor-controls {
@@ -1977,13 +2109,32 @@ body.resizing-v {
 .beepboxEditor .instrument-settings-area {
 	display: flex;
 	flex-direction: column;
-	background: #18181b;
+	background: ${ColorConfig.editorBackground};
 	border: 1px solid var(--border-subtle, #2e2e33);
 	border-radius: 6px;
 	padding: 8px 10px;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
 	flex-shrink: 0;
+	min-width: 216px;
+	max-height: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
 	box-sizing: border-box;
+	scrollbar-width: thin;
+	scrollbar-color: #3f3f46 transparent;
+}
+.beepboxEditor .instrument-settings-area::-webkit-scrollbar {
+	width: 5px;
+}
+.beepboxEditor .instrument-settings-area::-webkit-scrollbar-track {
+	background: transparent;
+}
+.beepboxEditor .instrument-settings-area::-webkit-scrollbar-thumb {
+	background-color: #3f3f46;
+	border-radius: 3px;
+}
+.beepboxEditor .instrument-settings-area::-webkit-scrollbar-thumb:hover {
+	background-color: #71717a;
 }
 
 .beepboxEditor .editor-right-side-top > *, .beepboxEditor .editor-right-side-bottom > * {
@@ -2020,20 +2171,26 @@ body.resizing-v {
 .beepboxEditor input[type=text], .beepboxEditor input[type=number] {
 	font-size: 12px;
 	font-weight: 600;
-	font-family: var(--font-mono, monospace);
+	font-family: var(--font-sans);
+	font-feature-settings: "tnum";
 	background: #141416;
 	text-align: center;
 	border: 1px solid var(--border-default, #3f3f46);
-	border-radius: 3px;
+	border-radius: 4px;
 	color: ${ColorConfig.primaryText};
 	padding: 2px 4px;
 	box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);
-	transition: border-color 0.12s ease, box-shadow 0.12s ease;
+	transition: all 0.15s ease;
+}
+
+.beepboxEditor input[type=text]:hover, .beepboxEditor input[type=number]:hover {
+	border-color: var(--accent-mod-cyan, #38bdf8);
 }
 
 .beepboxEditor input[type=text]:focus, .beepboxEditor input[type=number]:focus {
 	border-color: var(--accent-mod-cyan, #38bdf8);
-	box-shadow: inset 0 1px 2px rgba(0,0,0,0.6), 0 0 6px rgba(56, 189, 248, 0.3);
+	box-shadow: inset 0 1px 2px rgba(0,0,0,0.6), 0 0 6px rgba(56, 189, 248, 0.35);
+	background: #1a1a1e;
 	outline: none;
 }
 
@@ -2198,35 +2355,500 @@ li.select2-results__option[role=group] > strong:hover {
 	}
 }
 
-/* narrow screen */
-@media (max-width: 710px) {
+/* Mobile & Drawer Controls Defaults */
+.mobile-menu-btn {
+	display: none;
+}
+.mobile-drawer-close-btn {
+	display: none;
+}
+.mobile-drawer-backdrop {
+	display: none;
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.65);
+	backdrop-filter: blur(4px);
+	-webkit-backdrop-filter: blur(4px);
+	z-index: 10000;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.22s ease;
+}
+.mobile-drawer-backdrop.open {
+	display: block;
+	opacity: 1;
+	pointer-events: auto;
+}
+.mobile-quick-bar {
+	display: none;
+}
+.rotate-device-prompt {
+	display: none;
+	position: fixed;
+	inset: 0;
+	z-index: 100000;
+	background: rgba(0, 0, 0, 0.82);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	align-items: center;
+	justify-content: center;
+	padding: 20px;
+	box-sizing: border-box;
+}
+@media (orientation: portrait) and (max-width: 900px) {
+	.rotate-device-prompt {
+		display: flex;
+	}
+}
+.rotate-device-content {
+	background: ${ColorConfig.editorBackground};
+	border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.2));
+	border-radius: 18px;
+	padding: 26px 22px;
+	max-width: 320px;
+	width: 90%;
+	text-align: center;
+	box-shadow: 0 16px 48px rgba(0, 0, 0, 0.85);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 12px;
+}
+.rotate-device-icon {
+	font-size: 42px;
+	line-height: 1;
+	animation: rotatePromptSpin 2.5s ease-in-out infinite alternate;
+}
+@keyframes rotatePromptSpin {
+	0% { transform: rotate(0deg); }
+	50% { transform: rotate(-90deg); }
+	100% { transform: rotate(-90deg); }
+}
+.rotate-device-title {
+	font-size: 18px;
+	font-weight: bold;
+	color: ${ColorConfig.primaryText};
+	margin: 0;
+}
+.rotate-device-desc {
+	font-size: 13px;
+	color: ${ColorConfig.secondaryText};
+	line-height: 1.45;
+	margin: 0;
+}
+.rotate-dismiss-btn {
+	margin-top: 6px;
+	padding: 9px 24px;
+	font-size: 14px;
+	font-weight: 600;
+	border-radius: 20px;
+	border: none;
+	background: ${ColorConfig.linkAccent};
+	color: #ffffff;
+	cursor: pointer;
+	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+	touch-action: manipulation;
+	transition: transform 0.12s ease, filter 0.15s ease;
+}
+.rotate-dismiss-btn:active {
+	transform: scale(0.95);
+	filter: brightness(1.15);
+}
+
+/* Mobile Landscape Mode (Phone/Tablet horizontal & PWA) */
+@media (hover: none) and (pointer: coarse) and (orientation: landscape), (hover: none) and (pointer: coarse) and (max-height: 560px) {
 	.beepboxEditor {
-		grid-template-columns: minmax(0, 1fr);
+		height: 100vh;
+		height: 100dvh;
+		max-height: 100dvh;
+		grid-template-columns: minmax(180px, var(--primary-left-width, 1.4fr)) 6px minmax(160px, 1fr) !important;
+		grid-template-rows: minmax(0, 1fr) !important;
+		grid-template-areas: 
+			"pattern-area h-splitter track-area" !important;
+		gap: 2px !important;
+		padding: 2px calc(4px + env(safe-area-inset-right, 0px)) 2px calc(4px + env(safe-area-inset-left, 0px)) !important;
+		box-sizing: border-box !important;
+		position: relative !important;
+	}
+	.beepboxEditor .editor-splitter-left,
+	.beepboxEditor .editor-splitter-right,
+	.beepboxEditor .editor-splitter-mid,
+	.beepboxEditor .editor-splitter-mid-h,
+	.beepboxEditor .editor-splitter-bottom {
+		display: none !important;
+	}
+	.beepboxEditor .editor-splitter-horizontal {
+		grid-area: h-splitter !important;
+		display: flex !important;
+		align-items: center !important;
+		justify-content: center !important;
+		width: 6px !important;
+		height: 100% !important;
+		cursor: col-resize !important;
+		touch-action: none !important;
+		background: ${ColorConfig.editorBackground} !important;
+		border-left: 1px solid var(--border-subtle, #2e2e33) !important;
+		border-right: 1px solid var(--border-subtle, #2e2e33) !important;
+		border-top: none !important;
+		border-bottom: none !important;
+		position: relative !important;
+		z-index: 10 !important;
+		user-select: none !important;
+		transition: background-color 0.15s ease, border-color 0.15s ease !important;
+	}
+	.beepboxEditor .editor-splitter-horizontal::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: -8px;
+		right: -8px;
+		z-index: 1;
+	}
+	.beepboxEditor .editor-splitter-horizontal::after {
+		display: none !important;
+	}
+	.beepboxEditor .editor-splitter-horizontal .splitter-handle-h {
+		width: 3px !important;
+		height: 42px !important;
+		border-radius: 1.5px !important;
+		background: #71717a !important;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6) !important;
+		transition: height 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease !important;
+		position: relative;
+		z-index: 2;
+	}
+	.beepboxEditor .editor-splitter-horizontal:hover,
+	.beepboxEditor .editor-splitter-horizontal.active {
+		background: ${ColorConfig.uiWidgetBackground} !important;
+		border-color: var(--accent-mod-cyan, #38bdf8) !important;
+	}
+	.beepboxEditor .editor-splitter-horizontal:hover .splitter-handle-h,
+	.beepboxEditor .editor-splitter-horizontal.active .splitter-handle-h {
+		height: 60px !important;
+		width: 3px !important;
+		background: var(--accent-mod-cyan, #38bdf8) !important;
+		box-shadow: 0 0 8px rgba(56, 189, 248, 0.7) !important;
+	}
+	.beepboxEditor .pattern-area {
+		grid-area: pattern-area !important;
+		width: 100% !important;
+		height: 100% !important;
+		min-height: 0 !important;
+		position: relative !important;
+		border-radius: 6px !important;
+		margin: 0 !important;
+	}
+	.beepboxEditor .track-area {
+		grid-area: track-area !important;
+		width: 100% !important;
+		height: 100% !important;
+		min-height: 0 !important;
+		display: flex !important;
+		flex-direction: column !important;
+		position: relative !important;
+		border-radius: 6px !important;
+		margin: 0 !important;
+	}
+	.beepboxEditor .trackAndMuteContainer {
+		width: 100% !important;
+		height: 100% !important;
+		min-height: 0 !important;
+		flex: 1 1 0 !important;
+		overflow: auto !important;
+		scrollbar-width: thin !important;
+		overscroll-behavior: contain !important;
+		-webkit-overflow-scrolling: touch !important;
+	}
+	.beepboxEditor .menu-area {
+		position: fixed !important;
+		top: calc(4px + env(safe-area-inset-top, 0px)) !important;
+		left: calc(6px + env(safe-area-inset-left, 0px)) !important;
+		right: calc(6px + env(safe-area-inset-right, 0px)) !important;
+		z-index: 990 !important;
+		display: flex !important;
+		flex-direction: row !important;
+		justify-content: space-between !important;
+		align-items: center !important;
+		background: transparent !important;
+		background-image: none !important;
+		border: none !important;
+		box-shadow: none !important;
+		border-radius: 0 !important;
+		min-height: 0 !important;
+		height: auto !important;
+		padding: 0 !important;
+		margin: 0 !important;
+		pointer-events: none !important;
+	}
+	.beepboxEditor .menu-area.mobile-menu-open {
+		z-index: 10001 !important;
+		pointer-events: auto !important;
+	}
+	.mobile-menu-btn {
+		pointer-events: auto !important;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 18px;
+		font-weight: bold;
+		width: 32px;
+		height: 28px;
+		line-height: 1;
+		border-radius: 6px;
+		border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.2));
+		background: rgba(18, 18, 24, 0.85);
+		backdrop-filter: blur(8px);
+		-webkit-backdrop-filter: blur(8px);
+		color: ${ColorConfig.primaryText};
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+		cursor: pointer;
+		margin: 0;
+		flex-shrink: 0;
+		touch-action: manipulation;
+		transition: transform 0.12s ease;
+	}
+	.mobile-menu-btn:active {
+		transform: scale(0.92);
+	}
+	.beepboxEditor .menu-right-group {
+		position: fixed !important;
+		bottom: calc(6px + env(safe-area-inset-bottom, 0px)) !important;
+		right: calc(182px + env(safe-area-inset-right, 0px)) !important;
+		top: auto !important;
+		left: auto !important;
+		z-index: 998 !important;
+		pointer-events: auto !important;
+		display: flex !important;
+		flex-direction: row !important;
+		align-items: center !important;
+		gap: 4px !important;
+		margin: 0 !important;
+		padding: 2px 6px !important;
+		border-radius: 16px;
+		background: rgba(18, 18, 24, 0.88);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+		border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.18));
+		box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+	}
+	.beepboxEditor .playback-volume-controls {
+		display: none !important;
+	}
+	.beepboxEditor .playback-volume-bar {
+		width: 70px !important;
+		min-width: 50px !important;
+		height: 20px !important;
+		margin-left: 2px !important;
+	}
+	.beepboxEditor .global-oscilloscope-container {
+		height: 22px !important;
+		margin-right: 0 !important;
+	}
+	.beepboxEditor .global-oscilloscope-container canvas {
+		height: 20px !important;
+		width: 50px !important;
+	}
+	.beepboxEditor .menu-area .menu-left-group {
+		display: none !important;
+	}
+	.beepboxEditor .menu-area.mobile-menu-open .menu-left-group {
+		display: flex !important;
+		position: fixed !important;
+		left: 0 !important;
+		top: 0 !important;
+		bottom: 0 !important;
+		width: min(320px, calc(86vw - env(safe-area-inset-left, 0px))) !important;
+		height: 100vh !important;
+		height: 100dvh !important;
+		z-index: 10002 !important;
+		flex-direction: column !important;
+		align-items: stretch !important;
+		background: ${ColorConfig.editorBackground} !important;
+		border-right: 1px solid var(--border-subtle, #333) !important;
+		box-shadow: 8px 0 32px rgba(0, 0, 0, 0.85) !important;
+		padding: calc(12px + env(safe-area-inset-top, 0px)) 16px calc(16px + env(safe-area-inset-bottom, 0px)) calc(16px + env(safe-area-inset-left, 0px)) !important;
+		box-sizing: border-box !important;
+		gap: 10px !important;
+		overflow-y: auto !important;
+		overscroll-behavior: contain !important;
+		-webkit-overflow-scrolling: touch !important;
+		pointer-events: auto !important;
+	}
+	.beepboxEditor .menu-area.mobile-menu-open .menu-left-header {
+		display: flex !important;
+		flex-direction: row !important;
+		align-items: center !important;
+		justify-content: space-between !important;
+		width: 100% !important;
+		gap: 10px !important;
+		order: 0 !important;
+		margin-bottom: 6px !important;
+		pointer-events: auto !important;
+	}
+	.beepboxEditor .menu-area.mobile-menu-open .menu-song-title-area {
+		flex: 1 !important;
+		width: auto !important;
+		pointer-events: auto !important;
+	}
+	.beepboxEditor .menu-area.mobile-menu-open .menu-song-title-area input {
+		width: 100% !important;
+		height: 34px !important;
+		font-size: 13px !important;
+		text-align: left !important;
+		padding: 4px 10px !important;
+		pointer-events: auto !important;
+	}
+	.beepboxEditor .menu-area.mobile-menu-open .selectContainer.menu {
+		display: block !important;
+		width: 100% !important;
+		min-width: 100% !important;
+		height: 38px !important;
+		position: relative !important;
+		pointer-events: auto !important;
+		margin: 0 !important;
+	}
+	.beepboxEditor .menu-area.mobile-menu-open .selectContainer.menu select {
+		display: block !important;
+		width: 100% !important;
+		min-width: 100% !important;
+		height: 38px !important;
+		line-height: 38px !important;
+		font-size: 13px !important;
+		font-weight: 600 !important;
+		padding: 6px 14px 6px 36px !important;
+		pointer-events: auto !important;
+		cursor: pointer !important;
+		border-radius: 8px !important;
+		text-align: left !important;
+		text-align-last: left !important;
+		box-sizing: border-box !important;
+	}
+	.beepboxEditor .menu-area.mobile-menu-open .selectContainer.menu::before {
+		left: 10px !important;
+		top: 50% !important;
+		transform: translateY(-50%) !important;
+		pointer-events: none !important;
+	}
+	.mobile-drawer-close-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 28px;
+		height: 28px;
+		font-size: 14px;
+		font-weight: bold;
+		background: ${ColorConfig.uiWidgetBackground};
+		color: ${ColorConfig.primaryText};
+		border: 1px solid var(--border-subtle, #333);
+		border-radius: 6px;
+		cursor: pointer;
+		touch-action: manipulation;
+		flex-shrink: 0;
+	}
+	.mobile-drawer-close-btn:active {
+		transform: scale(0.92);
+	}
+	.beepboxEditor .song-settings-area,
+	.beepboxEditor .instrument-settings-area {
+		position: fixed !important;
+		right: 0 !important;
+		top: 0 !important;
+		bottom: 0 !important;
+		width: min(340px, calc(85vw - env(safe-area-inset-right, 0px))) !important;
+		height: 100vh !important;
+		height: 100dvh !important;
+		max-height: 100vh !important;
+		max-height: 100dvh !important;
+		overflow-y: auto !important;
+		overscroll-behavior: contain !important;
+		-webkit-overflow-scrolling: touch !important;
+		z-index: 10002 !important;
+		background: ${ColorConfig.editorBackground} !important;
+		border-left: 1px solid var(--border-subtle, #333) !important;
+		box-shadow: -8px 0 32px rgba(0, 0, 0, 0.8) !important;
+		transform: translateX(110%) !important;
+		transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+		margin: 0 !important;
+		padding: calc(10px + env(safe-area-inset-top, 0px)) calc(12px + env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) 12px !important;
+		box-sizing: border-box !important;
+		display: block !important;
+		pointer-events: auto !important;
+	}
+	.beepboxEditor .song-settings-area.mobile-drawer-open,
+	.beepboxEditor .instrument-settings-area.mobile-drawer-open {
+		transform: translateX(0) !important;
+	}
+	.beepboxEditor .song-settings-area > .editor-controls,
+	.beepboxEditor .instrument-settings-area > .editor-controls {
+		position: relative;
+		width: 100%;
+	}
+	.mobile-quick-bar {
+		display: flex;
+		position: fixed;
+		right: calc(6px + env(safe-area-inset-right, 0px));
+		bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+		gap: 6px;
+		z-index: 998;
+	}
+	.mobile-quick-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 4px 10px;
+		font-size: 11px;
+		font-weight: 600;
+		height: 26px;
+		box-sizing: border-box;
+		border-radius: 16px;
+		border: 1px solid rgba(255, 255, 255, 0.18);
+		background: ${ColorConfig.uiWidgetBackground};
+		color: ${ColorConfig.primaryText};
+		box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55);
+		cursor: pointer;
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		touch-action: manipulation;
+		transition: transform 0.12s ease, filter 0.15s ease;
+		user-select: none;
+		-webkit-user-select: none;
+		white-space: nowrap;
+	}
+	.mobile-quick-btn:active {
+		transform: scale(0.93);
+		filter: brightness(1.2);
+	}
+	.beepboxEditor .panel-lock-button,
+	.beepboxEditor .panel-floating-lock {
+		display: none !important;
+	}
+}
+
+/* narrow screen (tablet / medium mobile portrait) */
+@media (min-width: 481px) and (max-width: 710px) and (orientation: portrait) {
+	.beepboxEditor {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 		grid-template-rows: max-content min-content 6px min-content min-content;
 		grid-template-areas: 
-			"menu-area"
-			"pattern-area" 
-			"." 
-			"track-area" 
-			"settings-area";
-		grid-row-gap: 0;
-	}
-	.beepboxEditor .settings-area {
-		display: grid;
-		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-		grid-template-rows: min-content;
-		grid-template-areas:
+			"menu-area menu-area"
+			"pattern-area pattern-area" 
+			". ." 
+			"track-area track-area" 
 			"song-settings-area instrument-settings-area";
 		grid-column-gap: 8px;
-		margin: 0 4px;
-		width: auto;
-		overflow-y: visible;
+		grid-row-gap: 4px;
 	}
+	.beepboxEditor .song-settings-area,
 	.beepboxEditor .instrument-settings-area {
+		width: auto;
+		max-width: 100%;
 		position: relative;
 		overflow: visible;
+		margin: 0 4px;
 	}
-	.beepboxEditor .instrument-settings-area > .editor-controls {
+	.beepboxEditor .instrument-settings-area > .editor-controls,
+	.beepboxEditor .song-settings-area > .editor-controls {
 		position: relative;
 		width: 100%;
 	}
@@ -2235,6 +2857,51 @@ li.select2-results__option[role=group] > strong:hover {
 	}
 	.beepboxEditor .pattern-area {
 		max-height: 75vh;
+	}
+	.beepboxEditor .trackAndMuteContainer {
+		overflow-x: auto;
+	}
+	.beepboxEditor .barScrollBar {
+		display: none;
+	}
+	.beepboxEditor .panel-lock-button,
+	.beepboxEditor .panel-floating-lock {
+		display: none !important;
+	}
+}
+
+/* small mobile screen (portrait) */
+@media (max-width: 480px) and (orientation: portrait) {
+	.beepboxEditor {
+		grid-template-columns: minmax(0, 1fr);
+		grid-template-rows: max-content min-content 6px min-content min-content min-content;
+		grid-template-areas: 
+			"menu-area"
+			"pattern-area" 
+			"." 
+			"track-area" 
+			"song-settings-area"
+			"instrument-settings-area";
+		grid-row-gap: 6px;
+	}
+	.beepboxEditor .song-settings-area,
+	.beepboxEditor .instrument-settings-area {
+		width: auto;
+		max-width: 100%;
+		position: relative;
+		overflow: visible;
+		margin: 0 2px;
+	}
+	.beepboxEditor .instrument-settings-area > .editor-controls,
+	.beepboxEditor .song-settings-area > .editor-controls {
+		position: relative;
+		width: 100%;
+	}
+	.beepboxEditor:focus-within {
+		outline: none;
+	}
+	.beepboxEditor .pattern-area {
+		max-height: 70vh;
 	}
 	.beepboxEditor .trackAndMuteContainer {
 		overflow-x: auto;
@@ -2261,8 +2928,69 @@ li.select2-results__option[role=group] > strong:hover {
 	  left: 6px;
 	  position: absolute;
 	  top: -6px;
-	  width: 0;
 	}
+	.beepboxEditor .panel-lock-button,
+	.beepboxEditor .panel-floating-lock {
+		display: none !important;
+	}
+}
+.rotate-device-prompt {
+	display: none;
+}
+@media (hover: none) and (pointer: coarse) and (orientation: portrait) and (max-width: 600px) {
+	.rotate-device-prompt {
+		display: flex;
+		position: fixed;
+		inset: 0;
+		z-index: 99999;
+		background: rgba(10, 10, 14, 0.96);
+		backdrop-filter: blur(14px);
+		-webkit-backdrop-filter: blur(14px);
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 24px;
+		text-align: center;
+		box-sizing: border-box;
+	}
+	.rotate-device-content {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 14px;
+		max-width: 300px;
+	}
+	.rotate-device-icon {
+		font-size: 48px;
+		line-height: 1;
+		animation: rotatePhoneAnim 2s infinite ease-in-out;
+	}
+	.rotate-device-title {
+		font-size: 18px;
+		font-weight: 700;
+		color: ${ColorConfig.primaryText};
+	}
+	.rotate-device-desc {
+		font-size: 13px;
+		line-height: 1.4;
+		color: ${ColorConfig.secondaryText};
+	}
+	.rotate-dismiss-btn {
+		margin-top: 6px;
+		padding: 6px 18px;
+		font-size: 12px;
+		font-weight: 600;
+		border-radius: 14px;
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		background: ${ColorConfig.uiWidgetBackground};
+		color: ${ColorConfig.primaryText};
+		cursor: pointer;
+	}
+}
+@keyframes rotatePhoneAnim {
+	0%, 100% { transform: rotate(0deg); }
+	50% { transform: rotate(-90deg); }
 }
 
 `));
+

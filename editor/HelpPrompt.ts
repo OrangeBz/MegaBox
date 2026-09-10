@@ -3,57 +3,68 @@
 import { SongDocument } from "./SongDocument";
 import { Prompt } from "./Prompt";
 import { HTML } from "imperative-html/dist/esm/elements-strict";
+import { isSpanish } from "./Localization";
 
 const { button, div, h2, h3, p, ul, li, b } = HTML;
 
 export class HelpPrompt implements Prompt {
 	private readonly _cancelButton: HTMLButtonElement = button({ class: "cancelButton" });
 
-	public readonly container: HTMLDivElement = div({ class: "prompt helpPrompt", style: "width: 580px; max-width: 90vw;" },
-		h2("Help & Instructions"),
-		div({ style: "max-height: 480px; overflow-y: auto; padding-right: 8px; text-align: left;" },
-			h3({ style: "margin: 0.8em 0 0.4em 0; color: var(--link-accent, #98f);" }, "Basic Instructions"),
-			p("You can add or remove notes by clicking on the rows in the pattern grid. MegaBox automatically plays the notes out loud for you."),
-			p("Notes go into patterns, and you can edit one pattern at a time. The numbered boxes at the bottom of the editor are the different patterns. Click the boxes to move to a different part of the song, or click the arrows on the currently selected box to change which pattern is played."),
-			p("MegaBox can play several rows of patterns simultaneously, and each row has its own set of patterns. Most rows can play melodies or harmonies, but the bottom rows are typically for drums or modulators."),
-			p("All song data is contained in the URL in your browser. When you make changes to the song, the URL is updated to reflect your changes. Copy and paste the URL to save and share your song!"),
-
-			h3({ style: "margin: 1.2em 0 0.4em 0; color: var(--link-accent, #98f);" }, "Keyboard Shortcuts"),
-			p("When MegaBox has focus, you can use these keyboard shortcuts:"),
-			ul({ style: "padding-left: 20px; line-height: 1.6;" },
-				li(b("Spacebar"), ": Play or pause the song"),
-				li(b("Shift + Spacebar"), ": Play from mouse location"),
-				li(b("Z"), ": Undo | ", b("Y or Shift + Z"), ": Redo"),
-				li(b("C"), ": Copy pattern from selection"),
-				li(b("V"), ": Paste pattern into selection"),
-				li(b("0-9"), ": Assign pattern number to selection"),
-				li(b("Arrows"), ": Move selection"),
-				li(b("Ctrl + Arrows"), ": Rearrange channels"),
-				li(b("[ ]"), ": Move playhead backward or forward"),
-				li(b("F / H"), ": Move to First or Highlighted pattern"),
-				li(b("Shift + Drag"), ": Select part of a pattern"),
-				li(b("+ / -"), ": Transpose notes up or down"),
-				li(b("W"), ": Move all notes sideways"),
-				li(b("E"), ": Generate Euclidean rhythm"),
-				li(b("L"), ": Change song length (bar count)"),
-				li(b("Shift + B"), ": Change beats per bar"),
-				li(b("Q"), ": Channel settings"),
-				li(b("Shift + L"), ": Limiter settings"),
-				li(b("Shift + Q"), ": Add custom samples"),
-			),
-
-			h3({ style: "margin: 1.2em 0 0.4em 0; color: var(--link-accent, #98f);" }, "Editing Techniques & Advanced Tips"),
-			p("In the note pattern editor, click and drag horizontally on a note to adjust its duration. Click above or below an existing note to add more notes for chords."),
-			p(b("Pitch Bending: "), "Drag vertically from an existing note to bend its pitch."),
-			p(b("Volume Adjustment: "), "Drag vertically from above or below a note to adjust its volume. Hold Control for fine volume adjustment!"),
-			p(b("Multi-Selection: "), "Click and drag on the pattern grid to make a box selection. Then press C/V to mass copy/paste parts of your song."),
-			p(b("Modulator Recording: "), "If your song has any modulator channels, you can hold Ctrl or Shift while the song is playing to record the movement of sliders directly!"),
-			p(b("Mobile Touch: "), "On mobile or touchscreen devices, long-press in the pattern editor to select a time range within a pattern, which you can then drag to move multiple notes at once."),
-		),
-		this._cancelButton,
-	);
+	public readonly container: HTMLDivElement;
 
 	constructor(private _doc: SongDocument) {
+		const es = isSpanish();
+
+		this.container = div({ class: "prompt helpPrompt", style: "width: 580px; max-width: 90vw;" },
+			h2(es ? "Ayuda e Instrucciones" : "Help & Instructions"),
+			div({ style: "max-height: 480px; overflow-y: auto; padding-right: 8px; text-align: left;" },
+				h3({ style: "margin: 0.8em 0 0.4em 0; color: var(--link-accent, #98f);" }, es ? "Resumen básico" : "Basic Overview"),
+				p(es
+					? "Haz clic en la cuadrícula de notas para añadir o quitar notas. Las casillas numeradas en la parte inferior son los patrones del secuenciador. Haz clic en ellas para desplazarte a otra parte de la canción, o usa las flechas para cambiar el número de patrón."
+					: "Click rows in the note grid to add or remove notes. The numbered boxes at the bottom are patterns in the sequencer. Click them to move to different parts of the song, or click arrows to change pattern numbers."),
+				p(es
+					? "Todos los datos de la canción se guardan y comprimen directamente en la URL de tu navegador. Copia la URL para guardar y compartir tu creación."
+					: "All song data is saved and compressed directly within the browser URL. Copy the URL to save and share your creation."),
+
+				h3({ style: "margin: 1.2em 0 0.4em 0; color: var(--link-accent, #98f);" }, es ? "Espacio modular y movimiento de paneles" : "Modular Workspace & Panel Movement"),
+				ul({ style: "padding-left: 20px; line-height: 1.6;" },
+					li(b(es ? "Arrastrar y reorganizar paneles: " : "Drag & Rearrange Panels: "), es ? "Arrastra los paneles desde su encabezado o tirador para cambiar su orden en divisiones horizontales o verticales." : "Drag panels by their header or drag handle to reorder piano roll, sequencer, and settings sidebars horizontally or vertically."),
+					li(b(es ? "Bloquear / Desbloquear diseño: " : "Lock / Unlock Layout: "), es ? "Haz clic en el icono de candado (🔒) de cualquier panel para fijarlo o desbloquearlo y moverlo." : "Click the lock icon (🔒) on any panel header to pin it in place or unlock it for repositioning."),
+					li(b(es ? "Ajustes de acoplamiento: " : "Docking Settings: "), es ? "Acopla los ajustes de canción e instrumento a la izquierda, derecha o apilados en Editar > Preferencias de diseño." : "Dock Song and Instrument settings to the left, right, or stacked together in Edit > Layout Preferences."),
+				),
+
+				h3({ style: "margin: 1.2em 0 0.4em 0; color: var(--link-accent, #98f);" }, es ? "Movimiento táctil y versión móvil" : "Mobile & Touch Movement"),
+				ul({ style: "padding-left: 20px; line-height: 1.6;" },
+					li(b(es ? "Arrastre / Desplazamiento en secuenciador: " : "Sequencer Drag / Scroll: "), es ? "Arrastra horizontalmente sobre las pistas para hacer scroll fluido sin cambiar números de patrón por error." : "Drag horizontally across the track sequencer on touch devices to scroll smoothly without accidentally stepping pattern numbers."),
+					li(b(es ? "Menú lateral (≡): " : "Hamburger Menu (≡): "), es ? "Toca el icono de sándwich arriba a la izquierda para abrir el menú con Archivo, Edición, Preferencias, Ayuda y Acerca de." : "Tap the top-left menu icon to open the full drawer containing File, Edit, Preferences, Help, and About."),
+					li(b(es ? "Ajustes deslizantes: " : "Slide-out Settings: "), es ? "Toca " : "Tap ", b("Song S."), es ? " o " : " or ", b("Instrument S."), es ? " abajo a la derecha para abrir los paneles sin saturar la pantalla." : " at the bottom right to slide open drawer panels without cluttering your workspace."),
+					li(b(es ? "Selección táctil en cuadrícula: " : "Pattern Touch Selection: "), es ? "Mantén presionado sobre la cuadrícula para seleccionar una región y arrastrar notas en bloque." : "Long-press on the note pattern grid to select a region, then drag horizontally to move multiple notes."),
+				),
+
+				h3({ style: "margin: 1.2em 0 0.4em 0; color: var(--link-accent, #98f);" }, es ? "Atajos de teclado" : "Keyboard Shortcuts"),
+				ul({ style: "padding-left: 20px; line-height: 1.6;" },
+					li(b("Spacebar"), es ? ": Reproducir / Pausar | " : ": Play / Pause | ", b("Shift + Spacebar"), es ? ": Reproducir desde cursor" : ": Play from cursor"),
+					li(b("Z"), es ? ": Deshacer | " : ": Undo | ", b("Y / Shift + Z"), es ? ": Rehacer" : ": Redo"),
+					li(b("C / V"), es ? ": Copiar / Pegar patrón o región" : ": Copy / Paste selected pattern or region"),
+					li(b("0-9"), es ? ": Asignar número de patrón a selección" : ": Assign pattern number to selection"),
+					li(b("Arrows"), es ? ": Mover selección | " : ": Move selection | ", b("Ctrl + Arrows"), es ? ": Reordenar canales" : ": Reorder channels"),
+					li(b("[ / ]"), es ? ": Mover cabezal atrás / adelante" : ": Move playhead backward / forward"),
+					li(b("+ / -"), es ? ": Transportar notas arriba / abajo" : ": Transpose notes up / down"),
+					li(b("W"), es ? ": Desplazar notas lateralmente" : ": Shift notes sideways"),
+					li(b("E"), es ? ": Generador de ritmos euclidianos" : ": Euclidean rhythm generator"),
+					li(b("L"), es ? ": Duración de canción | " : ": Bar count | ", b("Shift + B"), es ? ": Pulsos por compás" : ": Beats per bar"),
+					li(b("Q"), es ? ": Ajustes de canal | " : ": Channel settings | ", b("Shift + L"), es ? ": Ajustes de limitador" : ": Limiter settings"),
+					li(b("Shift + Q"), es ? ": Añadir samples personalizados" : ": Add custom samples"),
+				),
+
+				h3({ style: "margin: 1.2em 0 0.4em 0; color: var(--link-accent, #98f);" }, es ? "Consejos de edición y modulación" : "Editing & Modulation Tips"),
+				p("• ", b(es ? "Pitch Bend: " : "Pitch Bending: "), es ? "Arrastra verticalmente desde una nota existente." : "Drag vertically from an existing note to bend pitch."),
+				p("• ", b(es ? "Volumen de nota: " : "Note Volume: "), es ? "Arrastra verticalmente arriba o abajo de una nota (mantén Ctrl para ajuste fino)." : "Drag vertically above or below a note (hold Ctrl for fine control)."),
+				p("• ", b(es ? "Automatización en vivo: " : "Live Automation: "), es ? "Mantén presionado Ctrl o Shift durante la reproducción para grabar el movimiento de sliders en canales de modulación." : "Hold Ctrl or Shift while playing to record slider movements into modulator channels in real time."),
+			),
+			this._cancelButton,
+		);
+
 		this._cancelButton.addEventListener("click", this._close);
 	}
 

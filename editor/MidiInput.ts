@@ -45,7 +45,8 @@ export class MidiInputHandler {
 			this._takeMidiHandlerFocus();
 			window.addEventListener("focus", this._takeMidiHandlerFocus);
 		} catch (e) {
-			console.error("Failed to get MIDI access", e);
+			// MIDI is optional and might be unavailable/blocked in local file:// or without permission
+			console.warn("MIDI access not granted or unavailable:", e);
 		}
 	}
 	

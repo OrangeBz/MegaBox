@@ -1,6 +1,6 @@
 // Copyright (c) 2012-2022 John Nesky and contributing authors, distributed under the MIT license, see accompanying the LICENSE.md file.
 
-//import {Layout} from "./Layout";
+import { Layout } from "./Layout";
 import { sampleLoadEvents, SampleLoadedEvent, InstrumentType, EffectType, Config, effectsIncludeTransition, effectsIncludeChord, effectsIncludePitchShift, effectsIncludeDetune, effectsIncludeVibrato, effectsIncludeNoteFilter, effectsIncludeDistortion, effectsIncludeBitcrusher, effectsIncludePanning, effectsIncludeChorus, effectsIncludeEcho, effectsIncludeReverb, DropdownID } from "../synth/SynthConfig";
 import { BarScrollBar } from "./BarScrollBar";
 import { BeatsPerBarPrompt } from "./BeatsPerBarPrompt";
@@ -14,7 +14,6 @@ import { InstrumentImportPrompt } from "./InstrumentImportPrompt";
 import { EditorConfig, prettyNumber, Preset, PresetCategory } from "./EditorConfig";
 import { EuclideanRhythmPrompt } from "./EuclidgenRhythmPrompt";
 import { ExportPrompt } from "./ExportPrompt";
-import "./Layout"; // Imported here for the sake of ensuring this code is transpiled early.
 import { Instrument, Channel, Synth } from "../synth/synth";
 import { HTML, SVG } from "imperative-html/dist/esm/elements-strict";
 import { Preferences } from "./Preferences";
@@ -22,7 +21,6 @@ import { HarmonicsEditor, HarmonicsEditorPrompt } from "./HarmonicsEditor";
 import { InputBox, Slider } from "./HTMLWrapper";
 import { ImportPrompt } from "./ImportPrompt";
 import { ChannelRow } from "./ChannelRow";
-import { LayoutPrompt } from "./LayoutPrompt";
 import { EnvelopeEditor } from "./EnvelopeEditor";
 import { FadeInOutEditor } from "./FadeInOutEditor";
 import { FilterEditor } from "./FilterEditor";
@@ -56,6 +54,9 @@ import { AddSamplesPrompt } from "./AddSamplesPrompt";
 import { ShortenerConfigPrompt } from "./ShortenerConfigPrompt";
 import { HelpPrompt } from "./HelpPrompt";
 import { AboutPrompt } from "./AboutPrompt";
+import { SampleDatabase } from "./SampleDatabase";
+import { ZipArchive } from "./ZipArchive";
+import { isSpanish } from "./Localization";
 
 const { button, div, input, select, span, optgroup, option, canvas } = HTML;
 
@@ -753,22 +754,22 @@ export class SongEditor {
     private readonly _loopEditor: LoopEditor = new LoopEditor(this._doc, this._trackEditor);
     private readonly _piano: Piano = new Piano(this._doc);
     private readonly _octaveScrollBar: OctaveScrollBar = new OctaveScrollBar(this._doc, this._piano);
-    private readonly _playButton: HTMLButtonElement = button({ class: "playButton", type: "button", title: "Play (Space)" }, span("Play"));
-    private readonly _pauseButton: HTMLButtonElement = button({ class: "pauseButton", style: "display: none;", type: "button", title: "Pause (Space)" }, "Pause");
-    private readonly _recordButton: HTMLButtonElement = button({ class: "recordButton", style: "display: none;", type: "button", title: "Record (Ctrl+Space)" }, span("Record"));
-    private readonly _stopButton: HTMLButtonElement = button({ class: "stopButton", style: "display: none;", type: "button", title: "Stop Recording (Space)" }, "Stop Recording");
-    private readonly _prevBarButton: HTMLButtonElement = button({ class: "prevBarButton", type: "button", title: "Previous Bar (left bracket)" });
-    private readonly _nextBarButton: HTMLButtonElement = button({ class: "nextBarButton", type: "button", title: "Next Bar (right bracket)" });
-    private readonly _volumeSlider: Slider = new Slider(input({ title: "main volume", class: "playback-volume-slider", type: "range", min: "0", max: "75", value: "50", step: "1" }), this._doc, null, false);
-    private readonly _outVolumeBarBg: SVGRectElement = SVG.rect({ "pointer-events": "none", width: "90%", height: "50%", x: "5%", y: "25%", fill: ColorConfig.uiWidgetBackground });
-    private readonly _outVolumeBar: SVGRectElement = SVG.rect({ "pointer-events": "none", height: "50%", width: "0%", x: "5%", y: "25%", fill: "url('#volumeGrad2')" });
-    private readonly _outVolumeCap: SVGRectElement = SVG.rect({ "pointer-events": "none", width: "2px", height: "50%", x: "5%", y: "25%", fill: ColorConfig.uiWidgetFocus });
-    private readonly _stop1: SVGStopElement = SVG.stop({ "stop-color": "#22c55e", offset: "65%" });
-    private readonly _stop2: SVGStopElement = SVG.stop({ "stop-color": "#eab308", offset: "85%" });
-    private readonly _stop3: SVGStopElement = SVG.stop({ "stop-color": "#ef4444", offset: "100%" });
-    private readonly _gradient: SVGGradientElement = SVG.linearGradient({ id: "volumeGrad2", gradientUnits: "userSpaceOnUse" }, this._stop1, this._stop2, this._stop3);
+    private readonly _playButton: HTMLButtonElement = button({ class: "playButton", type: "button", title: isSpanish() ? "Reproducir (Espacio)" : "Play (Space)" }, span("Play"));
+    private readonly _pauseButton: HTMLButtonElement = button({ class: "pauseButton", style: "display: none;", type: "button", title: isSpanish() ? "Pausar (Espacio)" : "Pause (Space)" }, isSpanish() ? "Pausar" : "Pause");
+    private readonly _recordButton: HTMLButtonElement = button({ class: "recordButton", style: "display: none;", type: "button", title: isSpanish() ? "Grabar (Ctrl+Espacio)" : "Record (Ctrl+Space)" }, span(isSpanish() ? "Grabar" : "Record"));
+    private readonly _stopButton: HTMLButtonElement = button({ class: "stopButton", style: "display: none;", type: "button", title: isSpanish() ? "Detener grabación (Espacio)" : "Stop Recording (Space)" }, isSpanish() ? "Detener" : "Stop Recording");
+    private readonly _prevBarButton: HTMLButtonElement = button({ class: "prevBarButton", type: "button", title: isSpanish() ? "Compás anterior ([)" : "Previous Bar (left bracket)" });
+    private readonly _nextBarButton: HTMLButtonElement = button({ class: "nextBarButton", type: "button", title: isSpanish() ? "Compás siguiente (])" : "Next Bar (right bracket)" });
+    private readonly _volumeSlider: Slider = new Slider(input({ title: isSpanish() ? "Volumen general" : "main volume", class: "playback-volume-slider", type: "range", min: "0", max: "75", value: "50", step: "1" }), this._doc, null, false);
+    private readonly _outVolumeBarBg: SVGRectElement = SVG.rect({ "pointer-events": "none", width: "144", height: "12", x: "8", y: "2", rx: "1.5", ry: "1.5", fill: ColorConfig.uiWidgetBackground });
+    private readonly _outVolumeBar: SVGRectElement = SVG.rect({ "pointer-events": "none", height: "12", width: "0", x: "8", y: "2", rx: "1.5", ry: "1.5", fill: "url('#volumeGrad2')" });
+    private readonly _outVolumeCap: SVGRectElement = SVG.rect({ "pointer-events": "none", width: "2px", height: "12", x: "8", y: "2", fill: ColorConfig.uiWidgetFocus });
+    private readonly _stop1: SVGStopElement = SVG.stop({ "stop-color": "#22c55e", offset: "60%" });
+    private readonly _stop2: SVGStopElement = SVG.stop({ "stop-color": "#eab308", offset: "80%" });
+    private readonly _stop3: SVGStopElement = SVG.stop({ "stop-color": "#ef4444", offset: "98%" });
+    private readonly _gradient: SVGGradientElement = SVG.linearGradient({ id: "volumeGrad2", x1: "0", y1: "0", x2: "160", y2: "0", gradientUnits: "userSpaceOnUse" }, this._stop1, this._stop2, this._stop3);
     private readonly _defs: SVGDefsElement = SVG.defs({}, this._gradient);
-    private readonly _volumeBarContainer: SVGSVGElement = SVG.svg({ style: `touch-action: none; overflow: visible; display: block;`, width: "120px", height: "12px", preserveAspectRatio: "none", viewBox: "0 0 160 12" },
+    private readonly _volumeBarContainer: SVGSVGElement = SVG.svg({ style: `touch-action: none; overflow: visible; display: block; width: 100%; height: 16px;`, width: "132px", height: "16px", preserveAspectRatio: "none", viewBox: "0 0 160 16" },
         this._defs,
         this._outVolumeBarBg,
         this._outVolumeBar,
@@ -778,87 +779,86 @@ export class SongEditor {
         this._volumeBarContainer,
     );
     private readonly _fileMenu: HTMLSelectElement = select({ style: "width: 100%;" },
-        option({ selected: true, disabled: true, hidden: true }, "File"),
-        option({ value: "new" }, formatMenuOption("New Blank Song", "(⇧`)", 38)),
-        option({ value: "import" }, formatMenuOption("Import Song...", "(" + EditorConfig.ctrlSymbol + "O)", 38)),
-        option({ value: "export" }, formatMenuOption("Export Song...", "(" + EditorConfig.ctrlSymbol + "S)", 38)),
-        option({ value: "copyUrl" }, "Copy Song URL"),
-        option({ value: "shareUrl" }, "Share Song URL"),
-        option({ value: "configureShortener" }, "Customize Url Shortener..."),
-        option({ value: "shortenUrl" }, "Shorten Song URL"),
-        option({ value: "viewPlayer" }, formatMenuOption("View in Song Player", "(⇧P)", 38)),
-        option({ value: "copyEmbed" }, "Copy HTML Embed Code"),
-        option({ value: "songRecovery" }, formatMenuOption("Recover Recent Song...", "(`)", 38)),
+        option({ selected: true, disabled: true, hidden: true }, isSpanish() ? "Archivo" : "File"),
+        option({ value: "new" }, formatMenuOption(isSpanish() ? "Nueva canción en blanco" : "New Blank Song", "(⇧`)", 38)),
+        option({ value: "import" }, formatMenuOption(isSpanish() ? "Importar canción..." : "Import Song...", "(" + EditorConfig.ctrlSymbol + "O)", 38)),
+        option({ value: "export" }, formatMenuOption(isSpanish() ? "Exportar canción..." : "Export Song...", "(" + EditorConfig.ctrlSymbol + "S)", 38)),
+        option({ value: "copyUrl" }, isSpanish() ? "Copiar URL de canción" : "Copy Song URL"),
+        option({ value: "shareUrl" }, isSpanish() ? "Compartir URL de canción" : "Share Song URL"),
+        option({ value: "configureShortener" }, isSpanish() ? "Configurar acortador de URL..." : "Customize Url Shortener..."),
+        option({ value: "shortenUrl" }, isSpanish() ? "Acortar URL de canción" : "Shorten Song URL"),
+        option({ value: "viewPlayer" }, formatMenuOption(isSpanish() ? "Ver en reproductor" : "View in Song Player", "(⇧P)", 38)),
+        option({ value: "copyEmbed" }, isSpanish() ? "Copiar código embed HTML" : "Copy HTML Embed Code"),
+        option({ value: "songRecovery" }, formatMenuOption(isSpanish() ? "Recuperar canción reciente..." : "Recover Recent Song...", "(`)", 38)),
     );
     private readonly _editMenu: HTMLSelectElement = select({ style: "width: 100%;" },
-        option({ selected: true, disabled: true, hidden: true }, "Edit"),
-        option({ value: "undo" }, formatMenuOption("Undo", "(Z)", 38)),
-        option({ value: "redo" }, formatMenuOption("Redo", "(Y)", 38)),
-        option({ value: "copy" }, formatMenuOption("Copy Pattern", "(C)", 38)),
-        option({ value: "pasteNotes" }, formatMenuOption("Paste Pattern Notes", "(V)", 38)),
-        option({ value: "pasteNumbers" }, formatMenuOption("Paste Pattern Numbers", "(" + EditorConfig.ctrlSymbol + "⇧V)", 38)),
-        option({ value: "insertBars" }, formatMenuOption("Insert Bar", "(⏎)", 38)),
-        option({ value: "deleteBars" }, formatMenuOption("Delete Selected Bars", "(⌫)", 38)),
-        option({ value: "insertChannel" }, formatMenuOption("Insert Channel", "(" + EditorConfig.ctrlSymbol + "⏎)", 38)),
-        option({ value: "deleteChannel" }, formatMenuOption("Delete Selected Channels", "(" + EditorConfig.ctrlSymbol + "⌫)", 38)),
-        option({ value: "selectChannel" }, formatMenuOption("Select Channel", "(⇧A)", 38)),
-        option({ value: "selectAll" }, formatMenuOption("Select All", "(A)", 38)),
-        option({ value: "duplicatePatterns" }, formatMenuOption("Duplicate Reused Patterns", "(D)", 38)),
-        option({ value: "transposeUp" }, formatMenuOption("Move Notes Up", "(+ or ⇧+)", 38)),
-        option({ value: "transposeDown" }, formatMenuOption("Move Notes Down", "(- or ⇧-)", 38)),
-        option({ value: "moveNotesSideways" }, formatMenuOption("Move All Notes Sideways...", "(W)", 38)),
-	    option({ value: "generateEuclideanRhythm" }, formatMenuOption("Generate Euclidean Rhythm...", "(E)", 38)),
-        option({ value: "beatsPerBar" }, formatMenuOption("Change Beats Per Bar...", "(⇧B)", 38)),
-        option({ value: "barCount" }, formatMenuOption("Change Song Length...", "(L)", 38)),
-        option({ value: "channelSettings" }, formatMenuOption("Channel Settings...", "(Q)", 38)),
-        option({ value: "limiterSettings" }, formatMenuOption("Limiter Settings...", "(⇧L)", 38)),
-	    option({ value: "addExternal" }, formatMenuOption("Add Custom Samples...", "(⇧Q)", 38)),
+        option({ selected: true, disabled: true, hidden: true }, isSpanish() ? "Editar" : "Edit"),
+        option({ value: "undo" }, formatMenuOption(isSpanish() ? "Deshacer" : "Undo", "(Z)", 38)),
+        option({ value: "redo" }, formatMenuOption(isSpanish() ? "Rehacer" : "Redo", "(Y)", 38)),
+        option({ value: "copy" }, formatMenuOption(isSpanish() ? "Copiar patrón" : "Copy Pattern", "(C)", 38)),
+        option({ value: "pasteNotes" }, formatMenuOption(isSpanish() ? "Pegar notas del patrón" : "Paste Pattern Notes", "(V)", 38)),
+        option({ value: "pasteNumbers" }, formatMenuOption(isSpanish() ? "Pegar números del patrón" : "Paste Pattern Numbers", "(" + EditorConfig.ctrlSymbol + "⇧V)", 38)),
+        option({ value: "insertBars" }, formatMenuOption(isSpanish() ? "Insertar compás" : "Insert Bar", "(⏎)", 38)),
+        option({ value: "deleteBars" }, formatMenuOption(isSpanish() ? "Eliminar compases seleccionados" : "Delete Selected Bars", "(⌫)", 38)),
+        option({ value: "insertChannel" }, formatMenuOption(isSpanish() ? "Insertar canal" : "Insert Channel", "(" + EditorConfig.ctrlSymbol + "⏎)", 38)),
+        option({ value: "deleteChannel" }, formatMenuOption(isSpanish() ? "Eliminar canales seleccionados" : "Delete Selected Channels", "(" + EditorConfig.ctrlSymbol + "⌫)", 38)),
+        option({ value: "selectChannel" }, formatMenuOption(isSpanish() ? "Seleccionar canal" : "Select Channel", "(⇧A)", 38)),
+        option({ value: "selectAll" }, formatMenuOption(isSpanish() ? "Seleccionar todo" : "Select All", "(A)", 38)),
+        option({ value: "duplicatePatterns" }, formatMenuOption(isSpanish() ? "Duplicar patrones reutilizados" : "Duplicate Reused Patterns", "(D)", 38)),
+        option({ value: "transposeUp" }, formatMenuOption(isSpanish() ? "Subir notas" : "Move Notes Up", "(+ or ⇧+)", 38)),
+        option({ value: "transposeDown" }, formatMenuOption(isSpanish() ? "Bajar notas" : "Move Notes Down", "(- or ⇧-)", 38)),
+        option({ value: "moveNotesSideways" }, formatMenuOption(isSpanish() ? "Desplazar todas las notas..." : "Move All Notes Sideways...", "(W)", 38)),
+	    option({ value: "generateEuclideanRhythm" }, formatMenuOption(isSpanish() ? "Generar ritmo euclidiano..." : "Generate Euclidean Rhythm...", "(E)", 38)),
+        option({ value: "beatsPerBar" }, formatMenuOption(isSpanish() ? "Cambiar pulsos por compás..." : "Change Beats Per Bar...", "(⇧B)", 38)),
+        option({ value: "barCount" }, formatMenuOption(isSpanish() ? "Cambiar duración de canción..." : "Change Song Length...", "(L)", 38)),
+        option({ value: "channelSettings" }, formatMenuOption(isSpanish() ? "Ajustes de canal..." : "Channel Settings...", "(Q)", 38)),
+        option({ value: "limiterSettings" }, formatMenuOption(isSpanish() ? "Ajustes de limitador..." : "Limiter Settings...", "(⇧L)", 38)),
+	    option({ value: "addExternal" }, formatMenuOption(isSpanish() ? "Añadir samples personalizados..." : "Add Custom Samples...", "(⇧Q)", 38)),
     );
     private readonly _optionsMenu: HTMLSelectElement = select({ style: "width: 100%;" },
-        option({ selected: true, disabled: true, hidden: true }, "Preferences"),
-        optgroup({ label: "Technical" },
-        option({ value: "autoPlay" }, "Auto Play on Load"),
-        option({ value: "autoFollow" }, "Auto Follow Playhead"),
-        option({ value: "enableNotePreview" }, "Hear Added Notes"),
-        option({ value: "notesOutsideScale" }, "Place Notes Out of Scale"),
-        option({ value: "setDefaultScale" }, "Set Current Scale as Default"),
-        option({ value: "alwaysFineNoteVol" }, "Always Fine Note Volume"),
-        option({ value: "enableChannelMuting" }, "Enable Channel Muting"),
-        option({ value: "instrumentCopyPaste" }, "Enable Copy/Paste Buttons"),
-        option({ value: "instrumentImportExport" }, "Enable Import/Export Buttons"),
-        option({ value: "displayBrowserUrl" }, "Enable Song Data in URL"),
-        option({ value: "closePromptByClickoff" }, "Close Prompts on Click Off"),
-        option({ value: "recordingSetup" }, "Note Recording..."),
+        option({ selected: true, disabled: true, hidden: true }, isSpanish() ? "Preferencias" : "Preferences"),
+        optgroup({ label: isSpanish() ? "Técnico" : "Technical" },
+        option({ value: "autoPlay" }, isSpanish() ? "Reproducción automática al cargar" : "Auto Play on Load"),
+        option({ value: "autoFollow" }, isSpanish() ? "Seguir cursor de reproducción" : "Auto Follow Playhead"),
+        option({ value: "enableNotePreview" }, isSpanish() ? "Escuchar notas al añadir" : "Hear Added Notes"),
+        option({ value: "notesOutsideScale" }, isSpanish() ? "Permitir notas fuera de escala" : "Place Notes Out of Scale"),
+        option({ value: "setDefaultScale" }, isSpanish() ? "Fijar escala actual por defecto" : "Set Current Scale as Default"),
+        option({ value: "alwaysFineNoteVol" }, isSpanish() ? "Ajuste fino de volumen de nota siempre" : "Always Fine Note Volume"),
+        option({ value: "enableChannelMuting" }, isSpanish() ? "Habilitar silenciado de canales" : "Enable Channel Muting"),
+        option({ value: "instrumentCopyPaste" }, isSpanish() ? "Botones de copiar/pegar instrumento" : "Enable Copy/Paste Buttons"),
+        option({ value: "instrumentImportExport" }, isSpanish() ? "Botones de importar/exportar instrumento" : "Enable Import/Export Buttons"),
+        option({ value: "displayBrowserUrl" }, isSpanish() ? "Guardar datos de canción en URL" : "Enable Song Data in URL"),
+        option({ value: "closePromptByClickoff" }, isSpanish() ? "Cerrar diálogos al hacer clic fuera" : "Close Prompts on Click Off"),
+        option({ value: "recordingSetup" }, isSpanish() ? "Configurar grabación de notas..." : "Note Recording..."),
         ),
-        optgroup({ label: "Appearance" },
-        option({ value: "showFifth" }, 'Highlight "Fifth" Note'),
-        option({ value: "notesFlashWhenPlayed" }, "Notes Flash When Played"),
-        option({ value: "instrumentButtonsAtTop" }, "Instrument Buttons at Top"),
-        option({ value: "frostedGlassBackground" }, "Frosted Glass Prompt Backdrop"),
-        option({ value: "showChannels" }, "Show All Channels"),
-        option({ value: "showScrollBar" }, "Show Octave Scroll Bar"),
-        option({ value: "showInstrumentScrollbars" }, "Show Instrument Scrollbars"),
-        option({ value: "showLetters" }, "Show Piano Keys"),
-        option({ value: "displayVolumeBar" }, "Show Playback Volume"),
-        option({ value: "showOscilloscope" }, "Show Oscilloscope"),
-        option({ value: "showSampleLoadingStatus" }, "Show Sample Loading Status"),
-        option({ value: "showDescription" }, "Show Description"),
-        option({ value: "layout" }, "Set Layout..."),
-        option({ value: "colorTheme" }, "Set Theme..."),
-	    option({ value: "customTheme" }, "Custom Theme..."),
+        optgroup({ label: isSpanish() ? "Apariencia" : "Appearance" },
+        option({ value: "showFifth" }, isSpanish() ? 'Resaltar "Quinta" nota' : 'Highlight "Fifth" Note'),
+        option({ value: "notesFlashWhenPlayed" }, isSpanish() ? "Destello de notas al reproducir" : "Notes Flash When Played"),
+        option({ value: "instrumentButtonsAtTop" }, isSpanish() ? "Botones de instrumento arriba" : "Instrument Buttons at Top"),
+        option({ value: "frostedGlassBackground" }, isSpanish() ? "Fondo de diálogo con cristal esmerilado" : "Frosted Glass Prompt Backdrop"),
+        option({ value: "showChannels" }, isSpanish() ? "Mostrar todos los canales" : "Show All Channels"),
+        option({ value: "showScrollBar" }, isSpanish() ? "Mostrar barra de octavas" : "Show Octave Scroll Bar"),
+        option({ value: "showInstrumentScrollbars" }, isSpanish() ? "Mostrar barras de scroll de instrumentos" : "Show Instrument Scrollbars"),
+        option({ value: "showLetters" }, isSpanish() ? "Mostrar teclas de piano" : "Show Piano Keys"),
+        option({ value: "displayVolumeBar" }, isSpanish() ? "Mostrar volumen de salida" : "Show Playback Volume"),
+        option({ value: "showOscilloscope" }, isSpanish() ? "Mostrar osciloscopio" : "Show Oscilloscope"),
+        option({ value: "showSampleLoadingStatus" }, isSpanish() ? "Mostrar estado de carga de samples" : "Show Sample Loading Status"),
+        option({ value: "showDescription" }, isSpanish() ? "Mostrar descripción" : "Show Description"),
+        option({ value: "colorTheme" }, isSpanish() ? "Cambiar tema..." : "Set Theme..."),
+	    option({ value: "customTheme" }, isSpanish() ? "Tema personalizado..." : "Custom Theme..."),
         ),
     );
     private readonly _helpMenu: HTMLSelectElement = select({ style: "width: 100%;" },
-        option({ selected: true, disabled: true, hidden: true }, "Help"),
-        option({ value: "help" }, formatMenuOption("Instructions & Shortcuts", "(F1)", 38)),
+        option({ selected: true, disabled: true, hidden: true }, isSpanish() ? "Ayuda" : "Help"),
+        option({ value: "help" }, formatMenuOption(isSpanish() ? "Instrucciones y atajos" : "Instructions & Shortcuts", "(F1)", 38)),
     );
     private readonly _aboutMenu: HTMLSelectElement = select({ style: "width: 100%;" },
-        option({ selected: true, disabled: true, hidden: true }, "About"),
-        option({ value: "about" }, "About MegaBox"),
-        option({ value: "credits" }, "Credits"),
-        option({ value: "faq" }, "FAQ"),
-        option({ value: "patchNotes" }, "Patch Notes"),
-        option({ value: "archive" }, "Online Archive"),
+        option({ selected: true, disabled: true, hidden: true }, isSpanish() ? "Acerca de" : "About"),
+        option({ value: "about" }, isSpanish() ? "Acerca de MegaBox" : "About MegaBox"),
+        option({ value: "credits" }, isSpanish() ? "Créditos" : "Credits"),
+        option({ value: "faq" }, isSpanish() ? "Preguntas frecuentes" : "FAQ"),
+        option({ value: "patchNotes" }, isSpanish() ? "Notas de versión" : "Patch Notes"),
+        option({ value: "archive" }, isSpanish() ? "Archivo online" : "Online Archive"),
     );
     private readonly _scaleSelect: HTMLSelectElement = buildOptions(select(), Config.scales.map(scale => scale.name));
     private readonly _keySelect: HTMLSelectElement = buildOptions(select(), Config.keys.map(key => key.name).reverse());
@@ -1229,10 +1229,15 @@ export class SongEditor {
             this._instrumentImportButton,
         ),
     );
+    private readonly _instrumentSettingsTitleSpan: HTMLSpanElement = span({ class: "instrument-header-text", style: "flex-grow: 1; text-align: center;" }, isSpanish() ? "Ajustes de Instrumento" : "Instrument Settings");
     private readonly _instrumentSettingsFoldIcon: HTMLSpanElement = span({ class: "fold-icon", style: "margin-left: 6px; pointer-events: none;" }, "▾");
-    private readonly _instrumentSettingsTextRow: HTMLDivElement = div({ id: "instrumentSettingsText", class: "collapsible-header", style: `padding: 3px 0; max-width: 15em; text-align: center; color: ${ColorConfig.secondaryText}; display: flex; align-items: center; justify-content: center;` },
-        span({ class: "instrument-header-text" }, "Instrument Settings"),
+    private readonly _instrumentSettingsLockBtn: HTMLSpanElement = span({ class: "panel-lock-button", title: isSpanish() ? "Panel fijado (clic para desbloquear y mover)" : "Panel locked (click to unlock and reposition)" });
+    private readonly _instrumentSettingsCloseBtn: HTMLButtonElement = button({ class: "mobile-drawer-close-btn", type: "button", title: isSpanish() ? "Cerrar" : "Close" }, "✕");
+    private readonly _instrumentSettingsTextRow: HTMLDivElement = div({ id: "instrumentSettingsText", class: "collapsible-header", style: `padding: 3px 0; width: 100%; text-align: center; color: ${ColorConfig.secondaryText}; display: flex; align-items: center; justify-content: center; position: relative;` },
+        this._instrumentSettingsTitleSpan,
         this._instrumentSettingsFoldIcon,
+        this._instrumentSettingsLockBtn,
+        this._instrumentSettingsCloseBtn,
     );
     private readonly _instrumentTypeSelectRow: HTMLDivElement = div({ class: "selectRow", id: "typeSelectRow" },
         span({ class: "tip", onclick: () => this._openPrompt("instrumentType") }, "Type:"),
@@ -1263,14 +1268,16 @@ export class SongEditor {
 
     private readonly _promptContainer: HTMLDivElement = div({ class: "promptContainer", style: "display: none;" });
     private readonly _promptContainerBG: HTMLDivElement = div({ class: "promptContainerBG", style: "display: none; height: 100%; width: 100%; position: fixed; z-index: 99; overflow-x: hidden; pointer-events: none;" });
-    private readonly _zoomInButton: HTMLButtonElement = button({ class: "zoomInButton", type: "button", title: "Zoom In" });
-    private readonly _zoomOutButton: HTMLButtonElement = button({ class: "zoomOutButton", type: "button", title: "Zoom Out" });
+    private readonly _zoomInButton: HTMLButtonElement = button({ class: "zoomInButton", type: "button", title: isSpanish() ? "Acercar" : "Zoom In" });
+    private readonly _zoomOutButton: HTMLButtonElement = button({ class: "zoomOutButton", type: "button", title: isSpanish() ? "Alejar" : "Zoom Out" });
+    private readonly _patternLockBtn: HTMLSpanElement = span({ class: "panel-lock-button panel-floating-lock", title: isSpanish() ? "Panel fijado (clic para desbloquear y mover)" : "Panel locked (click to unlock and reposition)" });
     private readonly _patternEditorRow: HTMLDivElement = div({ style: "flex: 1; height: 100%; display: flex; overflow: hidden; justify-content: center;" },
         this._patternEditorPrev.container,
         this._patternEditor.container,
         this._patternEditorNext.container,
     );
     private readonly _patternArea: HTMLDivElement = div({ class: "pattern-area" },
+        this._patternLockBtn,
         this._piano.container,
         this._patternEditorRow,
         this._octaveScrollBar.container,
@@ -1288,33 +1295,45 @@ export class SongEditor {
         this._trackVisibleArea,
     );
     public readonly _barScrollBar: BarScrollBar = new BarScrollBar(this._doc);
+    private readonly _trackLockBtn: HTMLSpanElement = span({ class: "panel-lock-button panel-floating-lock", title: isSpanish() ? "Panel fijado (clic para desbloquear y mover)" : "Panel locked (click to unlock and reposition)" });
     private readonly _trackArea: HTMLDivElement = div({ class: "track-area" },
+        this._trackLockBtn,
         this._trackAndMuteContainer,
         this._barScrollBar.container,
     );
 
-    private readonly _menuArea: HTMLDivElement = div({ class: "menu-area" },
-        div({ class: "menu-left-group" },
-            div({ class: "selectContainer menu file" },
-                this._fileMenu,
-            ),
-            div({ class: "selectContainer menu edit" },
-                this._editMenu,
-            ),
-            div({ class: "selectContainer menu preferences" },
-                this._optionsMenu,
-            ),
-            div({ class: "selectContainer menu help" },
-                this._helpMenu,
-            ),
-            div({ class: "selectContainer menu about" },
-                this._aboutMenu,
-            ),
+    private readonly _mobileMenuButton: HTMLButtonElement = button({ class: "mobile-menu-btn", type: "button", title: isSpanish() ? "Menú" : "Menu" }, "≡");
+    private readonly _mobileMenuCloseBtn: HTMLButtonElement = button({ class: "mobile-drawer-close-btn mobile-menu-close-btn", type: "button", title: isSpanish() ? "Cerrar menú" : "Close menu" }, "✕");
+    private readonly _songTitleRow: HTMLDivElement = div({ class: "version-area menu-song-title-area" },
+        this._songTitleInputBox.input,
+    );
+    private readonly _menuLeftHeader: HTMLDivElement = div({ class: "menu-left-header" },
+        this._songTitleRow,
+        this._mobileMenuCloseBtn,
+    );
+    private readonly _menuLeftGroup: HTMLDivElement = div({ class: "menu-left-group" },
+        this._menuLeftHeader,
+        div({ class: "selectContainer menu file" },
+            this._fileMenu,
         ),
+        div({ class: "selectContainer menu edit" },
+            this._editMenu,
+        ),
+        div({ class: "selectContainer menu preferences" },
+            this._optionsMenu,
+        ),
+        div({ class: "selectContainer menu help" },
+            this._helpMenu,
+        ),
+        div({ class: "selectContainer menu about" },
+            this._aboutMenu,
+        ),
+    );
+
+    private readonly _menuArea: HTMLDivElement = div({ class: "menu-area" },
+        this._mobileMenuButton,
+        this._menuLeftGroup,
         div({ class: "menu-right-group" },
-            div({ class: "version-area" },
-                this._songTitleInputBox.input,
-            ),
             div({ class: "playback-bar-controls" },
                 this._prevBarButton,
                 this._playButton,
@@ -1343,8 +1362,10 @@ export class SongEditor {
     );
 
     private readonly _songSettingsFoldIcon: HTMLSpanElement = span({ class: "fold-icon", style: "margin-left: 6px; pointer-events: none;" }, "▾");
+    private readonly _songSettingsLockBtn: HTMLSpanElement = span({ class: "panel-lock-button", title: isSpanish() ? "Panel fijado (clic para desbloquear y mover)" : "Panel locked (click to unlock and reposition)" });
+    private readonly _songSettingsCloseBtn: HTMLButtonElement = button({ class: "mobile-drawer-close-btn", type: "button", title: isSpanish() ? "Cerrar" : "Close" }, "✕");
     private readonly _songSettingsHeader: HTMLDivElement = div({ class: "editor-song-settings collapsible-header" },
-        div({ style: "width: 100%; margin: 3px 0; position: relative; text-align: center; color: ${ColorConfig.secondaryText}; display: flex; align-items: center; justify-content: center;" },
+        div({ style: `width: 100%; margin: 3px 0; position: relative; text-align: center; color: ${ColorConfig.secondaryText}; display: flex; align-items: center; justify-content: center;` },
             div({ class: "tip", style: "flex-shrink: 0; position:absolute; left: 0; top: 0; width: 12px; height: 12px", onclick: (e: MouseEvent) => { e.stopPropagation(); this._openPrompt("usedPattern"); } },
                 SVG.svg({ style: "flex-shrink: 0; position: absolute; left: 0; top: 0; pointer-events: none;", width: "12px", height: "12px", "margin-right": "0.5em", viewBox: "-6 -6 12 12" },
                     this._usedPatternIndicator,
@@ -1355,70 +1376,99 @@ export class SongEditor {
                     this._usedInstrumentIndicator,
                 ),
             ),
-            span({ style: "flex-grow: 1; text-align: center;" }, "Song Settings"),
+            div({ class: "tip", style: "flex-shrink: 0; position: absolute; left: 28px; top: 0; width: 12px; height: 12px", onclick: (e: MouseEvent) => { e.stopPropagation(); this._openPrompt("jumpToMod"); } },
+                this._jumpToModIndicator,
+            ),
+            span({ class: "song-header-text" }, isSpanish() ? "Ajustes de Canción" : "Song Settings"),
             this._songSettingsFoldIcon,
-            div({ style: "width: 100%; left: 0; top: -1px; position:absolute; overflow-x:clip;" }, this._jumpToModIndicator),
+            this._songSettingsLockBtn,
+            this._songSettingsCloseBtn,
         ),
     );
     private readonly _songSettingsControls: HTMLDivElement = div({ class: "song-controls-group" },
-        div({ class: "selectRow" },
-            span({ class: "tip", onclick: () => this._openPrompt("scale") }, "Scale: "),
-            div({ class: "selectContainer" }, this._scaleSelect),
+        div({ class: "selectRow", style: "margin: 0;" },
+            span({ class: "tip", onclick: () => this._openPrompt("scale") }, "Scale:"),
+            div({ class: "selectContainer", style: "width: 100%;" }, this._scaleSelect),
         ),
-        div({ class: "selectRow key-octave-row" },
-            div({ class: "key-group", style: "display: flex; align-items: center; gap: 4px; flex: 1; min-width: 0;" },
-                span({ class: "tip", onclick: () => this._openPrompt("key") }, "Key:"),
-                div({ class: "selectContainer", style: "flex: 1; min-width: 0;" }, this._keySelect),
-            ),
-            div({ class: "octave-group", style: "display: flex; align-items: center; gap: 4px; flex-shrink: 0;" },
-                span({ class: "tip", onclick: () => this._openPrompt("key_octave") }, "Oct:"),
-                this._octaveStepper,
-            ),
+        div({ class: "selectRow", style: "margin: 0;" },
+            span({ class: "tip", onclick: () => this._openPrompt("key") }, "Key:"),
+            div({ class: "selectContainer", style: "width: 100%;" }, this._keySelect),
         ),
-        div({ class: "selectRow" },
-            span({ class: "tip", onclick: () => this._openPrompt("tempo") }, "Tempo: "),
-            span({ style: "display: flex;" },
-                this._tempoSlider.container,
-                this._tempoStepper,
-            ),
+        div({ class: "selectRow", style: "margin: 0;" },
+            span({ class: "tip", onclick: () => this._openPrompt("tempo") }, "Tempo:"),
+            span({ style: "display: flex; width: 100%; align-items: center;" }, this._tempoSlider.container, this._tempoStepper),
         ),
-        div({ class: "selectRow" },
-            span({ class: "tip", onclick: () => this._openPrompt("rhythm") }, "Rhythm: "),
-            div({ class: "selectContainer" }, this._rhythmSelect),
+        div({ class: "selectRow", style: "margin: 0;" },
+            span({ class: "tip", onclick: () => this._openPrompt("rhythm") }, "Rhythm:"),
+            div({ class: "selectContainer", style: "width: 100%;" }, this._rhythmSelect),
         ),
         this._sampleLoadingStatusContainer,
     );
-
+    private readonly _songSettingsGroup: HTMLDivElement = div({ class: "editor-controls" },
+        this._songSettingsHeader,
+        this._songSettingsControls,
+    );
     private readonly _songSettingsArea: HTMLDivElement = div({ class: "song-settings-area" },
-        div({ class: "editor-controls" },
-            this._songSettingsHeader,
-            this._songSettingsControls,
-        ),
+        this._songSettingsGroup,
     );
     private readonly _instrumentSettingsArea: HTMLDivElement = div({ class: "instrument-settings-area" },
         this._instrumentSettingsGroup,
-        this._modulatorGroup);
-
-    public readonly _settingsArea: HTMLDivElement = div({ class: "settings-area noSelection" },
-        this._songSettingsArea,
-        this._instrumentSettingsArea,
     );
-
-    private readonly _horizontalSplitter: HTMLDivElement = div({ class: "editor-splitter-horizontal", title: "Arrastrar para redimensionar pista / Clic para plegar" },
+    private readonly _leftSplitter: HTMLDivElement = div({ class: "editor-splitter-left", title: isSpanish() ? "Arrastrar para redimensionar" : "Drag to resize" },
+        div({ class: "splitter-handle-v" })
+    );
+    private readonly _rightSplitter: HTMLDivElement = div({ class: "editor-splitter-right", title: isSpanish() ? "Arrastrar para redimensionar" : "Drag to resize" },
+        div({ class: "splitter-handle-v" })
+    );
+    private readonly _midSplitter: HTMLDivElement = div({ class: "editor-splitter-mid", title: isSpanish() ? "Arrastrar para redimensionar" : "Drag to resize" },
+        div({ class: "splitter-handle-v" })
+    );
+    private readonly _horizontalSplitter: HTMLDivElement = div({ class: "editor-splitter-horizontal", title: isSpanish() ? "Arrastrar para redimensionar" : "Drag to resize" },
         div({ class: "splitter-handle-h" })
     );
-    private readonly _verticalSplitter: HTMLDivElement = div({ class: "editor-splitter-vertical", title: "Arrastrar para redimensionar panel lateral / Clic para plegar" },
-        div({ class: "splitter-handle-v" })
+    private readonly _midHorizontalSplitter: HTMLDivElement = div({ class: "editor-splitter-mid-horizontal", title: isSpanish() ? "Arrastrar para redimensionar" : "Drag to resize" },
+        div({ class: "splitter-handle-h" })
+    );
+    private readonly _bottomSplitter: HTMLDivElement = div({ class: "editor-splitter-bottom", title: isSpanish() ? "Arrastrar para redimensionar" : "Drag to resize" },
+        div({ class: "splitter-handle-h" })
+    );
+
+    private readonly _settingsStackContainer: HTMLDivElement = div({ class: "settings-stack-container" });
+
+    private readonly _mobileSongSettingsButton: HTMLButtonElement = button({ class: "mobile-quick-btn", type: "button", title: isSpanish() ? "Ajustes de Canción" : "Song Settings" }, "Song S.");
+    private readonly _mobileInstrumentSettingsButton: HTMLButtonElement = button({ class: "mobile-quick-btn", type: "button", title: isSpanish() ? "Ajustes de Instrumento" : "Instrument Settings" }, "Instrument S.");
+    private readonly _mobileDrawerBackdrop: HTMLDivElement = div({ class: "mobile-drawer-backdrop" });
+    private readonly _rotateDismissBtn: HTMLButtonElement = button({ class: "rotate-dismiss-btn", type: "button" }, isSpanish() ? "Continuar" : "Continue");
+    private readonly _rotateDevicePrompt: HTMLDivElement = div({ class: "rotate-device-prompt" },
+        div({ class: "rotate-device-content" },
+            div({ class: "rotate-device-icon" }, "🔄"),
+            div({ class: "rotate-device-title" }, isSpanish() ? "Gira tu pantalla" : "Rotate your screen"),
+            div({ class: "rotate-device-desc" }, isSpanish() ? "MegaBox funciona mejor en modo horizontal (Landscape)." : "MegaBox works best in landscape orientation."),
+            this._rotateDismissBtn,
+        )
+    );
+    private readonly _mobileQuickBar: HTMLDivElement = div({ class: "mobile-quick-bar" },
+        this._mobileSongSettingsButton,
+        this._mobileInstrumentSettingsButton
     );
 
     public readonly mainLayer: HTMLDivElement = div({ class: "beepboxEditor", tabIndex: "0" },
         this._menuArea,
+        this._leftSplitter,
         this._patternArea,
         this._horizontalSplitter,
         this._trackArea,
-        this._verticalSplitter,
-        this._settingsArea,
+        this._rightSplitter,
+        this._midSplitter,
+        this._midHorizontalSplitter,
+        this._bottomSplitter,
+        this._songSettingsArea,
+        this._instrumentSettingsArea,
+        this._settingsStackContainer,
         this._promptContainer,
+        this._mobileQuickBar,
+        this._mobileDrawerBackdrop,
+        this._rotateDevicePrompt,
     );
 
     private _wasPlaying: boolean = false;
@@ -1469,6 +1519,18 @@ export class SongEditor {
         this._doc.modRecordingHandler = () => { this.handleModRecording() };
         new MidiInputHandler(this._doc);
         window.addEventListener("resize", this.whenUpdated);
+        window.addEventListener("dragover", (event: DragEvent) => {
+            if (event.dataTransfer && event.dataTransfer.types.includes("Files")) {
+                event.preventDefault();
+                event.dataTransfer.dropEffect = "copy";
+            }
+        });
+        window.addEventListener("drop", (event: DragEvent) => {
+            if (event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files.length > 0) {
+                event.preventDefault();
+                this._handleDroppedFiles(event.dataTransfer.files);
+            }
+        });
         window.requestAnimationFrame(this.updatePlayButton);
         window.requestAnimationFrame(this._animate);
 
@@ -1684,6 +1746,28 @@ export class SongEditor {
         this._patternArea.addEventListener("mousedown", this._refocusStageNotEditing);
         this._trackArea.addEventListener("mousedown", this.refocusStage);
 
+        this._mobileMenuButton.addEventListener("click", () => this._toggleMobileMenu());
+        this._mobileMenuCloseBtn.addEventListener("click", () => this._closeMobileDrawers());
+        this._mobileSongSettingsButton.addEventListener("click", () => this._toggleMobileDrawer("song"));
+        this._songSettingsCloseBtn.addEventListener("click", () => this._closeMobileDrawers());
+        this._mobileInstrumentSettingsButton.addEventListener("click", () => this._toggleMobileDrawer("instrument"));
+        this._instrumentSettingsCloseBtn.addEventListener("click", () => this._closeMobileDrawers());
+        this._mobileDrawerBackdrop.addEventListener("click", () => this._closeMobileDrawers());
+        
+        const dismissRotatePrompt = () => {
+            try {
+                window.localStorage.setItem("megabox_rotate_dismissed", "true");
+            } catch (e) {}
+            this._rotateDevicePrompt.style.display = "none";
+        };
+        this._rotateDismissBtn.addEventListener("click", dismissRotatePrompt);
+        this._rotateDevicePrompt.addEventListener("click", (e: MouseEvent) => {
+            if (e.target === this._rotateDevicePrompt) dismissRotatePrompt();
+        });
+        if (window.localStorage.getItem("megabox_rotate_dismissed") === "true") {
+            this._rotateDevicePrompt.style.display = "none";
+        }
+
         this._volumeSlider.container.style.setProperty("display", "flex");
 
         // Also, any slider with a multiplicative effect instead of a replacement effect gets a different mod color, and a round slider.
@@ -1759,22 +1843,34 @@ export class SongEditor {
 		//this._trackAndMuteContainer.addEventListener("scroll", this._onTrackAreaScroll, {capture: false, passive: true});
 		(<Function>this._trackAndMuteContainer.addEventListener)("scroll", this._onTrackAreaScroll, {capture: false, passive: true});
 
-        // Horizontal splitter drag and click-to-fold
+        // Horizontal splitter drag and click-to-fold (adaptive for vertical & horizontal primary layout)
         let hDragging = false;
+        let hStartX = 0;
         let hStartY = 0;
-        let hStartHeight = 0;
+        let hStartDimension = 0;
         let hMoved = false;
         let hLastExpandedHeight = 460;
 
         const onHPointerMove = (e: MouseEvent | TouchEvent) => {
             if (!hDragging) return;
-            const clientY = "touches" in e ? (e as TouchEvent).touches[0].clientY : (e as MouseEvent).clientY;
-            const deltaY = clientY - hStartY;
-            if (Math.abs(deltaY) > 3) hMoved = true;
-            const maxH = Math.max(200, window.innerHeight - 200);
-            const newHeight = Math.max(160, Math.min(maxH, hStartHeight + deltaY));
-            document.documentElement.style.setProperty("--pattern-area-height", `${newHeight}px`);
-            hLastExpandedHeight = newHeight;
+            const isMobileLandscape = window.matchMedia("(orientation: landscape) and (max-height: 560px), (max-width: 900px) and (orientation: landscape)").matches;
+            const isHorizontal = isMobileLandscape || Layout.getWorkspaceState().primarySplit === "horizontal";
+            if (isHorizontal) {
+                const clientX = "touches" in e ? (e as TouchEvent).touches[0].clientX : (e as MouseEvent).clientX;
+                const deltaX = clientX - hStartX;
+                if (Math.abs(deltaX) > 3) hMoved = true;
+                const maxW = Math.max(200, window.innerWidth - 200);
+                const newWidth = Math.max(160, Math.min(maxW, hStartDimension + deltaX));
+                document.documentElement.style.setProperty("--primary-left-width", `${newWidth}px`);
+            } else {
+                const clientY = "touches" in e ? (e as TouchEvent).touches[0].clientY : (e as MouseEvent).clientY;
+                const deltaY = clientY - hStartY;
+                if (Math.abs(deltaY) > 3) hMoved = true;
+                const maxH = Math.max(200, window.innerHeight - 200);
+                const newHeight = Math.max(160, Math.min(maxH, hStartDimension + deltaY));
+                document.documentElement.style.setProperty("--pattern-area-height", `${newHeight}px`);
+                hLastExpandedHeight = newHeight;
+            }
             this.whenUpdated();
         };
 
@@ -1783,21 +1879,26 @@ export class SongEditor {
             hDragging = false;
             this._horizontalSplitter.classList.remove("active");
             document.body.classList.remove("resizing-h");
+            document.body.classList.remove("resizing-v");
             window.removeEventListener("mousemove", onHPointerMove);
             window.removeEventListener("mouseup", onHPointerUp);
             window.removeEventListener("touchmove", onHPointerMove);
             window.removeEventListener("touchend", onHPointerUp);
 
             if (!hMoved) {
-                const currentH = this._patternArea.clientHeight;
-                if (currentH <= 170) {
-                    const targetH = Math.max(300, hLastExpandedHeight);
-                    document.documentElement.style.setProperty("--pattern-area-height", `${targetH}px`);
-                } else {
-                    hLastExpandedHeight = currentH;
-                    document.documentElement.style.setProperty("--pattern-area-height", "160px");
+                const isMobileLandscape = window.matchMedia("(orientation: landscape) and (max-height: 560px), (max-width: 900px) and (orientation: landscape)").matches;
+                const isHorizontal = isMobileLandscape || Layout.getWorkspaceState().primarySplit === "horizontal";
+                if (!isHorizontal) {
+                    const currentH = this._patternArea.clientHeight;
+                    if (currentH <= 170) {
+                        const targetH = Math.max(300, hLastExpandedHeight);
+                        document.documentElement.style.setProperty("--pattern-area-height", `${targetH}px`);
+                    } else {
+                        hLastExpandedHeight = currentH;
+                        document.documentElement.style.setProperty("--pattern-area-height", "160px");
+                    }
+                    this.whenUpdated();
                 }
-                this.whenUpdated();
             }
         };
 
@@ -1805,10 +1906,14 @@ export class SongEditor {
             e.preventDefault();
             hDragging = true;
             hMoved = false;
+            const isMobileLandscape = window.matchMedia("(orientation: landscape) and (max-height: 560px), (max-width: 900px) and (orientation: landscape)").matches;
+            const isHorizontal = isMobileLandscape || Layout.getWorkspaceState().primarySplit === "horizontal";
+            hStartX = "touches" in e ? (e as TouchEvent).touches[0].clientX : (e as MouseEvent).clientX;
             hStartY = "touches" in e ? (e as TouchEvent).touches[0].clientY : (e as MouseEvent).clientY;
-            hStartHeight = this._patternArea.clientHeight;
+            const topOrLeftPanel = Layout.getWorkspaceState().primaryInverted ? this._trackArea : this._patternArea;
+            hStartDimension = isHorizontal ? topOrLeftPanel.clientWidth : topOrLeftPanel.clientHeight;
             this._horizontalSplitter.classList.add("active");
-            document.body.classList.add("resizing-h");
+            document.body.classList.add(isHorizontal ? "resizing-v" : "resizing-h");
             window.addEventListener("mousemove", onHPointerMove);
             window.addEventListener("mouseup", onHPointerUp);
             window.addEventListener("touchmove", onHPointerMove, { passive: false });
@@ -1818,67 +1923,147 @@ export class SongEditor {
         this._horizontalSplitter.addEventListener("mousedown", onHPointerDown);
         this._horizontalSplitter.addEventListener("touchstart", onHPointerDown, { passive: false });
 
-        // Vertical splitter drag and click-to-fold
-        let vDragging = false;
-        let vStartX = 0;
-        let vStartWidth = 0;
-        let vMoved = false;
-        let vLastExpandedWidth = 220;
+        // Splitter helper
+        const setupSplitterDrag = (
+            splitterEl: HTMLElement,
+            isVertical: boolean,
+            onMove: (delta: number) => void
+        ) => {
+            let dragging = false;
+            let startCoord = 0;
 
-        const onVPointerMove = (e: MouseEvent | TouchEvent) => {
-            if (!vDragging) return;
-            const clientX = "touches" in e ? (e as TouchEvent).touches[0].clientX : (e as MouseEvent).clientX;
-            const deltaX = clientX - vStartX;
-            if (Math.abs(deltaX) > 3) vMoved = true;
-            const maxW = Math.max(220, Math.min(500, window.innerWidth - 320));
-            const newWidth = Math.max(160, Math.min(maxW, vStartWidth - deltaX));
-            document.documentElement.style.setProperty("--settings-area-width", `${newWidth}px`);
-            vLastExpandedWidth = newWidth;
-            if (this._settingsArea.classList.contains("collapsed-sidebar")) {
-                this._settingsArea.classList.remove("collapsed-sidebar");
-            }
-            this.whenUpdated();
-        };
-
-        const onVPointerUp = (e: MouseEvent | TouchEvent) => {
-            if (!vDragging) return;
-            vDragging = false;
-            this._verticalSplitter.classList.remove("active");
-            document.body.classList.remove("resizing-v");
-            window.removeEventListener("mousemove", onVPointerMove);
-            window.removeEventListener("mouseup", onVPointerUp);
-            window.removeEventListener("touchmove", onVPointerMove);
-            window.removeEventListener("touchend", onVPointerUp);
-
-            if (!vMoved) {
-                if (this._settingsArea.classList.contains("collapsed-sidebar")) {
-                    this._settingsArea.classList.remove("collapsed-sidebar");
-                    document.documentElement.style.setProperty("--settings-area-width", `${Math.max(192, vLastExpandedWidth)}px`);
-                } else {
-                    vLastExpandedWidth = this._settingsArea.clientWidth;
-                    this._settingsArea.classList.add("collapsed-sidebar");
-                    document.documentElement.style.setProperty("--settings-area-width", "36px");
-                }
+            const onPointerMove = (e: MouseEvent | TouchEvent) => {
+                if (!dragging) return;
+                const coord = isVertical
+                    ? ("touches" in e ? (e as TouchEvent).touches[0].clientX : (e as MouseEvent).clientX)
+                    : ("touches" in e ? (e as TouchEvent).touches[0].clientY : (e as MouseEvent).clientY);
+                const delta = coord - startCoord;
+                onMove(delta);
                 this.whenUpdated();
+            };
+
+            const onPointerUp = () => {
+                if (!dragging) return;
+                dragging = false;
+                splitterEl.classList.remove("active");
+                document.body.classList.remove("resizing-v", "resizing-h");
+                window.removeEventListener("mousemove", onPointerMove);
+                window.removeEventListener("mouseup", onPointerUp);
+                window.removeEventListener("touchmove", onPointerMove);
+                window.removeEventListener("touchend", onPointerUp);
+            };
+
+            const onPointerDown = (e: MouseEvent | TouchEvent) => {
+                e.preventDefault();
+                dragging = true;
+                startCoord = isVertical
+                    ? ("touches" in e ? (e as TouchEvent).touches[0].clientX : (e as MouseEvent).clientX)
+                    : ("touches" in e ? (e as TouchEvent).touches[0].clientY : (e as MouseEvent).clientY);
+                splitterEl.classList.add("active");
+                document.body.classList.add(isVertical ? "resizing-v" : "resizing-h");
+                window.addEventListener("mousemove", onPointerMove);
+                window.addEventListener("mouseup", onPointerUp);
+                window.addEventListener("touchmove", onPointerMove, { passive: false });
+                window.addEventListener("touchend", onPointerUp);
+            };
+
+            splitterEl.addEventListener("mousedown", onPointerDown);
+            splitterEl.addEventListener("touchstart", onPointerDown, { passive: false });
+        };
+
+        // Left splitter drag
+        let leftStartWidth = 200;
+        setupSplitterDrag(this._leftSplitter, true, (delta) => {
+            const w = Math.max(160, Math.min(320, leftStartWidth + delta));
+            const ws = Layout.getWorkspaceState();
+            if (ws.songSettingsDock === "left" && ws.instrumentSettingsDock === "left") {
+                document.documentElement.style.setProperty("--settings-col-width", `${w}px`);
+                document.documentElement.style.setProperty("--song-settings-width", `${w}px`);
+            } else if (ws.songSettingsDock === "left") {
+                document.documentElement.style.setProperty("--song-settings-width", `${w}px`);
+            } else if (ws.instrumentSettingsDock === "left") {
+                document.documentElement.style.setProperty("--instrument-settings-width", `${w}px`);
             }
+        });
+        const onLeftSplitterStart = () => {
+            const ws = Layout.getWorkspaceState();
+            if (ws.songSettingsDock === "left") leftStartWidth = this._songSettingsArea.clientWidth || 192;
+            else if (ws.instrumentSettingsDock === "left") leftStartWidth = this._instrumentSettingsArea.clientWidth || 216;
         };
+        this._leftSplitter.addEventListener("mousedown", onLeftSplitterStart);
+        this._leftSplitter.addEventListener("touchstart", onLeftSplitterStart);
 
-        const onVPointerDown = (e: MouseEvent | TouchEvent) => {
-            e.preventDefault();
-            vDragging = true;
-            vMoved = false;
-            vStartX = "touches" in e ? (e as TouchEvent).touches[0].clientX : (e as MouseEvent).clientX;
-            vStartWidth = this._settingsArea.clientWidth;
-            this._verticalSplitter.classList.add("active");
-            document.body.classList.add("resizing-v");
-            window.addEventListener("mousemove", onVPointerMove);
-            window.addEventListener("mouseup", onVPointerUp);
-            window.addEventListener("touchmove", onVPointerMove, { passive: false });
-            window.addEventListener("touchend", onVPointerUp);
+        // Right splitter drag
+        let rightStartWidth = 220;
+        setupSplitterDrag(this._rightSplitter, true, (delta) => {
+            const w = Math.max(160, Math.min(320, rightStartWidth - delta));
+            const ws = Layout.getWorkspaceState();
+            if (ws.songSettingsDock === "right" && ws.instrumentSettingsDock === "right") {
+                if (ws.sharedDockOrientation === "column") {
+                    document.documentElement.style.setProperty("--settings-col-width", `${w}px`);
+                } else {
+                    const firstProp = ws.sharedDockOrder === "song-first" ? "--song-settings-width" : "--instrument-settings-width";
+                    document.documentElement.style.setProperty(firstProp, `${w}px`);
+                }
+            } else if (ws.instrumentSettingsDock === "right") {
+                document.documentElement.style.setProperty("--instrument-settings-width", `${w}px`);
+            } else if (ws.songSettingsDock === "right") {
+                document.documentElement.style.setProperty("--song-settings-width", `${w}px`);
+            }
+        });
+        const onRightSplitterStart = () => {
+            const ws = Layout.getWorkspaceState();
+            if (ws.instrumentSettingsDock === "right") rightStartWidth = this._instrumentSettingsArea.clientWidth || 216;
+            else if (ws.songSettingsDock === "right") rightStartWidth = this._songSettingsArea.clientWidth || 192;
         };
+        this._rightSplitter.addEventListener("mousedown", onRightSplitterStart);
+        this._rightSplitter.addEventListener("touchstart", onRightSplitterStart);
 
-        this._verticalSplitter.addEventListener("mousedown", onVPointerDown);
-        this._verticalSplitter.addEventListener("touchstart", onVPointerDown, { passive: false });
+        // Mid splitter (between side-by-side panels)
+        let midStartWidth = 200;
+        setupSplitterDrag(this._midSplitter, true, (delta) => {
+            const ws = Layout.getWorkspaceState();
+            const w = Math.max(150, Math.min(320, midStartWidth + delta));
+            if (ws.sharedDockOrder === "song-first") {
+                document.documentElement.style.setProperty("--song-settings-width", `${w}px`);
+            } else {
+                document.documentElement.style.setProperty("--instrument-settings-width", `${w}px`);
+            }
+        });
+        const onMidSplitterStart = () => {
+            const ws = Layout.getWorkspaceState();
+            midStartWidth = (ws.sharedDockOrder === "song-first" ? this._songSettingsArea.clientWidth : this._instrumentSettingsArea.clientWidth) || 200;
+        };
+        this._midSplitter.addEventListener("mousedown", onMidSplitterStart);
+        this._midSplitter.addEventListener("touchstart", onMidSplitterStart);
+
+        // Mid horizontal splitter drag (between stacked settings panels)
+        let midHStartHeight = 240;
+        setupSplitterDrag(this._midHorizontalSplitter, false, (delta) => {
+            const h = Math.max(120, Math.min(550, midHStartHeight + delta));
+            document.documentElement.style.setProperty("--first-setting-height", `${h}px`);
+        });
+        const onMidHStart = () => {
+            const ws = Layout.getWorkspaceState();
+            const firstEl = ws.sharedDockOrder === "song-first" ? this._songSettingsArea : this._instrumentSettingsArea;
+            midHStartHeight = firstEl.clientHeight || 240;
+        };
+        this._midHorizontalSplitter.addEventListener("mousedown", onMidHStart);
+        this._midHorizontalSplitter.addEventListener("touchstart", onMidHStart);
+
+        // Bottom splitter
+        let bottomStartHeight = 200;
+        setupSplitterDrag(this._bottomSplitter, false, (delta) => {
+            const h = Math.max(120, Math.min(500, bottomStartHeight - delta));
+            document.documentElement.style.setProperty("--settings-area-height", `${h}px`);
+            document.documentElement.style.setProperty("--song-settings-height", `${h}px`);
+            document.documentElement.style.setProperty("--instrument-settings-height", `${h}px`);
+        });
+        const onBottomSplitterStart = () => {
+            bottomStartHeight = Math.max(this._songSettingsArea.clientHeight, this._instrumentSettingsArea.clientHeight) || 200;
+        };
+        this._bottomSplitter.addEventListener("mousedown", onBottomSplitterStart);
+        this._bottomSplitter.addEventListener("touchstart", onBottomSplitterStart);
 
         // Song Settings collapse toggle
         this._songSettingsHeader.addEventListener("click", () => {
@@ -1895,17 +2080,659 @@ export class SongEditor {
             this._instrumentSettingsFoldIcon.innerText = isCollapsed ? "▸" : "▾";
         });
 
-        // Beepbox uses availHeight too, but I have a display that fails the check even when one of the other layouts would look better on it. -jummbus
-        if (window.screen.availWidth < 710 /*|| window.screen.availHeight < 710*/) {
-            const layoutOption: HTMLOptionElement = <HTMLOptionElement>this._optionsMenu.querySelector("[value=layout]");
-            layoutOption.disabled = true;
-            layoutOption.setAttribute("hidden", "");
+        this._setupModularPanels();
+        this._updateSettingsStacking();
+    }
+
+    private _updateSettingsStacking(): void {
+        const ws = Layout.getWorkspaceState();
+        const isStackedColumn = (ws.songSettingsDock === ws.instrumentSettingsDock) &&
+                                (ws.songSettingsDock === "left" || ws.songSettingsDock === "right") &&
+                                ws.sharedDockOrientation === "column";
+        if (isStackedColumn) {
+            const firstEl = ws.sharedDockOrder === "song-first" ? this._songSettingsArea : this._instrumentSettingsArea;
+            const secondEl = ws.sharedDockOrder === "song-first" ? this._instrumentSettingsArea : this._songSettingsArea;
+
+            firstEl.style.flex = "0 0 auto";
+            firstEl.style.height = "var(--first-setting-height, auto)";
+            firstEl.style.maxHeight = "70%";
+            firstEl.style.minHeight = "120px";
+
+            secondEl.style.flex = "1 1 0%";
+            secondEl.style.height = "auto";
+            secondEl.style.maxHeight = "none";
+            secondEl.style.minHeight = "120px";
+
+            while (this._settingsStackContainer.firstChild) {
+                this._settingsStackContainer.removeChild(this._settingsStackContainer.firstChild);
+            }
+            this._settingsStackContainer.appendChild(firstEl);
+            this._settingsStackContainer.appendChild(this._midHorizontalSplitter);
+            this._settingsStackContainer.appendChild(secondEl);
+            this._settingsStackContainer.style.display = "flex";
+        } else {
+            this._settingsStackContainer.style.display = "none";
+            this._songSettingsArea.style.flex = "";
+            this._songSettingsArea.style.height = "";
+            this._songSettingsArea.style.maxHeight = "";
+            this._songSettingsArea.style.minHeight = "";
+            this._instrumentSettingsArea.style.flex = "";
+            this._instrumentSettingsArea.style.height = "";
+            this._instrumentSettingsArea.style.maxHeight = "";
+            this._instrumentSettingsArea.style.minHeight = "";
+
+            if (this._settingsStackContainer.contains(this._songSettingsArea)) {
+                this.mainLayer.appendChild(this._songSettingsArea);
+            }
+            if (this._settingsStackContainer.contains(this._instrumentSettingsArea)) {
+                this.mainLayer.appendChild(this._instrumentSettingsArea);
+            }
         }
     }
 
+    private async _handleDroppedFiles(files: FileList | File[]): Promise<void> {
+        if (files.length === 0) return;
+        const firstFile = files[0];
+        const ext = firstFile.name.slice((firstFile.name.lastIndexOf(".") - 1 >>> 0) + 2).toLowerCase();
+
+        if (ext === "mgb" || ext === "megabox" || ext === "zip") {
+            try {
+                const buffer = await firstFile.arrayBuffer();
+                const zipEntries = await ZipArchive.readZip(buffer);
+                let projectJsonString: string | null = null;
+                const customSampleNames: string[] = [];
+
+                for (const [filePath, data] of zipEntries.entries()) {
+                    const normalizedPath = filePath.replace(/\\/g, "/");
+                    const fileName = normalizedPath.split("/").pop() || "";
+
+                    if (normalizedPath.endsWith("project.json") || (normalizedPath.endsWith(".json") && projectJsonString == null)) {
+                        const decoder = new TextDecoder();
+                        projectJsonString = decoder.decode(data);
+                    } else if (
+                        normalizedPath.startsWith("samples/") ||
+                        fileName.endsWith(".wav") ||
+                        fileName.endsWith(".mp3") ||
+                        fileName.endsWith(".ogg") ||
+                        fileName.endsWith(".flac")
+                    ) {
+                        const cleanName = fileName;
+                        const sampleBytes = new Uint8Array(data.byteLength);
+                        sampleBytes.set(data);
+                        await SampleDatabase.saveSample({
+                            name: cleanName,
+                            fileName: cleanName,
+                            data: sampleBytes.buffer as ArrayBuffer,
+                            size: data.byteLength,
+                        });
+                        customSampleNames.push(`indexeddb:${cleanName}`);
+                    }
+                }
+
+                if (projectJsonString != null) {
+                    const parsed = JSON.parse(projectJsonString);
+                    if (parsed.customSamples && Array.isArray(parsed.customSamples)) {
+                        EditorConfig.customSamples = parsed.customSamples;
+                    } else if (customSampleNames.length > 0) {
+                        const existing = EditorConfig.customSamples || [];
+                        for (const s of customSampleNames) {
+                            if (!existing.includes(s)) existing.push(s);
+                        }
+                        EditorConfig.customSamples = existing;
+                    }
+                    this._doc.prompt = null;
+                    this._doc.goBackToStart();
+                    this._doc.record(new ChangeSong(this._doc, projectJsonString, "auto"), true, true);
+                }
+            } catch (e) {
+                console.error("Error processing dropped bundle:", e);
+            }
+        } else if (ext === "json") {
+            try {
+                const text = await firstFile.text();
+                this._doc.prompt = null;
+                this._doc.goBackToStart();
+                this._doc.record(new ChangeSong(this._doc, text, "auto"), true, true);
+            } catch (e) {
+                console.error("Error processing dropped JSON song:", e);
+            }
+        } else if (["wav", "mp3", "ogg", "flac"].includes(ext)) {
+            // Audio samples dropped!
+            let anySaved = false;
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const fileExt = file.name.slice((file.name.lastIndexOf(".") - 1 >>> 0) + 2).toLowerCase();
+                if (["wav", "mp3", "ogg", "flac"].includes(fileExt)) {
+                    const buffer = await file.arrayBuffer();
+                    await SampleDatabase.saveSample({
+                        name: file.name,
+                        fileName: file.name,
+                        data: buffer,
+                        type: file.type || undefined,
+                        size: file.size,
+                    });
+                    const sampleUrl = `indexeddb:${file.name}`;
+                    const existing = EditorConfig.customSamples || [];
+                    if (!existing.includes(sampleUrl)) {
+                        existing.push(sampleUrl);
+                        EditorConfig.customSamples = existing;
+                    }
+                    anySaved = true;
+                }
+            }
+            if (anySaved) {
+                this._openPrompt("addExternal");
+            }
+        }
+    }
+
+    private _toggleMobileMenu(force?: boolean): void {
+        const isOpen = force !== undefined ? force : !this._menuArea.classList.contains("mobile-menu-open");
+        if (isOpen) {
+            this._closeMobileDrawers();
+            this._menuArea.classList.add("mobile-menu-open");
+            this._mobileDrawerBackdrop.classList.add("open");
+        } else {
+            this._menuArea.classList.remove("mobile-menu-open");
+            this._mobileDrawerBackdrop.classList.remove("open");
+        }
+    }
+
+    private _toggleMobileDrawer(panel: "song" | "instrument"): void {
+        if (panel === "song") {
+            const willOpen = !this._songSettingsArea.classList.contains("mobile-drawer-open");
+            this._closeMobileDrawers();
+            if (willOpen) {
+                this._songSettingsArea.classList.add("mobile-drawer-open");
+                this._mobileDrawerBackdrop.classList.add("open");
+            }
+        } else {
+            const willOpen = !this._instrumentSettingsArea.classList.contains("mobile-drawer-open");
+            this._closeMobileDrawers();
+            if (willOpen) {
+                this._instrumentSettingsArea.classList.add("mobile-drawer-open");
+                this._mobileDrawerBackdrop.classList.add("open");
+            }
+        }
+    }
+
+    private _closeMobileDrawers(): void {
+        this._menuArea.classList.remove("mobile-menu-open");
+        this._songSettingsArea.classList.remove("mobile-drawer-open");
+        this._instrumentSettingsArea.classList.remove("mobile-drawer-open");
+        this._mobileDrawerBackdrop.classList.remove("open");
+    }
+
+    private _setupModularPanels(): void {
+        const panels = [
+            { id: "pattern", el: this._patternArea, lockBtn: this._patternLockBtn, headerEl: this._patternArea },
+            { id: "track", el: this._trackArea, lockBtn: this._trackLockBtn, headerEl: this._trackArea },
+            { id: "songSettings", el: this._songSettingsArea, lockBtn: this._songSettingsLockBtn, headerEl: this._songSettingsHeader },
+            { id: "instrumentSettings", el: this._instrumentSettingsArea, lockBtn: this._instrumentSettingsLockBtn, headerEl: this._instrumentSettingsTextRow },
+        ];
+
+        const createLockSvg = (locked: boolean): SVGSVGElement => {
+            if (locked) {
+                return SVG.svg({
+                    width: "12",
+                    height: "12",
+                    viewBox: "0 0 16 16",
+                    fill: "currentColor",
+                    style: "pointer-events: none; display: block;"
+                },
+                    SVG.path({
+                        d: "M 4.5 6.5 V 4.5 C 4.5 2.6 6.1 1 8 1 C 9.9 1 11.5 2.6 11.5 4.5 V 6.5",
+                        fill: "none",
+                        stroke: "currentColor",
+                        "stroke-width": "1.8",
+                        "stroke-linecap": "round"
+                    }),
+                    SVG.rect({
+                        x: "2.5",
+                        y: "6.5",
+                        width: "11",
+                        height: "8.5",
+                        rx: "1.8",
+                        fill: "currentColor"
+                    }),
+                    SVG.circle({
+                        cx: "8",
+                        cy: "10.2",
+                        r: "1",
+                        fill: "var(--editor-background, #121214)"
+                    }),
+                    SVG.rect({
+                        x: "7.4",
+                        y: "10.2",
+                        width: "1.2",
+                        height: "2.2",
+                        rx: "0.6",
+                        fill: "var(--editor-background, #121214)"
+                    })
+                );
+            } else {
+                return SVG.svg({
+                    width: "12",
+                    height: "12",
+                    viewBox: "0 0 16 16",
+                    fill: "currentColor",
+                    style: "pointer-events: none; display: block;"
+                },
+                    SVG.path({
+                        d: "M 4.5 6.5 V 4.5 C 4.5 2.6 6.1 1 8 1 C 9.9 1 11.5 2.6 11.5 4.5 V 3",
+                        fill: "none",
+                        stroke: "currentColor",
+                        "stroke-width": "1.8",
+                        "stroke-linecap": "round"
+                    }),
+                    SVG.rect({
+                        x: "2.5",
+                        y: "6.5",
+                        width: "11",
+                        height: "8.5",
+                        rx: "1.8",
+                        fill: "currentColor"
+                    }),
+                    SVG.circle({
+                        cx: "8",
+                        cy: "10.2",
+                        r: "1",
+                        fill: "var(--editor-background, #121214)"
+                    }),
+                    SVG.rect({
+                        x: "7.4",
+                        y: "10.2",
+                        width: "1.2",
+                        height: "2.2",
+                        rx: "0.6",
+                        fill: "var(--editor-background, #121214)"
+                    })
+                );
+            }
+        };
+
+        const updateLockVisuals = () => {
+            this._patternArea.removeAttribute("draggable");
+            this._trackArea.removeAttribute("draggable");
+            for (const p of panels) {
+                const isLocked = Layout.isPanelLocked(p.id);
+                while (p.lockBtn.firstChild) {
+                    p.lockBtn.removeChild(p.lockBtn.firstChild);
+                }
+                p.lockBtn.appendChild(createLockSvg(isLocked));
+                p.lockBtn.classList.toggle("unlocked", !isLocked);
+                p.lockBtn.title = isLocked
+                    ? (isSpanish() ? "Panel fijado (clic para desbloquear y mover)" : "Panel locked (click to unlock and reposition)")
+                    : (isSpanish() ? "Panel desbloqueado (arrastra para reorganizar / clic para fijar)" : "Panel unlocked (drag to rearrange / click to lock)");
+                p.headerEl.classList.toggle("panel-unlocked", !isLocked);
+                p.lockBtn.classList.toggle("panel-unlocked", !isLocked);
+            }
+        };
+
+        updateLockVisuals();
+
+        const dropIndicator = div({ class: "panel-drop-indicator", style: "display: none;" }, isSpanish() ? "Soltar aquí para reorganizar" : "Drop here to rearrange");
+        document.body.appendChild(dropIndicator);
+
+        const isFunctionalControl = (target: HTMLElement | null): boolean => {
+            if (!target) return false;
+            if (target.classList.contains("panel-lock-button") || target.closest(".panel-lock-button")) {
+                return false;
+            }
+            if (target.closest(".piano, .patternEditorRow, .octaveScrollBar, .zoomInButton, .zoomOutButton, .trackAndMuteContainer, .barScrollBar, .trackContainer, .muteEditor, .trackEditor, .loopEditor")) {
+                return true;
+            }
+            if (target.closest(".tip, .mobile-drawer-close-btn, .fold-icon, input, select, button, textarea, label, option")) {
+                return true;
+            }
+            if (target.closest(".song-controls-group, .selectRow, .instrumentsButtonRow, #typeSelectRow, .customInstrumentSettingsGroup")) {
+                return true;
+            }
+            return false;
+        };
+
+        let activeSession: {
+            panelId: string;
+            sourcePanel: typeof panels[0];
+            startX: number;
+            startY: number;
+            isDragging: boolean;
+            startedOnLockBtn: boolean;
+        } | null = null;
+
+        let suppressHeaderClickUntil = 0;
+
+        const cleanupDrag = () => {
+            if (activeSession) {
+                for (const p of panels) {
+                    p.el.classList.remove("panel-dragging");
+                }
+                activeSession = null;
+            }
+            dropIndicator.style.display = "none";
+            document.body.style.cursor = "";
+            document.body.style.userSelect = "";
+            window.removeEventListener("pointermove", onPointerMove);
+            window.removeEventListener("pointerup", onPointerUp);
+            window.removeEventListener("pointercancel", cleanupDrag);
+            window.removeEventListener("keydown", onKeyDown);
+        };
+
+        const onKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                cleanupDrag();
+            }
+        };
+
+        const onPointerMove = (e: PointerEvent) => {
+            if (!activeSession) return;
+            const dist = Math.hypot(e.clientX - activeSession.startX, e.clientY - activeSession.startY);
+
+            if (!activeSession.isDragging) {
+                if (dist >= 6) {
+                    if (Layout.isPanelLocked(activeSession.panelId)) {
+                        return;
+                    }
+                    activeSession.isDragging = true;
+                    suppressHeaderClickUntil = Date.now() + 300;
+                    activeSession.sourcePanel.el.classList.add("panel-dragging");
+                    document.body.style.cursor = "grabbing";
+                    document.body.style.userSelect = "none";
+                } else {
+                    return;
+                }
+            }
+
+            let targetPanel: typeof panels[0] | null = null;
+            for (const tp of panels) {
+                if (tp.id === activeSession.panelId) continue;
+                const rect = tp.el.getBoundingClientRect();
+                if (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                    targetPanel = tp;
+                    break;
+                }
+            }
+
+            if (!targetPanel) {
+                dropIndicator.style.display = "none";
+                return;
+            }
+
+            const targetRect = targetPanel.el.getBoundingClientRect();
+            const mouseX = e.clientX - targetRect.left;
+            const mouseY = e.clientY - targetRect.top;
+            const isTopHalf = mouseY < targetRect.height / 2;
+            const isLeftHalf = mouseX < targetRect.width / 2;
+
+            let previewLeft = targetRect.left;
+            let previewTop = targetRect.top;
+            let previewWidth = targetRect.width;
+            let previewHeight = targetRect.height;
+            let labelText = "";
+
+            const source = activeSession.panelId;
+            const target = targetPanel.id;
+
+            if ((source === "pattern" && target === "track") || (source === "track" && target === "pattern")) {
+                const patternRect = this._patternArea.getBoundingClientRect();
+                const trackRect = this._trackArea.getBoundingClientRect();
+                const minLeft = Math.min(patternRect.left, trackRect.left);
+                const minTop = Math.min(patternRect.top, trackRect.top);
+                const maxRight = Math.max(patternRect.right, trackRect.right);
+                const maxBottom = Math.max(patternRect.bottom, trackRect.bottom);
+                const stageWidth = maxRight - minLeft;
+                const stageHeight = maxBottom - minTop;
+                const normX = Math.abs(mouseX / targetRect.width - 0.5);
+                const normY = Math.abs(mouseY / targetRect.height - 0.5);
+
+                if (normY > normX) {
+                    previewLeft = minLeft;
+                    previewWidth = stageWidth;
+                    previewHeight = stageHeight / 2;
+                    if (isTopHalf) {
+                        previewTop = minTop;
+                        labelText = isSpanish() ? "Ubicar arriba" : "Place on top";
+                    } else {
+                        previewTop = minTop + stageHeight / 2;
+                        labelText = isSpanish() ? "Ubicar abajo" : "Place on bottom";
+                    }
+                } else {
+                    previewTop = minTop;
+                    previewHeight = stageHeight;
+                    previewWidth = stageWidth / 2;
+                    if (isLeftHalf) {
+                        previewLeft = minLeft;
+                        labelText = isSpanish() ? "Ubicar a la izquierda" : "Place on left";
+                    } else {
+                        previewLeft = minLeft + stageWidth / 2;
+                        labelText = isSpanish() ? "Ubicar a la derecha" : "Place on right";
+                    }
+                }
+            } else if ((source === "songSettings" && target === "instrumentSettings") || (source === "instrumentSettings" && target === "songSettings")) {
+                const normX = Math.abs(mouseX / targetRect.width - 0.5);
+                const normY = Math.abs(mouseY / targetRect.height - 0.5);
+                if (normX > normY) {
+                    previewTop = targetRect.top;
+                    previewHeight = targetRect.height;
+                    previewWidth = targetRect.width / 2;
+                    if (isLeftHalf) {
+                        previewLeft = targetRect.left;
+                        labelText = isSpanish() ? "Ubicar a la izquierda" : "Place on left";
+                    } else {
+                        previewLeft = targetRect.left + targetRect.width / 2;
+                        labelText = isSpanish() ? "Ubicar a la derecha" : "Place on right";
+                    }
+                } else {
+                    previewLeft = targetRect.left;
+                    previewWidth = targetRect.width;
+                    previewHeight = targetRect.height / 2;
+                    if (isTopHalf) {
+                        previewTop = targetRect.top;
+                        labelText = isSpanish() ? "Ubicar arriba" : "Place on top";
+                    } else {
+                        previewTop = targetRect.top + targetRect.height / 2;
+                        labelText = isSpanish() ? "Ubicar abajo" : "Place on bottom";
+                    }
+                }
+            } else if ((source === "songSettings" || source === "instrumentSettings") && (target === "pattern" || target === "track")) {
+                const patternRect = this._patternArea.getBoundingClientRect();
+                const trackRect = this._trackArea.getBoundingClientRect();
+                const minLeft = Math.min(patternRect.left, trackRect.left);
+                const minTop = Math.min(patternRect.top, trackRect.top);
+                const maxRight = Math.max(patternRect.right, trackRect.right);
+                const maxBottom = Math.max(patternRect.bottom, trackRect.bottom);
+                const stageWidth = maxRight - minLeft;
+                const stageHeight = maxBottom - minTop;
+                const sidebarWidth = Math.min(260, stageWidth * 0.35);
+
+                previewTop = minTop;
+                previewHeight = stageHeight;
+                if (isLeftHalf) {
+                    previewLeft = minLeft;
+                    previewWidth = sidebarWidth;
+                    labelText = isSpanish() ? "Acoplar a la izquierda" : "Dock to left";
+                } else {
+                    previewLeft = maxRight - sidebarWidth;
+                    previewWidth = sidebarWidth;
+                    labelText = isSpanish() ? "Acoplar a la derecha" : "Dock to right";
+                }
+            } else if ((source === "pattern" || source === "track") && (target === "songSettings" || target === "instrumentSettings")) {
+                const patternRect = this._patternArea.getBoundingClientRect();
+                const trackRect = this._trackArea.getBoundingClientRect();
+                const minLeft = Math.min(patternRect.left, trackRect.left);
+                const minTop = Math.min(patternRect.top, trackRect.top);
+                const maxRight = Math.max(patternRect.right, trackRect.right);
+                const maxBottom = Math.max(patternRect.bottom, trackRect.bottom);
+                const stageWidth = maxRight - minLeft;
+                const stageHeight = maxBottom - minTop;
+                const sidebarWidth = Math.min(260, stageWidth * 0.35);
+
+                previewTop = minTop;
+                previewHeight = stageHeight;
+                if (isLeftHalf) {
+                    previewLeft = minLeft;
+                    previewWidth = sidebarWidth;
+                    labelText = isSpanish() ? "Mover centro a la derecha" : "Move center to right";
+                } else {
+                    previewLeft = maxRight - sidebarWidth;
+                    previewWidth = sidebarWidth;
+                    labelText = isSpanish() ? "Mover centro a la izquierda" : "Move center to left";
+                }
+            } else {
+                const panelNames: { [k: string]: string } = {
+                    pattern: "Piano Roll",
+                    track: isSpanish() ? "Secuenciador" : "Sequencer",
+                    songSettings: isSpanish() ? "Ajustes de Canción" : "Song Settings",
+                    instrumentSettings: isSpanish() ? "Ajustes de Instrumento" : "Instrument Settings"
+                };
+                labelText = isSpanish() ? `Reorganizar con ${panelNames[targetPanel.id] || targetPanel.id}` : `Rearrange with ${panelNames[targetPanel.id] || targetPanel.id}`;
+            }
+
+            dropIndicator.style.display = "flex";
+            dropIndicator.style.left = `${previewLeft}px`;
+            dropIndicator.style.top = `${previewTop}px`;
+            dropIndicator.style.width = `${previewWidth}px`;
+            dropIndicator.style.height = `${previewHeight}px`;
+            dropIndicator.innerText = labelText;
+        };
+
+        const onPointerUp = (e: PointerEvent) => {
+            if (!activeSession) return;
+            const session = activeSession;
+
+            if (session.isDragging) {
+                suppressHeaderClickUntil = Date.now() + 300;
+                let targetPanel: typeof panels[0] | null = null;
+                for (const tp of panels) {
+                    if (tp.id === session.panelId) continue;
+                    const rect = tp.el.getBoundingClientRect();
+                    if (e.clientX >= rect.left && e.clientX <= rect.right && e.clientY >= rect.top && e.clientY <= rect.bottom) {
+                        targetPanel = tp;
+                        break;
+                    }
+                }
+
+                if (targetPanel) {
+                    const rect = targetPanel.el.getBoundingClientRect();
+                    const mouseX = e.clientX - rect.left;
+                    const mouseY = e.clientY - rect.top;
+                    const isTopHalf = mouseY < rect.height / 2;
+                    const isLeftHalf = mouseX < rect.width / 2;
+                    const normX = Math.abs(mouseX / rect.width - 0.5);
+                    const normY = Math.abs(mouseY / rect.height - 0.5);
+
+                    const state = Layout.getWorkspaceState();
+                    const source = session.panelId;
+                    const target = targetPanel.id;
+
+                    if ((source === "pattern" && target === "track") || (source === "track" && target === "pattern")) {
+                        if (normY > normX) {
+                            state.primarySplit = "vertical";
+                            state.primaryInverted = (source === "pattern" && !isTopHalf) || (source === "track" && isTopHalf);
+                        } else {
+                            state.primarySplit = "horizontal";
+                            state.primaryInverted = (source === "pattern" && !isLeftHalf) || (source === "track" && isLeftHalf);
+                        }
+                    } else if (source === "songSettings" && (target === "pattern" || target === "track")) {
+                        state.songSettingsDock = isLeftHalf ? "left" : "right";
+                    } else if (source === "instrumentSettings" && (target === "pattern" || target === "track")) {
+                        state.instrumentSettingsDock = isLeftHalf ? "left" : "right";
+                    } else if (source === "songSettings" && target === "instrumentSettings") {
+                        state.songSettingsDock = state.instrumentSettingsDock;
+                        if (normX > normY) {
+                            state.sharedDockOrientation = "row";
+                            state.sharedDockOrder = isLeftHalf ? "song-first" : "instrument-first";
+                        } else {
+                            state.sharedDockOrientation = "column";
+                            state.sharedDockOrder = isTopHalf ? "song-first" : "instrument-first";
+                        }
+                    } else if (source === "instrumentSettings" && target === "songSettings") {
+                        state.instrumentSettingsDock = state.songSettingsDock;
+                        if (normX > normY) {
+                            state.sharedDockOrientation = "row";
+                            state.sharedDockOrder = isLeftHalf ? "instrument-first" : "song-first";
+                        } else {
+                            state.sharedDockOrientation = "column";
+                            state.sharedDockOrder = isTopHalf ? "instrument-first" : "song-first";
+                        }
+                    } else if ((source === "pattern" || source === "track") && target === "songSettings") {
+                        state.songSettingsDock = isLeftHalf ? "right" : "left";
+                    } else if ((source === "pattern" || source === "track") && target === "instrumentSettings") {
+                        state.instrumentSettingsDock = isLeftHalf ? "right" : "left";
+                    }
+
+                    Layout.saveWorkspaceState(state);
+                    updateLockVisuals();
+                    this._updateSettingsStacking();
+                    this.whenUpdated();
+                }
+            } else {
+                if (session.startedOnLockBtn) {
+                    const newLock = !Layout.isPanelLocked(session.panelId);
+                    Layout.setPanelLock(session.panelId, newLock);
+                    updateLockVisuals();
+                }
+            }
+
+            cleanupDrag();
+        };
+
+        for (const p of panels) {
+            const handlePointerDown = (e: PointerEvent) => {
+                if (e.button !== 0) return;
+                const target = e.target as HTMLElement;
+                const isOnLock = p.lockBtn.contains(target);
+
+                if (isFunctionalControl(target) && !isOnLock) {
+                    return;
+                }
+
+                activeSession = {
+                    panelId: p.id,
+                    sourcePanel: p,
+                    startX: e.clientX,
+                    startY: e.clientY,
+                    isDragging: false,
+                    startedOnLockBtn: isOnLock,
+                };
+
+                window.addEventListener("pointermove", onPointerMove);
+                window.addEventListener("pointerup", onPointerUp);
+                window.addEventListener("pointercancel", cleanupDrag);
+                window.addEventListener("keydown", onKeyDown);
+            };
+
+            p.lockBtn.addEventListener("pointerdown", handlePointerDown);
+            p.headerEl.addEventListener("pointerdown", handlePointerDown);
+        }
+
+        // Song Settings collapse toggle with drag suppression
+        this._songSettingsHeader.addEventListener("click", (e: MouseEvent) => {
+            if (Date.now() < suppressHeaderClickUntil) return;
+            const target = e.target as HTMLElement;
+            if (target.closest(".tip, .panel-lock-button, .mobile-drawer-close-btn")) return;
+            const isCollapsed = this._songSettingsControls.classList.toggle("collapsed");
+            this._songSettingsArea.classList.toggle("collapsed", isCollapsed);
+            this._songSettingsHeader.classList.toggle("collapsed", isCollapsed);
+            this._songSettingsFoldIcon.innerText = isCollapsed ? "▸" : "▾";
+        });
+
+        // Instrument Settings collapse toggle with drag suppression
+        this._instrumentSettingsTextRow.addEventListener("click", (e: MouseEvent) => {
+            if (Date.now() < suppressHeaderClickUntil) return;
+            const target = e.target as HTMLElement;
+            if (target.closest(".panel-lock-button, .mobile-drawer-close-btn")) return;
+            const isCollapsed = this._instrumentSettingsArea.classList.contains("collapsed");
+            this._instrumentSettingsFoldIcon.innerText = isCollapsed ? "▸" : "▾";
+            this._instrumentSettingsTextRow.classList.toggle("collapsed", isCollapsed);
+        });
+    }
+
     private _setInstrumentSettingsText(title: string): void {
-        this._instrumentSettingsTextRow.textContent = title;
-        this._instrumentSettingsTextRow.appendChild(this._instrumentSettingsFoldIcon);
+        this._instrumentSettingsTitleSpan.textContent = title;
+        const isCollapsed = this._instrumentSettingsArea.classList.contains("collapsed");
+        this._instrumentSettingsFoldIcon.innerText = isCollapsed ? "▸" : "▾";
+        this._instrumentSettingsTextRow.classList.toggle("collapsed", isCollapsed);
     }
 
     private _whenSampleLoadingStatusClicked = (): void => {
@@ -2190,6 +3017,7 @@ export class SongEditor {
     }
 
     private _openPrompt(promptName: string): void {
+        this._closeMobileDrawers();
         this._doc.openPrompt(promptName);
         this._setPrompt(promptName);
     }
@@ -2260,9 +3088,6 @@ export class SongEditor {
                     break;
                 case "theme":
                     this.prompt = new ThemePrompt(this._doc);
-                    break;
-                case "layout":
-                    this.prompt = new LayoutPrompt(this._doc);
                     break;
                 case "recordingSetup":
                     this.prompt = new RecordingSetupPrompt(this._doc);
@@ -2460,7 +3285,6 @@ export class SongEditor {
             formatPreferenceOption("Show Oscilloscope", prefs.showOscilloscope, 38),
             formatPreferenceOption("Show Sample Loading Status", prefs.showSampleLoadingStatus, 38),
             formatPreferenceOption("Show Description", prefs.showDescription, 38),
-            formatPreferenceOption("Set Layout...", null, 38),
             formatPreferenceOption("Set Theme...", null, 38),
 	        formatPreferenceOption("Custom Theme...", null, 38),
         ];
@@ -3623,14 +4447,11 @@ export class SongEditor {
         if (this._doc.addedEffect) {
             const envButtonRect: DOMRect = this._addEnvelopeButton.getBoundingClientRect();
             const instSettingsRect: DOMRect = this._instrumentSettingsArea.getBoundingClientRect();
-            const settingsRect: DOMRect = this._settingsArea.getBoundingClientRect();
             this._instrumentSettingsArea.scrollTop += Math.max(0, envButtonRect.top - (instSettingsRect.top + instSettingsRect.height));
-            this._settingsArea.scrollTop += Math.max(0, envButtonRect.top - (settingsRect.top + settingsRect.height));
             this._doc.addedEffect = false;
         }
         if (this._doc.addedEnvelope) {
             this._instrumentSettingsArea.scrollTop = this._instrumentSettingsArea.scrollHeight;
-            this._settingsArea.scrollTop = this._settingsArea.scrollHeight;
             this._doc.addedEnvelope = false;
         }
 
@@ -5191,10 +6012,11 @@ export class SongEditor {
                 this._openPrompt("configureShortener");
                 break;
             case "viewPlayer":
-                location.href = "player/" + (OFFLINE ? "index.html" : "") + "#song=" + this._doc.song.toBase64String();
+                const playerUrl: string = new URL("player/index.html#song=" + this._doc.song.toBase64String(), location.href).href;
+                window.open(playerUrl, "_blank");
                 break;
             case "copyEmbed":
-                this._copyTextToClipboard(`<iframe width="384" height="60" style="border: none;" src="${new URL("player/#song=" + this._doc.song.toBase64String(), location.href).href}"></iframe>`);
+                this._copyTextToClipboard(`<iframe width="384" height="60" style="border: none;" src="${new URL("player/index.html#song=" + this._doc.song.toBase64String(), location.href).href}"></iframe>`);
                 break;
             case "songRecovery":
                 this._openPrompt("songRecovery");
@@ -5206,6 +6028,7 @@ export class SongEditor {
                 break;
         }
         this._fileMenu.selectedIndex = 0;
+        this._closeMobileDrawers();
     }
 
     private _editMenuHandler = (event: Event): void => {
@@ -5275,6 +6098,7 @@ export class SongEditor {
                 break;
         }
         this._editMenu.selectedIndex = 0;
+        this._closeMobileDrawers();
     }
 
     private _optionsMenuHandler = (event: Event): void => {
@@ -5363,6 +6187,7 @@ export class SongEditor {
                 break;
         }
         this._optionsMenu.selectedIndex = 0;
+        this._closeMobileDrawers();
         this._doc.notifier.changed();
         this._doc.prefs.save();
     }
@@ -5374,6 +6199,7 @@ export class SongEditor {
                 break;
         }
         this._helpMenu.selectedIndex = 0;
+        this._closeMobileDrawers();
     }
 
     private _aboutMenuHandler = (event: Event): void => {
@@ -5395,6 +6221,7 @@ export class SongEditor {
                 break;
         }
         this._aboutMenu.selectedIndex = 0;
+        this._closeMobileDrawers();
     }
 
     private _customWavePresetHandler = (event: Event): void => {

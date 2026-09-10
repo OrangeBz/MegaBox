@@ -1680,7 +1680,7 @@ export class PatternEditor {
 
                 if (this._doc.prefs.enableNotePreview && !this._doc.synth.playing) {
                     // Play the new note out loud if enabled.
-                    const duration: number = Math.min(Config.partsPerBeat, this._cursor.end - this._cursor.start);
+                    const duration: number = Math.max(Config.partsPerBeat * 6, this._cursor.end - this._cursor.start);
                     this._doc.performance.setTemporaryPitches([this._cursor.pitch], duration);
                 }
             }
@@ -2154,7 +2154,7 @@ export class PatternEditor {
                     this._copyPins(this._cursor.curNote);
 
                     if (this._doc.prefs.enableNotePreview && !this._doc.synth.playing) {
-                        const duration: number = Math.min(Config.partsPerBeat, this._cursor.end - this._cursor.start);
+                        const duration: number = Math.max(Config.partsPerBeat * 6, this._cursor.end - this._cursor.start);
                         this._doc.performance.setTemporaryPitches(this._cursor.curNote.pitches, duration);
                     }
                 } else {
@@ -2360,11 +2360,11 @@ export class PatternEditor {
             this._svgModBackground.setAttribute("width", "" + beatWidth);
             this._svgModBackground.setAttribute("height", "" + (this._pitchHeight));
             this._svgModBackground.setAttribute("y", "" + (this._pitchBorder / 2));
-            this._backgroundDrumRow.setAttribute("width", "" + (beatWidth - 2));
-            this._backgroundDrumRow.setAttribute("height", "" + (this._pitchHeight - 2));
+            this._backgroundDrumRow.setAttribute("width", "" + Math.max(0, beatWidth - 2));
+            this._backgroundDrumRow.setAttribute("height", "" + Math.max(0, this._pitchHeight - 2));
             if (this._pitchHeight > this._pitchBorder) {
-                this._backgroundModRow.setAttribute("width", "" + (beatWidth - 2));
-                this._backgroundModRow.setAttribute("height", "" + (this._pitchHeight - this._pitchBorder));
+                this._backgroundModRow.setAttribute("width", "" + Math.max(0, beatWidth - 2));
+                this._backgroundModRow.setAttribute("height", "" + Math.max(0, this._pitchHeight - this._pitchBorder));
             }
 
 
@@ -2372,9 +2372,9 @@ export class PatternEditor {
             for (let j: number = 0; j < Config.pitchesPerOctave; j++) {
                 const rectangle: SVGRectElement = this._backgroundPitchRows[j];
                 const y: number = (Config.pitchesPerOctave - j) % Config.pitchesPerOctave;
-                rectangle.setAttribute("width", "" + (beatWidth - 2));
+                rectangle.setAttribute("width", "" + Math.max(0, beatWidth - 2));
                 rectangle.setAttribute("y", "" + (y * this._pitchHeight + 1));
-                rectangle.setAttribute("height", "" + (this._pitchHeight - 2));
+                rectangle.setAttribute("height", "" + Math.max(0, this._pitchHeight - 2));
             }
         }
 

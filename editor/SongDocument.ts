@@ -476,7 +476,7 @@ export class SongDocument {
 	}
 		
 	public getFullScreen(): boolean {
-		return !this.getMobileLayout() && (this.prefs.layout != "small");
+		return !this.getMobileLayout();
 	}
 	
 	public getVisibleOctaveCount(): number {

@@ -10,11 +10,20 @@ import { ChangeGroup } from "./Change";
 import { removeDuplicatePatterns, ChangeSong, ChangeReplacePatterns } from "./changes";
 import { AnalogousDrum, analogousDrumMap, MidiChunkType, MidiFileFormat, MidiEventType, MidiControlEventMessage, MidiMetaEventMessage, MidiRegisteredParameterNumberMSB, MidiRegisteredParameterNumberLSB, midiVolumeToVolumeMult, midiExpressionToVolumeMult } from "./Midi";
 import { ArrayBufferReader } from "./ArrayBufferReader";
+import { SampleDatabase } from "./SampleDatabase";
+import { ZipArchive } from "./ZipArchive";
 
 	const {button, p, div, h2, input, select, option} = HTML;
 
 export class ImportPrompt implements Prompt {
-		private readonly _fileInput: HTMLInputElement = input({type: "file", accept: ".json,application/json,.mid,.midi,audio/midi,audio/x-midi"});
+		private readonly _formatSelect: HTMLSelectElement = select({style: "width: 100%; margin-bottom: 0.5em;"},
+			option({value: "all"}, "File Type: Auto-detect (.mgb, .json, .mid)"),
+			option({value: "mgb"}, "File Type: MegaBox Project Bundle (.mgb, .zip)"),
+			option({value: "json"}, "File Type: Song JSON (.json)"),
+			option({value: "midi"}, "File Type: MIDI File (.mid, .midi)"),
+		);
+		private readonly _fileInput: HTMLInputElement = input({type: "file", accept: ".mgb,.zip,application/zip,application/x-zip-compressed,.json,application/json,.mid,.midi,audio/midi,audio/x-midi", style: "display: none;"});
+		private readonly _selectFileButton: HTMLButtonElement = button({class: "selectFileButton", style: "width: 100%; margin: 0.5em 0; height: var(--button-size); font-weight: bold; cursor: pointer;"}, "📂 Choose File... ▼");
 		private readonly _cancelButton: HTMLButtonElement = button({class: "cancelButton"});
 		private readonly _modeImportSelect: HTMLSelectElement = select({style: "width: 100%;"},
 			option({value: "auto"}, "Auto-detect mode (for json)"),
@@ -24,30 +33,59 @@ export class ImportPrompt implements Prompt {
 			option({value: "SynthBox"}, "SynthBox"),
 			option({value: "GoldBox"}, "GoldBox"),
 			option({value: "PaandorasBox"}, "PaandorasBox"),
-			// Currently this option is unnecessary (UB is handled the same as JB) but we're keeping it in case there's any future conflicts
-			// There's also the situation where someone will see the "GoldBox" or "PaandorasBox" options and think they have to use one of those two
 			option({value: "UltraBox"}, "MegaBox / UltraBox"),
 		);
+		private readonly _jsonModeContainer: HTMLDivElement = div({style: "width: 100%; margin-bottom: 0.5em;"},
+			div({style: "margin-bottom: 0.2em; font-size: 11px; opacity: 0.8;"}, "Engine Compatibility:"),
+			div({class: "selectContainer", style: "width: 100%;"}, this._modeImportSelect)
+		);
+		private readonly _descriptionText: HTMLParagraphElement = p({style: "text-align: left; margin: 0.5em 0; font-size: 11px;"},
+			"Select a .mgb bundle, .json song, or .mid file to import into MegaBox."
+		);
 		
-		public readonly container: HTMLDivElement = div({class: "prompt noSelection", style: "width: 300px;"},
-		h2("Import"),
-			p({style: "text-align: left; margin: 0.5em 0;"},
-			"MegaBox songs can be exported and re-imported as .json files. You could also use other means to make .json files for MegaBox as long as they follow the same structure.",
-		),
-			p({style: "text-align: left; margin: 0.5em 0;"},
-			"MegaBox can also (crudely) import .mid files. There are many tools available for creating .mid files. Shorter and simpler songs are more likely to work well.",
-		),
-		this._modeImportSelect,
-		this._fileInput,
-		this._cancelButton,
+		public readonly container: HTMLDivElement = div({class: "prompt noSelection", style: "width: 310px;"},
+		h2("Import Song"),
+			this._descriptionText,
+			div({class: "selectContainer", style: "width: 100%; margin-bottom: 0.5em;"}, this._formatSelect),
+			this._jsonModeContainer,
+			this._selectFileButton,
+			this._fileInput,
+			this._cancelButton,
 	);
 		
 	constructor(private _doc: SongDocument) {
-		this._fileInput.select();
-			setTimeout(()=>this._fileInput.focus());
-			
+		this._formatSelect.addEventListener("change", this._whenFormatChanged);
+		this._selectFileButton.addEventListener("click", () => this._fileInput.click());
 		this._fileInput.addEventListener("change", this._whenFileSelected);
 		this._cancelButton.addEventListener("click", this._close);
+		this.container.addEventListener("dragover", this._whenDragOver);
+		this.container.addEventListener("drop", this._whenDrop);
+		this._updateFormatUI();
+	}
+
+	private _whenFormatChanged = (): void => {
+		this._updateFormatUI();
+	}
+
+	private _updateFormatUI = (): void => {
+		const format = this._formatSelect.value;
+		if (format === "json") {
+			this._fileInput.accept = ".json,application/json";
+			this._jsonModeContainer.style.display = "";
+			this._descriptionText.innerText = "MegaBox songs can be imported from .json files created in MegaBox, BeepBox, JummBox, or UltraBox.";
+		} else if (format === "mgb") {
+			this._fileInput.accept = ".mgb,.megabox,.zip,application/zip,application/x-zip-compressed";
+			this._jsonModeContainer.style.display = "none";
+			this._descriptionText.innerText = "MegaBox Project Bundles (.mgb / .zip) contain song structure and all custom audio samples stored in IndexedDB.";
+		} else if (format === "midi") {
+			this._fileInput.accept = ".mid,.midi,audio/midi,audio/x-midi";
+			this._jsonModeContainer.style.display = "none";
+			this._descriptionText.innerText = "MIDI files will be converted into MegaBox pitched and noise channels, detecting notes, channels, tempo and drums.";
+		} else {
+			this._fileInput.accept = ".mgb,.megabox,.zip,application/zip,application/x-zip-compressed,.json,application/json,.mid,.midi,audio/midi,audio/x-midi";
+			this._jsonModeContainer.style.display = "";
+			this._descriptionText.innerText = "Auto-detects .mgb project bundles, .json song files, and .mid MIDI tracks.";
+		}
 	}
 		
 		private _close = (): void => { 
@@ -55,14 +93,34 @@ export class ImportPrompt implements Prompt {
 	}
 		
 		public cleanUp = (): void => { 
+		this._formatSelect.removeEventListener("change", this._whenFormatChanged);
 		this._fileInput.removeEventListener("change", this._whenFileSelected);
 		this._cancelButton.removeEventListener("click", this._close);
+		this.container.removeEventListener("dragover", this._whenDragOver);
+		this.container.removeEventListener("drop", this._whenDrop);
+	}
+
+	private _whenDragOver = (event: DragEvent): void => {
+		event.preventDefault();
+		if (event.dataTransfer) {
+			event.dataTransfer.dropEffect = "copy";
+		}
+	}
+
+	private _whenDrop = (event: DragEvent): void => {
+		event.preventDefault();
+		if (event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files.length > 0) {
+			this._processFile(event.dataTransfer.files[0]);
+		}
 	}
 		
 	private _whenFileSelected = (): void => {
 		const file: File = this._fileInput.files![0];
 		if (!file) return;
-			
+		this._processFile(file);
+	}
+
+	private _processFile = (file: File): void => {
 		const extension: string = file.name.slice((file.name.lastIndexOf(".") - 1 >>> 0) + 2).toLowerCase();
 		if (extension == "json") {
 			const reader: FileReader = new FileReader();
@@ -72,6 +130,66 @@ export class ImportPrompt implements Prompt {
 				this._doc.record(new ChangeSong(this._doc, <string>reader.result, this._modeImportSelect.value), true, true);
 			});
 			reader.readAsText(file);
+		} else if (extension == "mgb" || extension == "megabox" || extension == "zip") {
+			const reader: FileReader = new FileReader();
+			reader.addEventListener("load", async (event: Event): Promise<void> => {
+				try {
+					const buffer = <ArrayBuffer>reader.result;
+					const zipEntries = await ZipArchive.readZip(buffer);
+					let projectJsonString: string | null = null;
+					const customSampleNames: string[] = [];
+
+					for (const [filePath, data] of zipEntries.entries()) {
+						const normalizedPath = filePath.replace(/\\/g, "/");
+						const fileName = normalizedPath.split("/").pop() || "";
+
+						if (normalizedPath.endsWith("project.json") || (normalizedPath.endsWith(".json") && projectJsonString == null)) {
+							const decoder = new TextDecoder();
+							projectJsonString = decoder.decode(data);
+						} else if (
+							normalizedPath.startsWith("samples/") ||
+							fileName.endsWith(".wav") ||
+							fileName.endsWith(".mp3") ||
+							fileName.endsWith(".ogg") ||
+							fileName.endsWith(".flac")
+						) {
+							const cleanName = fileName;
+							const sampleBytes = new Uint8Array(data.byteLength);
+							sampleBytes.set(data);
+							await SampleDatabase.saveSample({
+								name: cleanName,
+								fileName: cleanName,
+								data: sampleBytes.buffer as ArrayBuffer,
+								size: data.byteLength,
+							});
+							customSampleNames.push(`indexeddb:${cleanName}`);
+						}
+					}
+
+					if (projectJsonString != null) {
+						const parsed = JSON.parse(projectJsonString);
+						if (parsed.customSamples && Array.isArray(parsed.customSamples)) {
+							EditorConfig.customSamples = parsed.customSamples;
+						} else if (customSampleNames.length > 0) {
+							const existing = EditorConfig.customSamples || [];
+							for (const s of customSampleNames) {
+								if (!existing.includes(s)) existing.push(s);
+							}
+							EditorConfig.customSamples = existing;
+						}
+						this._doc.prompt = null;
+						this._doc.goBackToStart();
+						this._doc.record(new ChangeSong(this._doc, projectJsonString, this._modeImportSelect.value), true, true);
+					} else {
+						console.error("No project.json found in archive.");
+						this._close();
+					}
+				} catch (err) {
+					console.error("Error reading MegaBox zip bundle:", err);
+					this._close();
+				}
+			});
+			reader.readAsArrayBuffer(file);
 		} else if (extension == "midi" || extension == "mid") {
 			const reader: FileReader = new FileReader();
 			reader.addEventListener("load", (event: Event): void => {

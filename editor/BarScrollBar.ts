@@ -202,7 +202,7 @@ export class BarScrollBar {
 	}
 		
 	public render(): void {
-			this._notchSpace = (this._editorWidth-1) / Math.max(this._doc.trackVisibleBars, this._doc.song.barCount);
+		this._notchSpace = Math.max(0, this._editorWidth - 1) / Math.max(1, this._doc.trackVisibleBars, this._doc.song.barCount);
 			
 		const resized: boolean = this._renderedNotchCount != this._doc.song.barCount;
 		if (resized) {
@@ -212,17 +212,16 @@ export class BarScrollBar {
 				
 			for (let i: number = 0; i <= this._doc.song.barCount; i++) {
 				const lineHeight: number = (i % 16 == 0) ? 0 : ((i % 4 == 0) ? this._editorHeight / 8 : this._editorHeight / 3);
-					this._notches.appendChild(SVG.rect({fill: ColorConfig.uiWidgetBackground, x: i * this._notchSpace - 1, y: lineHeight, width: 2, height: this._editorHeight - lineHeight * 2}));
+				this._notches.appendChild(SVG.rect({fill: ColorConfig.uiWidgetBackground, x: i * this._notchSpace - 1, y: lineHeight, width: 2, height: Math.max(0, this._editorHeight - lineHeight * 2)}));
 			}
 		}
-		
 		
 		if (resized || this._renderedScrollBarPos != this._doc.barScrollPos) {
 			this._renderedScrollBarPos = this._doc.barScrollPos;
 			this._handle.setAttribute("x", String(this._notchSpace * this._doc.barScrollPos));
-			this._handle.setAttribute("width", String(this._notchSpace * this._doc.trackVisibleBars));
+			this._handle.setAttribute("width", String(Math.max(0, this._notchSpace * this._doc.trackVisibleBars)));
 			this._handleHighlight.setAttribute("x", String(this._notchSpace * this._doc.barScrollPos));
-			this._handleHighlight.setAttribute("width", String(this._notchSpace * this._doc.trackVisibleBars));
+			this._handleHighlight.setAttribute("width", String(Math.max(0, this._notchSpace * this._doc.trackVisibleBars)));
 		}
 			
 		this._updatePreview();

@@ -22,12 +22,16 @@ editor.whenUpdated();
 
 // Fade-in transitions
 editor.mainLayer.className += " load";
-editor.mainLayer.getElementsByClassName("pattern-area")[0].className += " load";
-editor.mainLayer.getElementsByClassName("settings-area")[0].className += " load";
-editor.mainLayer.getElementsByClassName("editor-song-settings")[0].className += " load";
-editor.mainLayer.getElementsByClassName("instrument-settings-area")[0].className += " load";
-editor.mainLayer.getElementsByClassName("trackAndMuteContainer")[0].className += " load";
-editor.mainLayer.getElementsByClassName("barScrollBar")[0].className += " load";
+const patternEl = editor.mainLayer.getElementsByClassName("pattern-area")[0];
+if (patternEl) patternEl.className += " load";
+const songSettingsEl = editor.mainLayer.getElementsByClassName("song-settings-area")[0];
+if (songSettingsEl) songSettingsEl.className += " load";
+const instSettingsEl = editor.mainLayer.getElementsByClassName("instrument-settings-area")[0];
+if (instSettingsEl) instSettingsEl.className += " load";
+const trackEl = editor.mainLayer.getElementsByClassName("trackAndMuteContainer")[0];
+if (trackEl) trackEl.className += " load";
+const barScrollEl = editor.mainLayer.getElementsByClassName("barScrollBar")[0];
+if (barScrollEl) barScrollEl.className += " load";
 
 // Give select2 class to these
 $('#pitchPresetSelect').select2({ dropdownAutoWidth: true });

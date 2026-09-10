@@ -358,6 +358,10 @@ export class SongPerformance {
 	}
 	
 	public setTemporaryPitches(pitches: number[], duration: number): void {
+		this._doc.synth.maintainLiveInput();
+		this._doc.synth.liveInputChannel = this._doc.channel;
+		const channelInstruments = this._doc.recentPatternInstruments[this._doc.channel];
+		this._doc.synth.liveInputInstruments = (channelInstruments && channelInstruments.length > 0) ? channelInstruments : [0];
 		this._updateRecordedNotes();
 		for (let i: number = 0; i < pitches.length; i++) {
 			this._doc.synth.liveInputPitches[i] = pitches[i];
@@ -370,6 +374,11 @@ export class SongPerformance {
 	}
 
 	public setTemporaryBassPitches(pitches: number[], duration: number): void {
+		this._doc.synth.maintainLiveInput();
+		const bassChannel = this._getBassOffsetChannel();
+		this._doc.synth.liveBassInputChannel = bassChannel;
+		const channelInstruments = this._doc.recentPatternInstruments[bassChannel];
+		this._doc.synth.liveBassInputInstruments = (channelInstruments && channelInstruments.length > 0) ? channelInstruments : [0];
 		this._updateRecordedBassNotes();
 		for (let i: number = 0; i < pitches.length; i++) {
 			this._doc.synth.liveBassInputPitches[i] = pitches[i];

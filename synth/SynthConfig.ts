@@ -367,14 +367,50 @@ export async function startLoadingSample(url: string, chipWaveIndex: number, pre
             url = joined;
         }
     }
-    fetch(url).then((response) => {
-	if (!response.ok) {
-	    // @TODO: Be specific with the error handling.
-	    sampleLoadingState.statusTable[chipWaveIndex] = SampleLoadingStatus.error;
-	    return Promise.reject(new Error("Couldn't load sample"));
-	}
-	return response.arrayBuffer();
-    }).then((arrayBuffer) => {
+    let fetchPromise: Promise<ArrayBuffer>;
+    if (url.startsWith("indexeddb:") || url.startsWith("local:")) {
+        const sampleName = url.replace(/^(indexeddb|local):/, "");
+        fetchPromise = new Promise((resolve, reject) => {
+            try {
+                if (typeof indexedDB === "undefined") {
+                    reject(new Error("IndexedDB is not available"));
+                    return;
+                }
+                const req = indexedDB.open("MegaBox_Samples_DB", 1);
+                req.onsuccess = (e) => {
+                    const db = (e.target as IDBOpenDBRequest).result;
+                    if (!db.objectStoreNames.contains("samples")) {
+                        reject(new Error(`Sample store not found`));
+                        return;
+                    }
+                    const tx = db.transaction("samples", "readonly");
+                    const store = tx.objectStore("samples");
+                    const getReq = store.get(sampleName);
+                    getReq.onsuccess = () => {
+                        if (getReq.result && getReq.result.data) {
+                            resolve(getReq.result.data);
+                        } else {
+                            reject(new Error(`Sample '${sampleName}' not found in IndexedDB`));
+                        }
+                    };
+                    getReq.onerror = () => reject(getReq.error);
+                };
+                req.onerror = () => reject(req.error);
+            } catch (err) {
+                reject(err);
+            }
+        });
+    } else {
+        fetchPromise = fetch(url).then((response) => {
+            if (!response.ok) {
+                sampleLoadingState.statusTable[chipWaveIndex] = SampleLoadingStatus.error;
+                return Promise.reject(new Error("Couldn't load sample"));
+            }
+            return response.arrayBuffer();
+        });
+    }
+
+    fetchPromise.then((arrayBuffer) => {
 	return sampleLoaderAudioContext.decodeAudioData(arrayBuffer);
     }).then((audioBuffer) => {
 	// @TODO: Downmix.
