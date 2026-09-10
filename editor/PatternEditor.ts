@@ -2146,7 +2146,7 @@ export class PatternEditor {
                 }
             } else {
 
-                if (this._pattern == null) throw new Error();
+                if (this._pattern == null || this._cursor.curNote == null) throw new Error();
 
                 const sequence: ChangeSequence = new ChangeSequence();
                 sequence.append(new ChangePatternSelection(this._doc, 0, 0));

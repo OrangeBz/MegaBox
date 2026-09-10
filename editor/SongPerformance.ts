@@ -504,10 +504,20 @@ export class SongPerformance {
 			this._channelIsDrum = isDrum;
 			this._channelOctave = octave;
 			this._songKey = this._doc.song.key;
-			this.clearAllPitches();
-			this.clearAllBassPitches();
+			if (!this._pitchesAreTemporary) {
+				this.clearAllPitches();
+				this.clearAllBassPitches();
+			}
 		}
-		this._doc.synth.liveInputInstruments = this._doc.recentPatternInstruments[this._doc.channel];
-		this._doc.synth.liveBassInputInstruments = this._doc.recentPatternInstruments[this._doc.synth.liveBassInputChannel];
+		const channelInstruments = this._doc.recentPatternInstruments[this._doc.channel];
+		const currentIns = this._doc.getCurrentInstrument();
+		let instruments = (channelInstruments && channelInstruments.length > 0) ? channelInstruments.slice() : [currentIns];
+		if (instruments.indexOf(currentIns) === -1) {
+			instruments.push(currentIns);
+		}
+		this._doc.synth.liveInputInstruments = instruments;
+		const bassChannel = this._doc.synth.liveBassInputChannel;
+		const bassInstruments = this._doc.recentPatternInstruments[bassChannel];
+		this._doc.synth.liveBassInputInstruments = (bassInstruments && bassInstruments.length > 0) ? bassInstruments : [0];
 	}
 }
