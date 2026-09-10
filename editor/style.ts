@@ -511,15 +511,30 @@ body.resizing-v {
 }
 .panel-floating-lock {
 	position: absolute;
-	top: 6px;
+	bottom: 6px;
 	right: 6px;
 	z-index: 20;
 	background: var(--editor-background, ${ColorConfig.editorBackground});
 	backdrop-filter: blur(4px);
 	pointer-events: auto;
 }
+.beepboxEditor .song-settings-area .panel-floating-lock,
+.beepboxEditor .instrument-settings-area .panel-floating-lock {
+	position: sticky;
+	bottom: 6px;
+	right: 6px;
+	margin-left: auto;
+	margin-top: auto;
+	align-self: flex-end;
+	flex-shrink: 0;
+}
 .beepboxEditor .pattern-area .panel-floating-lock {
-	right: 70px;
+	right: 26px;
+	bottom: 6px;
+}
+.beepboxEditor .track-area .panel-floating-lock {
+	right: 6px;
+	bottom: 22px;
 }
 .panel-lock-button.unlocked,
 .collapsible-header.panel-unlocked {
@@ -1141,6 +1156,11 @@ body.resizing-v {
 	margin-bottom: 4px;
 }
 
+.beepboxEditor select,
+.beepboxEditor select option {
+	font-size: 12px;
+	font-family: var(--font-sans);
+}
 .beepboxEditor select {
 	margin: 0;
 	padding: 0 6px;
@@ -1160,6 +1180,10 @@ body.resizing-v {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
+}
+.beepboxEditor select option {
+	background: ${ColorConfig.editorBackground};
+	color: ${ColorConfig.primaryText};
 }
 .beepboxEditor select:hover {
 	border-color: var(--accent-mod-cyan, #38bdf8);
@@ -1839,8 +1863,8 @@ body.resizing-v {
 	justify-content: space-between;
 	gap: 12px;
 	padding: 4px 16px;
-	background: ${ColorConfig.uiWidgetBackground};
-	background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(0, 0, 0, 0.12) 100%);
+	background-color: ${ColorConfig.uiWidgetBackground};
+	background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.5) 100%);
 	border-radius: 6px;
 	border: 1px solid var(--border-subtle, #2e2e33);
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
@@ -1872,6 +1896,12 @@ body.resizing-v {
 	gap: 18px;
 	margin-left: auto;
 	flex-shrink: 0;
+}
+.beepboxEditor .playback-controls-row {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 18px;
 }
 .beepboxEditor .version-area {
 	display: flex;
@@ -1973,6 +2003,16 @@ body.resizing-v {
 	border: 1px solid var(--border-subtle, #3f3f46) !important;
 	background: ${ColorConfig.editorBackground};
 }
+.beepboxEditor .desktop-menu-row {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 6px;
+}
+.beepboxEditor .mobile-buttons-row {
+	display: none;
+}
+
 .beepboxEditor .menu-area .selectContainer.menu {
 	width: 112px;
 	min-width: 112px;
@@ -2048,11 +2088,11 @@ body.resizing-v {
 .beepboxEditor .menu-left-group select option,
 .beepboxEditor .menu-left-group select optgroup {
 	text-align: left;
-	font-family: Consolas, "Liberation Mono", "Courier New", Courier, monospace;
-	font-variant-numeric: tabular-nums;
-	font-size: 11px;
-	font-weight: normal;
-	padding: 3px 6px;
+	font-family: var(--font-sans);
+	font-size: 12px;
+	font-weight: 500;
+	letter-spacing: 0.2px;
+	padding: 5px 10px;
 	margin: 0;
 	text-indent: 0;
 	background: ${ColorConfig.uiWidgetBackground};
@@ -2063,9 +2103,11 @@ body.resizing-v {
 .beepboxEditor .menu-left-group select optgroup {
 	font-weight: 700;
 	font-family: var(--font-sans);
+	font-size: 12px;
+	letter-spacing: 0.3px;
 	color: var(--accent-mod-cyan, #38bdf8);
 	background: ${ColorConfig.uiWidgetFocus};
-	padding: 4px 6px;
+	padding: 6px 10px;
 }
 
 .beepboxEditor .song-settings-area {
@@ -2379,7 +2421,8 @@ li.select2-results__option[role=group] > strong:hover {
 	opacity: 1;
 	pointer-events: auto;
 }
-.mobile-quick-bar {
+.mobile-quick-bar,
+.mobile-buttons-row {
 	display: none;
 }
 .rotate-device-prompt {
@@ -2456,7 +2499,7 @@ li.select2-results__option[role=group] > strong:hover {
 }
 
 /* Mobile Landscape Mode (Phone/Tablet horizontal & PWA) */
-@media (hover: none) and (pointer: coarse) and (orientation: landscape), (hover: none) and (pointer: coarse) and (max-height: 560px) {
+@media (max-width: 900px) and (orientation: landscape), (max-height: 560px) and (orientation: landscape), (hover: none) and (pointer: coarse) and (orientation: landscape), (hover: none) and (pointer: coarse) and (max-height: 560px) {
 	.beepboxEditor {
 		height: 100vh;
 		height: 100dvh;
@@ -2474,7 +2517,9 @@ li.select2-results__option[role=group] > strong:hover {
 	.beepboxEditor .editor-splitter-right,
 	.beepboxEditor .editor-splitter-mid,
 	.beepboxEditor .editor-splitter-mid-h,
-	.beepboxEditor .editor-splitter-bottom {
+	.beepboxEditor .editor-splitter-mid-horizontal,
+	.beepboxEditor .editor-splitter-bottom,
+	.beepboxEditor .settings-stack-container {
 		display: none !important;
 	}
 	.beepboxEditor .editor-splitter-horizontal {
@@ -2611,26 +2656,98 @@ li.select2-results__option[role=group] > strong:hover {
 	.mobile-menu-btn:active {
 		transform: scale(0.92);
 	}
+	.beepboxEditor .fold-icon {
+		display: none !important;
+	}
 	.beepboxEditor .menu-right-group {
 		position: fixed !important;
-		bottom: calc(6px + env(safe-area-inset-bottom, 0px)) !important;
-		right: calc(182px + env(safe-area-inset-right, 0px)) !important;
-		top: auto !important;
-		left: auto !important;
-		z-index: 998 !important;
+		bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+		right: calc(6px + env(safe-area-inset-right, 0px));
+		left: auto;
+		top: auto;
+		z-index: 9990 !important;
 		pointer-events: auto !important;
+		display: flex !important;
+		flex-direction: column !important;
+		align-items: stretch !important;
+		gap: 5px !important;
+		margin: 0 !important;
+		padding: 5px 8px !important;
+		border-radius: 8px !important;
+		background: rgba(18, 18, 24, 0.88) !important;
+		backdrop-filter: blur(12px) !important;
+		-webkit-backdrop-filter: blur(12px) !important;
+		border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.18)) !important;
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.65) !important;
+		touch-action: none !important;
+		user-select: none !important;
+		cursor: grab;
+	}
+	.beepboxEditor .menu-right-group.mobile-dragging {
+		cursor: grabbing !important;
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8), 0 0 12px rgba(56, 189, 248, 0.4) !important;
+		border-color: var(--accent-mod-cyan, #38bdf8) !important;
+	}
+	.beepboxEditor .playback-controls-row {
 		display: flex !important;
 		flex-direction: row !important;
 		align-items: center !important;
+		justify-content: center !important;
 		gap: 4px !important;
-		margin: 0 !important;
-		padding: 2px 6px !important;
-		border-radius: 16px;
-		background: rgba(18, 18, 24, 0.88);
-		backdrop-filter: blur(10px);
-		-webkit-backdrop-filter: blur(10px);
-		border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.18));
-		box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+		width: 100% !important;
+	}
+	.beepboxEditor .playback-bar-controls {
+		display: flex !important;
+		align-items: center !important;
+		justify-content: center !important;
+		gap: 4px !important;
+	}
+	.beepboxEditor .mobile-buttons-row {
+		display: flex !important;
+		flex-direction: row !important;
+		align-items: center !important;
+		justify-content: space-between !important;
+		gap: 4px !important;
+		width: 100% !important;
+	}
+	.beepboxEditor .mobile-buttons-row .mobile-quick-btn {
+		flex: 1 !important;
+		display: flex !important;
+		align-items: center !important;
+		justify-content: center !important;
+		padding: 2px 4px !important;
+		font-family: var(--font-sans) !important;
+		font-size: 10.5px !important;
+		font-weight: 600 !important;
+		height: var(--button-size, 26px) !important;
+		border-radius: 5px !important;
+		border: 1px solid var(--border-default, #3f3f46) !important;
+		background: ${ColorConfig.uiWidgetBackground} !important;
+		background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(0, 0, 0, 0.12) 100%) !important;
+		color: ${ColorConfig.primaryText} !important;
+		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+		cursor: pointer !important;
+		touch-action: manipulation !important;
+		white-space: nowrap !important;
+		transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1) !important;
+	}
+	.beepboxEditor .mobile-buttons-row .mobile-undo-btn,
+	.beepboxEditor .mobile-buttons-row .mobile-redo-btn {
+		font-size: 14px !important;
+		flex: 0.75 !important;
+	}
+	.beepboxEditor .mobile-buttons-row .mobile-quick-btn:hover {
+		background: ${ColorConfig.uiWidgetFocus} !important;
+		background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.08) 100%) !important;
+		border-color: var(--accent-mod-cyan, #38bdf8) !important;
+		color: #ffffff !important;
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), 0 0 8px rgba(56, 189, 248, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+	}
+	.beepboxEditor .mobile-buttons-row .mobile-quick-btn:active {
+		transform: translateY(0.5px) !important;
+		background: #1f1f23 !important;
+		border-color: var(--accent-mod-cyan, #38bdf8) !important;
+		box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 0 6px rgba(56, 189, 248, 0.3) !important;
 	}
 	.beepboxEditor .playback-volume-controls {
 		display: none !important;
@@ -2661,7 +2778,7 @@ li.select2-results__option[role=group] > strong:hover {
 		width: min(320px, calc(86vw - env(safe-area-inset-left, 0px))) !important;
 		height: 100vh !important;
 		height: 100dvh !important;
-		z-index: 10002 !important;
+		z-index: 10010 !important;
 		flex-direction: column !important;
 		align-items: stretch !important;
 		background: ${ColorConfig.editorBackground} !important;
@@ -2763,7 +2880,7 @@ li.select2-results__option[role=group] > strong:hover {
 		overflow-y: auto !important;
 		overscroll-behavior: contain !important;
 		-webkit-overflow-scrolling: touch !important;
-		z-index: 10002 !important;
+		z-index: 10010 !important;
 		background: ${ColorConfig.editorBackground} !important;
 		border-left: 1px solid var(--border-subtle, #333) !important;
 		box-shadow: -8px 0 32px rgba(0, 0, 0, 0.8) !important;
@@ -2783,41 +2900,6 @@ li.select2-results__option[role=group] > strong:hover {
 	.beepboxEditor .instrument-settings-area > .editor-controls {
 		position: relative;
 		width: 100%;
-	}
-	.mobile-quick-bar {
-		display: flex;
-		position: fixed;
-		right: calc(6px + env(safe-area-inset-right, 0px));
-		bottom: calc(6px + env(safe-area-inset-bottom, 0px));
-		gap: 6px;
-		z-index: 998;
-	}
-	.mobile-quick-btn {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: 4px 10px;
-		font-size: 11px;
-		font-weight: 600;
-		height: 26px;
-		box-sizing: border-box;
-		border-radius: 16px;
-		border: 1px solid rgba(255, 255, 255, 0.18);
-		background: ${ColorConfig.uiWidgetBackground};
-		color: ${ColorConfig.primaryText};
-		box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55);
-		cursor: pointer;
-		backdrop-filter: blur(12px);
-		-webkit-backdrop-filter: blur(12px);
-		touch-action: manipulation;
-		transition: transform 0.12s ease, filter 0.15s ease;
-		user-select: none;
-		-webkit-user-select: none;
-		white-space: nowrap;
-	}
-	.mobile-quick-btn:active {
-		transform: scale(0.93);
-		filter: brightness(1.2);
 	}
 	.beepboxEditor .panel-lock-button,
 	.beepboxEditor .panel-floating-lock {
@@ -2865,7 +2947,14 @@ li.select2-results__option[role=group] > strong:hover {
 		display: none;
 	}
 	.beepboxEditor .panel-lock-button,
-	.beepboxEditor .panel-floating-lock {
+	.beepboxEditor .panel-floating-lock,
+	.beepboxEditor .settings-stack-container,
+	.beepboxEditor .editor-splitter-left,
+	.beepboxEditor .editor-splitter-right,
+	.beepboxEditor .editor-splitter-mid,
+	.beepboxEditor .editor-splitter-mid-h,
+	.beepboxEditor .editor-splitter-mid-horizontal,
+	.beepboxEditor .editor-splitter-bottom {
 		display: none !important;
 	}
 }
@@ -2908,6 +2997,17 @@ li.select2-results__option[role=group] > strong:hover {
 	}
 	.beepboxEditor .barScrollBar {
 		display: none;
+	}
+	.beepboxEditor .panel-lock-button,
+	.beepboxEditor .panel-floating-lock,
+	.beepboxEditor .settings-stack-container,
+	.beepboxEditor .editor-splitter-left,
+	.beepboxEditor .editor-splitter-right,
+	.beepboxEditor .editor-splitter-mid,
+	.beepboxEditor .editor-splitter-mid-h,
+	.beepboxEditor .editor-splitter-mid-horizontal,
+	.beepboxEditor .editor-splitter-bottom {
+		display: none !important;
 	}
 	
 	.beepboxEditor .soundIcon {

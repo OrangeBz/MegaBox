@@ -865,7 +865,7 @@ export class Config {
 
     public static willReloadForCustomSamples: boolean = false;
 
-    public static jsonFormat: string = "UltraBox";
+    public static jsonFormat: string = "MegaBox";
     // public static thurmboxImportUrl: string = "https://file.garden/ZMQ0Om5nmTe-x2hq/PandoraArchive%20Samples/";
 
     public static readonly scales: DictionaryArray<Scale> = toNameMap([

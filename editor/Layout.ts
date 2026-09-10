@@ -11,6 +11,17 @@ export interface WorkspaceState {
 	sharedDockOrientation: "row" | "column"; // When both share same dock
 	sharedDockOrder: "song-first" | "instrument-first"; // When both share same dock
 	locked: { [key: string]: boolean }; // "pattern", "track", "songSettings", "instrumentSettings"
+	// Sizing parameters
+	patternAreaHeight?: number;
+	primaryLeftWidth?: number;
+	songSettingsWidth?: number;
+	instrumentSettingsWidth?: number;
+	settingsColWidth?: number;
+	firstSettingHeight?: number;
+	settingsAreaHeight?: number;
+	floatingControlsPos?: { x: number; y: number } | null;
+	songSettingsCollapsed?: boolean;
+	instrumentSettingsCollapsed?: boolean;
 }
 
 export class Layout {
@@ -33,6 +44,12 @@ export class Layout {
 				songSettings: true,
 				instrumentSettings: true,
 			},
+			patternAreaHeight: 460,
+			songSettingsWidth: 192,
+			instrumentSettingsWidth: 216,
+			settingsColWidth: 216,
+			firstSettingHeight: 240,
+			settingsAreaHeight: 200,
 		};
 
 		try {
@@ -99,12 +116,52 @@ export class Layout {
 		this.saveWorkspaceState({ primarySplit: split });
 	}
 
+	public static setPanelSize(property: "patternAreaHeight" | "primaryLeftWidth" | "songSettingsWidth" | "instrumentSettingsWidth" | "settingsColWidth" | "firstSettingHeight" | "settingsAreaHeight", value: number): void {
+		this.saveWorkspaceState({ [property]: value });
+	}
+
+	public static setFloatingControlsPos(pos: { x: number; y: number } | null): void {
+		this.saveWorkspaceState({ floatingControlsPos: pos });
+	}
+
+	public static setPanelCollapsed(panel: "songSettings" | "instrumentSettings", collapsed: boolean): void {
+		if (panel === "songSettings") {
+			this.saveWorkspaceState({ songSettingsCollapsed: collapsed });
+		} else {
+			this.saveWorkspaceState({ instrumentSettingsCollapsed: collapsed });
+		}
+	}
+
 	public static setLayout(_layoutName?: string): void {
 		this.applyWorkspaceState();
 	}
 
 	public static applyWorkspaceState(): void {
 		const state = this._state;
+
+		if (typeof document !== "undefined" && document.documentElement) {
+			if (state.patternAreaHeight != null) {
+				document.documentElement.style.setProperty("--pattern-area-height", `${state.patternAreaHeight}px`);
+			}
+			if (state.primaryLeftWidth != null) {
+				document.documentElement.style.setProperty("--primary-left-width", `${state.primaryLeftWidth}px`);
+			}
+			if (state.songSettingsWidth != null) {
+				document.documentElement.style.setProperty("--song-settings-width", `${state.songSettingsWidth}px`);
+			}
+			if (state.instrumentSettingsWidth != null) {
+				document.documentElement.style.setProperty("--instrument-settings-width", `${state.instrumentSettingsWidth}px`);
+			}
+			if (state.settingsColWidth != null) {
+				document.documentElement.style.setProperty("--settings-col-width", `${state.settingsColWidth}px`);
+			}
+			if (state.firstSettingHeight != null) {
+				document.documentElement.style.setProperty("--first-setting-height", `${state.firstSettingHeight}px`);
+			}
+			if (state.settingsAreaHeight != null) {
+				document.documentElement.style.setProperty("--settings-area-height", `${state.settingsAreaHeight}px`);
+			}
+		}
 
 		const topPanel = state.primaryInverted ? "track-area" : "pattern-area";
 		const bottomPanel = state.primaryInverted ? "pattern-area" : "track-area";
@@ -124,11 +181,16 @@ export class Layout {
 			if (!isHorizontalPrimary) {
 				gridTemplateColumns = "clamp(185px, var(--song-settings-width, 192px), 320px) 6px minmax(250px, 1fr) 6px clamp(185px, var(--instrument-settings-width, 216px), 320px)";
 				gridTemplateRows = "max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr)";
-				gridTemplateAreas = `
+				gridTemplateAreas = state.primaryInverted ? `
+					"menu-area menu-area menu-area menu-area menu-area"
+					"${topPanel} ${topPanel} ${topPanel} ${topPanel} ${topPanel}"
+					"h-splitter h-splitter h-splitter h-splitter h-splitter"
+					"song-settings-area v-splitter-left ${bottomPanel} v-splitter-right instrument-settings-area"
+				` : `
 					"menu-area menu-area menu-area menu-area menu-area"
 					"song-settings-area v-splitter-left ${topPanel} v-splitter-right instrument-settings-area"
-					"song-settings-area v-splitter-left h-splitter v-splitter-right instrument-settings-area"
-					"song-settings-area v-splitter-left ${bottomPanel} v-splitter-right instrument-settings-area"
+					"h-splitter h-splitter h-splitter h-splitter h-splitter"
+					"${bottomPanel} ${bottomPanel} ${bottomPanel} ${bottomPanel} ${bottomPanel}"
 				`;
 			} else {
 				gridTemplateColumns = "clamp(185px, var(--song-settings-width, 192px), 320px) 6px var(--primary-left-width, 1fr) 6px minmax(200px, 1fr) 6px clamp(185px, var(--instrument-settings-width, 216px), 320px)";
@@ -144,11 +206,16 @@ export class Layout {
 			if (!isHorizontalPrimary) {
 				gridTemplateColumns = "clamp(185px, var(--instrument-settings-width, 216px), 320px) 6px minmax(250px, 1fr) 6px clamp(185px, var(--song-settings-width, 192px), 320px)";
 				gridTemplateRows = "max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr)";
-				gridTemplateAreas = `
+				gridTemplateAreas = state.primaryInverted ? `
+					"menu-area menu-area menu-area menu-area menu-area"
+					"${topPanel} ${topPanel} ${topPanel} ${topPanel} ${topPanel}"
+					"h-splitter h-splitter h-splitter h-splitter h-splitter"
+					"instrument-settings-area v-splitter-left ${bottomPanel} v-splitter-right song-settings-area"
+				` : `
 					"menu-area menu-area menu-area menu-area menu-area"
 					"instrument-settings-area v-splitter-left ${topPanel} v-splitter-right song-settings-area"
-					"instrument-settings-area v-splitter-left h-splitter v-splitter-right song-settings-area"
-					"instrument-settings-area v-splitter-left ${bottomPanel} v-splitter-right song-settings-area"
+					"h-splitter h-splitter h-splitter h-splitter h-splitter"
+					"${bottomPanel} ${bottomPanel} ${bottomPanel} ${bottomPanel} ${bottomPanel}"
 				`;
 			} else {
 				gridTemplateColumns = "clamp(185px, var(--instrument-settings-width, 216px), 320px) 6px var(--primary-left-width, 1fr) 6px minmax(200px, 1fr) 6px clamp(185px, var(--song-settings-width, 192px), 320px)";
@@ -170,11 +237,16 @@ export class Layout {
 				if (!isHorizontalPrimary) {
 					gridTemplateColumns = `clamp(185px, ${firstWidth}, 320px) 6px clamp(185px, ${secondWidth}, 320px) 6px minmax(250px, 1fr)`;
 					gridTemplateRows = "max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr)";
-					gridTemplateAreas = `
+					gridTemplateAreas = state.primaryInverted ? `
+						"menu-area menu-area menu-area menu-area menu-area"
+						"${topPanel} ${topPanel} ${topPanel} ${topPanel} ${topPanel}"
+						"h-splitter h-splitter h-splitter h-splitter h-splitter"
+						"${firstPanel} v-splitter-mid ${secondPanel} v-splitter-left ${bottomPanel}"
+					` : `
 						"menu-area menu-area menu-area menu-area menu-area"
 						"${firstPanel} v-splitter-mid ${secondPanel} v-splitter-left ${topPanel}"
-						"${firstPanel} v-splitter-mid ${secondPanel} v-splitter-left h-splitter"
-						"${firstPanel} v-splitter-mid ${secondPanel} v-splitter-left ${bottomPanel}"
+						"h-splitter h-splitter h-splitter h-splitter h-splitter"
+						"${bottomPanel} ${bottomPanel} ${bottomPanel} ${bottomPanel} ${bottomPanel}"
 					`;
 				} else {
 					gridTemplateColumns = `clamp(185px, ${firstWidth}, 320px) 6px clamp(185px, ${secondWidth}, 320px) 6px var(--primary-left-width, 1fr) 6px minmax(200px, 1fr)`;
@@ -189,11 +261,16 @@ export class Layout {
 				if (!isHorizontalPrimary) {
 					gridTemplateColumns = "clamp(185px, var(--settings-col-width, 216px), 320px) 6px minmax(250px, 1fr)";
 					gridTemplateRows = "max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr)";
-					gridTemplateAreas = `
+					gridTemplateAreas = state.primaryInverted ? `
+						"menu-area menu-area menu-area"
+						"${topPanel} ${topPanel} ${topPanel}"
+						"h-splitter h-splitter h-splitter"
+						"settings-col-area v-splitter-left ${bottomPanel}"
+					` : `
 						"menu-area menu-area menu-area"
 						"settings-col-area v-splitter-left ${topPanel}"
-						"settings-col-area v-splitter-left h-splitter"
-						"settings-col-area v-splitter-left ${bottomPanel}"
+						"h-splitter h-splitter h-splitter"
+						"${bottomPanel} ${bottomPanel} ${bottomPanel}"
 					`;
 				} else {
 					gridTemplateColumns = "clamp(185px, var(--settings-col-width, 216px), 320px) 6px var(--primary-left-width, 1fr) 6px minmax(200px, 1fr)";
@@ -216,11 +293,16 @@ export class Layout {
 				if (!isHorizontalPrimary) {
 					gridTemplateColumns = `minmax(250px, 1fr) 6px clamp(185px, ${firstWidth}, 320px) 6px clamp(185px, ${secondWidth}, 320px)`;
 					gridTemplateRows = "max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr)";
-					gridTemplateAreas = `
+					gridTemplateAreas = state.primaryInverted ? `
+						"menu-area menu-area menu-area menu-area menu-area"
+						"${topPanel} ${topPanel} ${topPanel} ${topPanel} ${topPanel}"
+						"h-splitter h-splitter h-splitter h-splitter h-splitter"
+						"${bottomPanel} v-splitter-right ${firstPanel} v-splitter-mid ${secondPanel}"
+					` : `
 						"menu-area menu-area menu-area menu-area menu-area"
 						"${topPanel} v-splitter-right ${firstPanel} v-splitter-mid ${secondPanel}"
-						"h-splitter v-splitter-right ${firstPanel} v-splitter-mid ${secondPanel}"
-						"${bottomPanel} v-splitter-right ${firstPanel} v-splitter-mid ${secondPanel}"
+						"h-splitter h-splitter h-splitter h-splitter h-splitter"
+						"${bottomPanel} ${bottomPanel} ${bottomPanel} ${bottomPanel} ${bottomPanel}"
 					`;
 				} else {
 					gridTemplateColumns = `var(--primary-left-width, 1fr) 6px minmax(200px, 1fr) 6px clamp(185px, ${firstWidth}, 320px) 6px clamp(185px, ${secondWidth}, 320px)`;
@@ -235,11 +317,16 @@ export class Layout {
 				if (!isHorizontalPrimary) {
 					gridTemplateColumns = "minmax(250px, 1fr) 6px clamp(185px, var(--settings-col-width, 216px), 320px)";
 					gridTemplateRows = "max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr)";
-					gridTemplateAreas = `
+					gridTemplateAreas = state.primaryInverted ? `
+						"menu-area menu-area menu-area"
+						"${topPanel} ${topPanel} ${topPanel}"
+						"h-splitter h-splitter h-splitter"
+						"${bottomPanel} v-splitter-right settings-col-area"
+					` : `
 						"menu-area menu-area menu-area"
 						"${topPanel} v-splitter-right settings-col-area"
-						"h-splitter v-splitter-right settings-col-area"
-						"${bottomPanel} v-splitter-right settings-col-area"
+						"h-splitter h-splitter h-splitter"
+						"${bottomPanel} ${bottomPanel} ${bottomPanel}"
 					`;
 				} else {
 					gridTemplateColumns = "var(--primary-left-width, 1fr) 6px minmax(200px, 1fr) 6px clamp(185px, var(--settings-col-width, 216px), 320px)";
@@ -259,7 +346,7 @@ export class Layout {
 		const hasBottomSplitter = gridTemplateAreas.includes("v-splitter-bottom");
 
 		this._styleElement.textContent = `
-			@media (min-width: 711px) and (min-height: 400px), (hover: hover) and (pointer: fine) {
+			@media (min-width: 901px), (min-width: 711px) and (min-height: 561px) {
 				#beepboxEditorContainer {
 					max-width: initial;
 					height: 100vh;
@@ -429,4 +516,5 @@ export class Layout {
 	}
 }
 
-
+// Apply workspace state styles and CSS variables on startup
+Layout.applyWorkspaceState();

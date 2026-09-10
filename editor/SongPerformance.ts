@@ -361,7 +361,12 @@ export class SongPerformance {
 		this._doc.synth.maintainLiveInput();
 		this._doc.synth.liveInputChannel = this._doc.channel;
 		const channelInstruments = this._doc.recentPatternInstruments[this._doc.channel];
-		this._doc.synth.liveInputInstruments = (channelInstruments && channelInstruments.length > 0) ? channelInstruments : [0];
+		const currentIns = this._doc.getCurrentInstrument();
+		let instruments = (channelInstruments && channelInstruments.length > 0) ? channelInstruments.slice() : [currentIns];
+		if (instruments.indexOf(currentIns) === -1) {
+			instruments.push(currentIns);
+		}
+		this._doc.synth.liveInputInstruments = instruments;
 		this._updateRecordedNotes();
 		for (let i: number = 0; i < pitches.length; i++) {
 			this._doc.synth.liveInputPitches[i] = pitches[i];

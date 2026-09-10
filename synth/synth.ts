@@ -2047,7 +2047,7 @@ export class Instrument {
         }
 
         if (instrumentObject["volume"] != undefined) {
-            if (format == "jummbox" || format == "midbox" || format == "synthbox" || format == "goldbox" || format == "paandorasbox" || format == "ultrabox") {
+            if (format == "jummbox" || format == "midbox" || format == "synthbox" || format == "goldbox" || format == "paandorasbox" || format == "ultrabox" || format == "megabox") {
                 this.volume = clamp(-Config.volumeRange / 2, (Config.volumeRange / 2) + 1, instrumentObject["volume"] | 0);
             } else {
                 this.volume = Math.round(-clamp(0, 8, Math.round(5 - (instrumentObject["volume"] | 0) / 20)) * 25.0 / 7.0);
@@ -2824,9 +2824,11 @@ export class Song {
     private static readonly _latestGoldBoxVersion: number = 4;
     private static readonly _oldestUltraBoxVersion: number = 1;
     private static readonly _latestUltraBoxVersion: number = 5;
+    private static readonly _oldestMegaBoxVersion: number = 1;
+    private static readonly _latestMegaBoxVersion: number = 5;
     // One-character variant detection at the start of URL to distinguish variants such as JummBox, Or Goldbox. "j" and "g" respectively
-	//also "u" is ultrabox lol
-    private static readonly _variant = 0x75; //"u" ~ ultrabox
+    // MegaBox uses "M"
+    private static readonly _variant = 0x4D; // "M" ~ MegaBox
 
     public title: string;
     public titleNotifier: Function[] = [];
@@ -3044,7 +3046,7 @@ export class Song {
         let buffer: number[] = [];
 
         buffer.push(Song._variant);
-        buffer.push(base64IntToCharCode[Song._latestUltraBoxVersion]);
+        buffer.push(base64IntToCharCode[Song._latestMegaBoxVersion]);
 
         // Length of the song name string
         buffer.push(SongTagCode.songTitle);
@@ -3708,53 +3710,66 @@ export class Song {
         }
 
         const variantTest: number = compressed.charCodeAt(charIndex);
-        let fromBeepBox: boolean;
-        let fromJummBox: boolean;
-        let fromGoldBox: boolean;
-	    let fromUltraBox: boolean;
-        // let fromMidbox: boolean;
-        // let fromDogebox2: boolean;
-        // let fromAbyssBox: boolean;
+        let fromBeepBox: boolean = false;
+        let fromJummBox: boolean = false;
+        let fromGoldBox: boolean = false;
+        let fromUltraBox: boolean = false;
+        let fromMegaBox: boolean = false;
+        let fromOtherMod: boolean = false;
 
         // Detect variant here. If version doesn't match known variant, assume it is a vanilla string which does not report variant.
-        if (variantTest == 0x6A) { //"j"
-            fromBeepBox = false;
+        if (variantTest == 0x4D) { // "M" ~ MegaBox
+            fromMegaBox = true;
+            fromUltraBox = true;
+            charIndex++;
+        } else if (variantTest == 0x75) { // "u" ~ UltraBox
+            fromUltraBox = true;
+            charIndex++;
+        } else if (variantTest == 0x55) { // "U" ~ Unbox
+            fromUltraBox = true;
+            fromOtherMod = true;
+            charIndex++;
+        } else if (variantTest == 0x61) { // "a" ~ AbyssBox
+            fromUltraBox = true;
+            fromOtherMod = true;
+            charIndex++;
+        } else if (variantTest == 0x6A) { // "j" ~ JummBox
             fromJummBox = true;
-            fromGoldBox = false;
-	        fromUltraBox = false;
             charIndex++;
-        } else if (variantTest == 0x67) { //"g"
-            fromBeepBox = false;
-            fromJummBox = false;
+        } else if (variantTest == 0x67) { // "g" ~ GoldBox
             fromGoldBox = true;
-	        fromUltraBox = false;
             charIndex++;
-        } else if (variantTest == 0x75) { //"u"
-                fromBeepBox = false;
-                fromJummBox = false;
-                fromGoldBox = false;
-		        fromUltraBox = true;
-                charIndex++;
-        } else if (variantTest == 0x64) { //"d" 
-                fromBeepBox = false;
-                fromJummBox = true;
-                fromGoldBox = false;
-		        fromUltraBox = false;
-                // to-do: add explicit dogebox2 support
-                //fromDogeBox2 = true;
-                charIndex++;
-            } else {
+        } else if (variantTest == 0x64) { // "d" ~ Dogebox2
+            fromJummBox = true;
+            fromOtherMod = true;
+            charIndex++;
+        } else if (
+            variantTest == 0x73 || // "s" ~ Slarmoo's Box
+            variantTest == 0x76 || // "v" ~ VoxBox
+            variantTest == 0x4C || // "L" ~ LemmBox
+            variantTest == 0x65 || // "e" ~ EdoBox
+            variantTest == 0x4A || // "J" ~ JukeBox
+            variantTest == 0x78 || // "x" ~ XenBox
+            variantTest == 0x70 || // "p" ~ 41Box
+            variantTest == 0x62 || // "b" ~ BeepBox Mod
+            variantTest == 0x6D || // "m" ~ Midbox
+            variantTest == 0x74 || // "t" ~ TheepBox
+            variantTest == 0x58    // "X" ~ MatchBox
+        ) {
+            fromJummBox = true;
+            fromOtherMod = true;
+            charIndex++;
+        } else {
             fromBeepBox = true;
-            fromJummBox = false;
-            fromGoldBox = false;
-	        fromUltraBox = false;
         }
 
         const version: number = base64CharCodeToInt[compressed.charCodeAt(charIndex++)];
-        if (fromBeepBox && (version == -1 || version > Song._latestBeepboxVersion || version < Song._oldestBeepboxVersion)) return;
-        if (fromJummBox && (version == -1 || version > Song._latestJummBoxVersion || version < Song._oldestJummBoxVersion)) return;
+        if (fromMegaBox && (version == -1 || version > Song._latestMegaBoxVersion || version < Song._oldestMegaBoxVersion)) return;
+        if (fromUltraBox && !fromMegaBox && !fromOtherMod && (version == -1 || version > Song._latestUltraBoxVersion || version < Song._oldestUltraBoxVersion)) return;
+        if (fromJummBox && !fromOtherMod && (version == -1 || version > Song._latestJummBoxVersion || version < Song._oldestJummBoxVersion)) return;
         if (fromGoldBox && (version == -1 || version > Song._latestGoldBoxVersion || version < Song._oldestGoldBoxVersion)) return;
-	    if (fromUltraBox && (version == -1 || version > Song._latestUltraBoxVersion || version < Song._oldestUltraBoxVersion)) return;
+        if (fromBeepBox && (version == -1 || version > Song._latestBeepboxVersion || version < Song._oldestBeepboxVersion)) return;
+        if (fromOtherMod && (version == -1 || version < 1)) return;
         const beforeTwo: boolean = version < 2;
         const beforeThree: boolean = version < 3;
         const beforeFour: boolean = version < 4;
@@ -6116,7 +6131,7 @@ export class Song {
         const result: any = {
             "name": this.title,
             "format": Song._format,
-            "version": Song._latestUltraBoxVersion,
+            "version": Song._latestMegaBoxVersion,
             "scale": Config.scales[this.scale].name,
             "customScale": this.scaleCustom,
             "key": Config.keys[this.key].name,
