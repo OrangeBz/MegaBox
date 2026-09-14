@@ -134,7 +134,60 @@ export class Layout {
 		}
 	}
 
-	public static setLayout(_layoutName?: string): void {
+	public static setLayout(layoutName?: string): void {
+		if (layoutName) {
+			const updates: Partial<WorkspaceState> = {};
+			switch (layoutName) {
+				case "flipped long":
+					updates.primarySplit = "vertical";
+					updates.primaryInverted = true;
+					updates.songSettingsDock = "left";
+					updates.instrumentSettingsDock = "left";
+					updates.sharedDockOrientation = "column";
+					updates.sharedDockOrder = "song-first";
+					break;
+				case "tall":
+					updates.primarySplit = "horizontal";
+					updates.primaryInverted = false;
+					updates.songSettingsDock = "right";
+					updates.instrumentSettingsDock = "right";
+					updates.sharedDockOrientation = "row";
+					updates.sharedDockOrder = "song-first";
+					break;
+				case "wide":
+					updates.primarySplit = "vertical";
+					updates.primaryInverted = false;
+					updates.songSettingsDock = "left";
+					updates.instrumentSettingsDock = "right";
+					break;
+				case "wide long":
+					updates.primarySplit = "vertical";
+					updates.primaryInverted = false;
+					updates.songSettingsDock = "right";
+					updates.instrumentSettingsDock = "right";
+					updates.sharedDockOrientation = "column";
+					updates.sharedDockOrder = "instrument-first";
+					break;
+				case "focused long":
+					updates.primarySplit = "vertical";
+					updates.primaryInverted = false;
+					updates.songSettingsDock = "right";
+					updates.instrumentSettingsDock = "right";
+					updates.sharedDockOrientation = "column";
+					updates.sharedDockOrder = "song-first";
+					break;
+				case "long":
+					updates.primarySplit = "vertical";
+					updates.primaryInverted = false;
+					updates.songSettingsDock = "right";
+					updates.instrumentSettingsDock = "right";
+					updates.sharedDockOrientation = "row";
+					updates.sharedDockOrder = "song-first";
+					break;
+			}
+			this.saveWorkspaceState(updates);
+			return;
+		}
 		this.applyWorkspaceState();
 	}
 
@@ -183,7 +236,7 @@ export class Layout {
 
 		const defaultVRows = !state.primaryInverted
 			? "max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr)"
-			: "max-content var(--track-area-height, 180px) 6px minmax(180px, 1fr)";
+			: "max-content var(--track-area-height, 180px) 6px minmax(100px, 1fr)";
 
 		// Case 1: Song Settings on Left, Instrument Settings on Right
 		if (songDock === "left" && instDock === "right") {

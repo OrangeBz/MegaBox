@@ -1963,6 +1963,7 @@ export class SongEditor {
         let hStartX = 0;
         let hStartY = 0;
         let hStartDimension = 0;
+        let hLastCalculatedDimension = 0;
         let hMoved = false;
         let hLastExpandedHeight = 460;
 
@@ -1977,14 +1978,16 @@ export class SongEditor {
                 if (Math.abs(deltaX) > 3) hMoved = true;
                 const maxW = Math.max(200, window.innerWidth - 200);
                 const newWidth = Math.max(160, Math.min(maxW, hStartDimension + deltaX));
+                hLastCalculatedDimension = newWidth;
                 document.documentElement.style.setProperty("--primary-left-width", `${newWidth}px`);
             } else {
                 const clientY = "touches" in e ? (e as TouchEvent).touches[0].clientY : (e as MouseEvent).clientY;
                 const deltaY = clientY - hStartY;
                 if (Math.abs(deltaY) > 3) hMoved = true;
-                const maxH = Math.max(200, window.innerHeight - 200);
-                const minH = isInverted ? 60 : 160;
+                const maxH = Math.max(200, window.innerHeight - 150);
+                const minH = isInverted ? 50 : 160;
                 const newHeight = Math.max(minH, Math.min(maxH, hStartDimension + deltaY));
+                hLastCalculatedDimension = newHeight;
                 if (isInverted) {
                     document.documentElement.style.setProperty("--track-area-height", `${newHeight}px`);
                 } else {
@@ -2012,15 +2015,15 @@ export class SongEditor {
 
             if (hMoved) {
                 if (isHorizontal) {
-                    const currentW = (isInverted ? this._trackArea : this._patternArea).clientWidth;
-                    Layout.setPanelSize("primaryLeftWidth", currentW);
+                    const finalW = hLastCalculatedDimension || (isInverted ? this._trackArea : this._patternArea).clientWidth;
+                    Layout.setPanelSize("primaryLeftWidth", finalW);
                 } else {
                     if (isInverted) {
-                        const currentH = this._trackArea.clientHeight;
-                        Layout.setPanelSize("trackAreaHeight", currentH);
+                        const finalH = hLastCalculatedDimension || this._trackArea.clientHeight;
+                        Layout.setPanelSize("trackAreaHeight", finalH);
                     } else {
-                        const currentH = this._patternArea.clientHeight;
-                        Layout.setPanelSize("patternAreaHeight", currentH);
+                        const finalH = hLastCalculatedDimension || this._patternArea.clientHeight;
+                        Layout.setPanelSize("patternAreaHeight", finalH);
                     }
                 }
             } else {
@@ -2058,6 +2061,7 @@ export class SongEditor {
             hStartY = "touches" in e ? (e as TouchEvent).touches[0].clientY : (e as MouseEvent).clientY;
             const topOrLeftPanel = Layout.getWorkspaceState().primaryInverted ? this._trackArea : this._patternArea;
             hStartDimension = isHorizontal ? topOrLeftPanel.clientWidth : topOrLeftPanel.clientHeight;
+            hLastCalculatedDimension = hStartDimension;
             this._horizontalSplitter.classList.add("active");
             document.body.classList.add(isHorizontal ? "resizing-v" : "resizing-h");
             window.addEventListener("mousemove", onHPointerMove);

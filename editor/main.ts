@@ -33,10 +33,16 @@ if (trackEl) trackEl.className += " load";
 const barScrollEl = editor.mainLayer.getElementsByClassName("barScrollBar")[0];
 if (barScrollEl) barScrollEl.className += " load";
 
-// Give select2 class to these (disable searchbox on mobile / coarse pointers to prevent OS virtual keyboard from appearing instead of the list)
+// Give select2 class to these (disable searchbox to prevent OS virtual keyboard from appearing on mobile)
+const isMobileOrTouch: boolean = isMobile || (typeof window !== "undefined" && (
+	(window.matchMedia && (window.matchMedia("(pointer: coarse)").matches || window.matchMedia("(max-width: 900px)").matches || window.matchMedia("(max-height: 560px)").matches)) ||
+	('ontouchstart' in window) ||
+	(navigator.maxTouchPoints > 0)
+));
+
 const select2Opts = {
 	dropdownAutoWidth: true,
-	minimumResultsForSearch: (window.matchMedia && window.matchMedia("(pointer: coarse)").matches) ? Infinity : 10
+	minimumResultsForSearch: Infinity
 };
 $('#pitchPresetSelect').select2(select2Opts);
 $('#drumPresetSelect').select2(select2Opts);
@@ -48,6 +54,14 @@ $("body").on('click', '.select2-container--open .select2-results__group', functi
 
 // Open event to collapse all optgroups by default
 $("#pitchPresetSelect").on('select2:open', function () {
+	if (isMobileOrTouch) {
+		const searchField = document.querySelector('.select2-search__field') as HTMLElement | null;
+		if (searchField) {
+			searchField.setAttribute('readonly', 'readonly');
+			searchField.setAttribute('inputmode', 'none');
+			searchField.blur();
+		}
+	}
 	$('.select2-dropdown--below').css('opacity', 0);
 	$('.select2-dropdown').css('opacity', 1);
 	$('#pitchPresetSelect')
@@ -69,6 +83,14 @@ $("#pitchPresetSelect").on('select2:open', function () {
 
 // Open event to collapse all optgroups by default
 $("#drumPresetSelect").on('select2:open', function () {
+	if (isMobileOrTouch) {
+		const searchField = document.querySelector('.select2-search__field') as HTMLElement | null;
+		if (searchField) {
+			searchField.setAttribute('readonly', 'readonly');
+			searchField.setAttribute('inputmode', 'none');
+			searchField.blur();
+		}
+	}
 	$('.select2-dropdown--below').css('opacity', 0);
 	$('.select2-dropdown').css('opacity', 1);
 	$('#drumPresetSelect')

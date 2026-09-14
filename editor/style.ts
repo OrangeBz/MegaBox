@@ -1295,20 +1295,12 @@ body.resizing-v {
     display:none !important;
 }
 
+.select2-search,
 .select2-search--dropdown {
-    display: block;
-    padding: 4px;
-}
-.select2-search__field {
-    background: #141416;
-    color: inherit !important;
-    font-size: 13px;
-    font-family: var(--font-sans);
-    border: 1px solid var(--border-default, #3f3f46) !important;
-    border-radius: 4px;
-    padding: 4px 6px !important;
-    box-sizing: border-box;
-    width: 100% !important;
+    display: none !important;
+    padding: 0;
+    height: 0;
+    overflow: hidden;
 }
 .select2-container--open {
     z-index: 100020 !important;
