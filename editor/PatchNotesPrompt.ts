@@ -105,13 +105,13 @@ export class PatchNotesPrompt implements Prompt {
 			},
 		];
 
-		const cardElements: HTMLElement[] = categories.map(cat => {
+		const sectionElements: HTMLElement[] = categories.map(cat => {
 			const items = es ? cat.itemsEs : cat.itemsEn;
 			return div({
-				style: "padding: 12px 14px; margin-bottom: 10px; border-radius: 8px; background: var(--ui-widget-background, rgba(255, 255, 255, 0.05)); border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.1)); display: flex; flex-direction: column; gap: 4px;"
+				style: "margin-bottom: 16px;"
 			},
-				h3({ style: "margin: 0 0 4px 0; font-size: 1rem; font-weight: 700; color: var(--accent-mod-cyan, #38bdf8);" }, es ? cat.titleEs : cat.titleEn),
-				ul({ style: "margin: 0; padding-left: 18px; line-height: 1.5; font-size: 0.88rem; color: var(--primary-text, #e2e8f0);" },
+				h3({ style: "margin: 0 0 6px 0; font-size: 1rem; font-weight: 700; color: var(--accent-mod-cyan, #38bdf8);" }, es ? cat.titleEs : cat.titleEn),
+				ul({ style: "margin: 0; padding-left: 18px; line-height: 1.6; font-size: 0.88rem; color: var(--primary-text, #e2e8f0);" },
 					...items.map(item => li(item)),
 				),
 			);
@@ -120,11 +120,11 @@ export class PatchNotesPrompt implements Prompt {
 		this.container = div({ class: "prompt patchNotesPrompt", style: "width: 600px; max-width: 90vw;" },
 			h2(es ? "Notas de Versión — MegaBox v1.0" : "Patch Notes — MegaBox v1.0"),
 			div({ style: "max-height: 480px; overflow-y: auto; padding-right: 8px; text-align: left;" },
-				p({ style: "margin: 0 0 10px 0; font-size: 0.85rem; color: var(--secondary-text, #94a3b8);" },
+				p({ style: "margin: 0 0 14px 0; font-size: 0.85rem; color: var(--secondary-text, #94a3b8);" },
 					b(es ? "Lanzamiento oficial v1.0 • " : "Official Release v1.0 • "),
 					"MegaBox by OrangeBz"
 				),
-				...cardElements,
+				...sectionElements,
 			),
 			this._cancelButton,
 		);

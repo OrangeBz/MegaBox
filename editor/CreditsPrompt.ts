@@ -5,7 +5,7 @@ import { Prompt } from "./Prompt";
 import { HTML } from "imperative-html/dist/esm/elements-strict";
 import { isSpanish } from "./Localization";
 
-const { button, div, h2, h3, p, a, b } = HTML;
+const { button, div, span, h2, p, a } = HTML;
 
 interface ModCredit {
 	name: string;
@@ -60,19 +60,25 @@ export class CreditsPrompt implements Prompt {
 	constructor(private _doc: SongDocument) {
 		const es = isSpanish();
 
-		const cardElements: HTMLElement[] = modCredits.map(mod => {
+		const creditElements: HTMLElement[] = modCredits.map(mod => {
 			const isHighlighted = !!mod.highlight;
 			return div({
-				style: `padding: 10px 14px; margin-bottom: 8px; border-radius: 8px; background: ${isHighlighted ? "rgba(56, 189, 248, 0.12)" : "var(--ui-widget-background, rgba(255, 255, 255, 0.05))"}; border: 1px solid ${isHighlighted ? "var(--accent-mod-cyan, #38bdf8)" : "var(--border-subtle, rgba(255, 255, 255, 0.1))"}; display: flex; flex-direction: column; gap: 3px;`
+				style: "padding: 8px 0; border-bottom: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.08)); display: flex; justify-content: space-between; align-items: baseline; gap: 12px;"
 			},
-				div({ style: "display: flex; justify-content: space-between; align-items: center;" },
-					h3({ style: `margin: 0; font-size: 1.05rem; font-weight: 700; color: ${isHighlighted ? "var(--accent-mod-cyan, #38bdf8)" : "var(--primary-text, #fff)"};` }, mod.name),
-					a({ href: mod.url, target: "_blank", style: "font-size: 0.85rem; color: var(--link-accent, #38bdf8); text-decoration: underline;" }, es ? "Visitar web" : "Visit website"),
+				div({ style: "display: flex; flex-direction: column; gap: 2px;" },
+					div({ style: `font-weight: 700; font-size: 0.95rem; color: ${isHighlighted ? "var(--accent-mod-cyan, #38bdf8)" : "var(--primary-text, #e2e8f0)"};` },
+						mod.name,
+						isHighlighted ? span({ style: "margin-left: 8px; font-size: 0.75rem; font-weight: 600; color: var(--accent-mod-cyan, #38bdf8);" }, es ? "(Actual)" : "(Current)") : ""
+					),
+					div({ style: "font-size: 0.83rem; color: var(--secondary-text, #94a3b8);" },
+						`${es ? "Creado por: " : "Made by: "}${mod.authors}`
+					)
 				),
-				p({ style: "margin: 0; font-size: 0.85rem; color: var(--secondary-text, #94a3b8);" },
-					b(es ? "Creado por: " : "Made by: "),
-					mod.authors
-				),
+				a({
+					href: mod.url,
+					target: "_blank",
+					style: "font-size: 0.83rem; color: var(--link-accent, #38bdf8); text-decoration: underline; white-space: nowrap;"
+				}, es ? "Web" : "Website"),
 			);
 		});
 
@@ -84,7 +90,7 @@ export class CreditsPrompt implements Prompt {
 						? "MegaBox se construye sobre el legado de BeepBox y su increíble comunidad de desarrolladores de mods:"
 						: "MegaBox is built upon the legacy of BeepBox and its incredible community of mod developers:"
 				),
-				...cardElements,
+				...creditElements,
 			),
 			this._cancelButton,
 		);

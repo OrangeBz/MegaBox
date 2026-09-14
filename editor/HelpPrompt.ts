@@ -15,14 +15,14 @@ export class HelpPrompt implements Prompt {
 	constructor(private _doc: SongDocument) {
 		const es = isSpanish();
 
-		const cardStyle = "padding: 12px 14px; margin-bottom: 10px; border-radius: 8px; background: var(--ui-widget-background, rgba(255, 255, 255, 0.05)); border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.1)); display: flex; flex-direction: column; gap: 6px;";
-		const h3Style = "margin: 0 0 4px 0; font-size: 1rem; font-weight: 700; color: var(--accent-mod-cyan, #38bdf8);";
+		const sectionStyle = "margin-bottom: 16px; text-align: left;";
+		const h3Style = "margin: 0 0 6px 0; font-size: 1rem; font-weight: 700; color: var(--accent-mod-cyan, #38bdf8);";
 
 		this.container = div({ class: "prompt helpPrompt", style: "width: 580px; max-width: 90vw;" },
 			h2(es ? "Ayuda e Instrucciones" : "Help & Instructions"),
 			div({ style: "max-height: 480px; overflow-y: auto; padding-right: 8px; text-align: left;" },
-				// Card 1: Overview
-				div({ style: cardStyle },
+				// Section 1: Overview
+				div({ style: sectionStyle },
 					h3({ style: h3Style }, es ? "Resumen básico" : "Basic Overview"),
 					p({ style: "margin: 0; font-size: 0.88rem; line-height: 1.5; color: var(--primary-text, #e2e8f0);" },
 						es
@@ -36,8 +36,8 @@ export class HelpPrompt implements Prompt {
 					),
 				),
 
-				// Card 2: Workspace & Panels
-				div({ style: cardStyle },
+				// Section 2: Workspace & Panels
+				div({ style: sectionStyle },
 					h3({ style: h3Style }, es ? "Espacio modular y movimiento de paneles" : "Modular Workspace & Panel Movement"),
 					ul({ style: "margin: 0; padding-left: 18px; line-height: 1.6; font-size: 0.88rem; color: var(--primary-text, #e2e8f0);" },
 						li(b(es ? "Arrastrar y reorganizar paneles: " : "Drag & Rearrange Panels: "), es ? "Arrastra los paneles desde su botón de candado para cambiar su orden en divisiones horizontales o verticales." : "Drag panels by their lock button to reorder piano roll, sequencer, and settings sidebars horizontally or vertically."),
@@ -46,8 +46,8 @@ export class HelpPrompt implements Prompt {
 					),
 				),
 
-				// Card 3: Mobile & Touch
-				div({ style: cardStyle },
+				// Section 3: Mobile & Touch
+				div({ style: sectionStyle },
 					h3({ style: h3Style }, es ? "Movimiento táctil y versión móvil" : "Mobile & Touch Movement"),
 					ul({ style: "margin: 0; padding-left: 18px; line-height: 1.6; font-size: 0.88rem; color: var(--primary-text, #e2e8f0);" },
 						li(b(es ? "Arrastre / Desplazamiento en secuenciador: " : "Sequencer Drag / Scroll: "), es ? "Arrastra horizontalmente sobre las pistas para hacer scroll fluido sin cambiar números de patrón por error." : "Drag horizontally across the track sequencer on touch devices to scroll smoothly without accidentally stepping pattern numbers."),
@@ -57,8 +57,8 @@ export class HelpPrompt implements Prompt {
 					),
 				),
 
-				// Card 4: Keyboard Shortcuts
-				div({ style: cardStyle },
+				// Section 4: Keyboard Shortcuts
+				div({ style: sectionStyle },
 					h3({ style: h3Style }, es ? "Atajos de teclado" : "Keyboard Shortcuts"),
 					ul({ style: "margin: 0; padding-left: 18px; line-height: 1.6; font-size: 0.88rem; color: var(--primary-text, #e2e8f0);" },
 						li(b("Spacebar"), es ? ": Reproducir / Pausar | " : ": Play / Pause | ", b("Shift + Spacebar"), es ? ": Reproducir desde cursor" : ": Play from cursor"),
@@ -76,8 +76,8 @@ export class HelpPrompt implements Prompt {
 					),
 				),
 
-				// Card 5: Tips
-				div({ style: cardStyle },
+				// Section 5: Tips
+				div({ style: sectionStyle },
 					h3({ style: h3Style }, es ? "Consejos de edición y modulación" : "Editing & Modulation Tips"),
 					ul({ style: "margin: 0; padding-left: 18px; line-height: 1.6; font-size: 0.88rem; color: var(--primary-text, #e2e8f0);" },
 						li(b(es ? "Pitch Bend: " : "Pitch Bending: "), es ? "Arrastra verticalmente desde una nota existente." : "Drag vertically from an existing note to bend pitch."),
