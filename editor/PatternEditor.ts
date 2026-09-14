@@ -1680,7 +1680,7 @@ export class PatternEditor {
 
                 if (this._doc.prefs.enableNotePreview && !this._doc.synth.playing) {
                     // Play the new note out loud if enabled.
-                    const duration: number = Math.max(Config.partsPerBeat * 6, this._cursor.end - this._cursor.start);
+                    const duration: number = Math.min(Config.partsPerBeat, Math.max(Config.partsPerBeat / 2, this._cursor.end - this._cursor.start));
                     this._doc.performance.setTemporaryPitches([this._cursor.pitch], duration);
                 }
             }
@@ -2142,7 +2142,7 @@ export class PatternEditor {
                 if (this._doc.prefs.enableNotePreview) {
                     if (!this._doc.synth.playing && this._cursor.valid && this._mouseDragging && this._dragVisible) {
                         const pitchToPlay = (this._cursor.curNote != null) ? this._cursor.curNote.pitches : [this._cursor.pitch];
-                        const duration: number = Math.max(Config.partsPerBeat * 6, 24);
+                        const duration: number = Config.partsPerBeat;
                         this._doc.performance.setTemporaryPitches(pitchToPlay, duration);
                     } else if (this._mouseDragging && !this._dragVisible) {
                         this._doc.performance.clearAllPitches();
@@ -2164,7 +2164,7 @@ export class PatternEditor {
                     this._copyPins(this._cursor.curNote);
 
                     if (this._doc.prefs.enableNotePreview && !this._doc.synth.playing) {
-                        const duration: number = Math.max(Config.partsPerBeat * 6, this._cursor.end - this._cursor.start);
+                        const duration: number = Math.min(Config.partsPerBeat, Math.max(Config.partsPerBeat / 2, this._cursor.end - this._cursor.start));
                         this._doc.performance.setTemporaryPitches(this._cursor.curNote.pitches, duration);
                     }
                 } else {

@@ -181,16 +181,11 @@ export class Layout {
 			if (!isHorizontalPrimary) {
 				gridTemplateColumns = "clamp(185px, var(--song-settings-width, 192px), 320px) 6px minmax(250px, 1fr) 6px clamp(185px, var(--instrument-settings-width, 216px), 320px)";
 				gridTemplateRows = "max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr)";
-				gridTemplateAreas = state.primaryInverted ? `
-					"menu-area menu-area menu-area menu-area menu-area"
-					"${topPanel} ${topPanel} ${topPanel} ${topPanel} ${topPanel}"
-					"h-splitter h-splitter h-splitter h-splitter h-splitter"
-					"song-settings-area v-splitter-left ${bottomPanel} v-splitter-right instrument-settings-area"
-				` : `
+				gridTemplateAreas = `
 					"menu-area menu-area menu-area menu-area menu-area"
 					"song-settings-area v-splitter-left ${topPanel} v-splitter-right instrument-settings-area"
-					"h-splitter h-splitter h-splitter h-splitter h-splitter"
-					"${bottomPanel} ${bottomPanel} ${bottomPanel} ${bottomPanel} ${bottomPanel}"
+					"song-settings-area v-splitter-left h-splitter v-splitter-right instrument-settings-area"
+					"song-settings-area v-splitter-left ${bottomPanel} v-splitter-right instrument-settings-area"
 				`;
 			} else {
 				gridTemplateColumns = "clamp(185px, var(--song-settings-width, 192px), 320px) 6px var(--primary-left-width, 1fr) 6px minmax(200px, 1fr) 6px clamp(185px, var(--instrument-settings-width, 216px), 320px)";
@@ -206,16 +201,11 @@ export class Layout {
 			if (!isHorizontalPrimary) {
 				gridTemplateColumns = "clamp(185px, var(--instrument-settings-width, 216px), 320px) 6px minmax(250px, 1fr) 6px clamp(185px, var(--song-settings-width, 192px), 320px)";
 				gridTemplateRows = "max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr)";
-				gridTemplateAreas = state.primaryInverted ? `
-					"menu-area menu-area menu-area menu-area menu-area"
-					"${topPanel} ${topPanel} ${topPanel} ${topPanel} ${topPanel}"
-					"h-splitter h-splitter h-splitter h-splitter h-splitter"
-					"instrument-settings-area v-splitter-left ${bottomPanel} v-splitter-right song-settings-area"
-				` : `
+				gridTemplateAreas = `
 					"menu-area menu-area menu-area menu-area menu-area"
 					"instrument-settings-area v-splitter-left ${topPanel} v-splitter-right song-settings-area"
-					"h-splitter h-splitter h-splitter h-splitter h-splitter"
-					"${bottomPanel} ${bottomPanel} ${bottomPanel} ${bottomPanel} ${bottomPanel}"
+					"instrument-settings-area v-splitter-left h-splitter v-splitter-right song-settings-area"
+					"instrument-settings-area v-splitter-left ${bottomPanel} v-splitter-right song-settings-area"
 				`;
 			} else {
 				gridTemplateColumns = "clamp(185px, var(--instrument-settings-width, 216px), 320px) 6px var(--primary-left-width, 1fr) 6px minmax(200px, 1fr) 6px clamp(185px, var(--song-settings-width, 192px), 320px)";
@@ -237,16 +227,11 @@ export class Layout {
 				if (!isHorizontalPrimary) {
 					gridTemplateColumns = `clamp(185px, ${firstWidth}, 320px) 6px clamp(185px, ${secondWidth}, 320px) 6px minmax(250px, 1fr)`;
 					gridTemplateRows = "max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr)";
-					gridTemplateAreas = state.primaryInverted ? `
-						"menu-area menu-area menu-area menu-area menu-area"
-						"${topPanel} ${topPanel} ${topPanel} ${topPanel} ${topPanel}"
-						"h-splitter h-splitter h-splitter h-splitter h-splitter"
-						"${firstPanel} v-splitter-mid ${secondPanel} v-splitter-left ${bottomPanel}"
-					` : `
+					gridTemplateAreas = `
 						"menu-area menu-area menu-area menu-area menu-area"
 						"${firstPanel} v-splitter-mid ${secondPanel} v-splitter-left ${topPanel}"
-						"h-splitter h-splitter h-splitter h-splitter h-splitter"
-						"${bottomPanel} ${bottomPanel} ${bottomPanel} ${bottomPanel} ${bottomPanel}"
+						"${firstPanel} v-splitter-mid ${secondPanel} v-splitter-left h-splitter"
+						"${firstPanel} v-splitter-mid ${secondPanel} v-splitter-left ${bottomPanel}"
 					`;
 				} else {
 					gridTemplateColumns = `clamp(185px, ${firstWidth}, 320px) 6px clamp(185px, ${secondWidth}, 320px) 6px var(--primary-left-width, 1fr) 6px minmax(200px, 1fr)`;
@@ -261,16 +246,11 @@ export class Layout {
 				if (!isHorizontalPrimary) {
 					gridTemplateColumns = "clamp(185px, var(--settings-col-width, 216px), 320px) 6px minmax(250px, 1fr)";
 					gridTemplateRows = "max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr)";
-					gridTemplateAreas = state.primaryInverted ? `
-						"menu-area menu-area menu-area"
-						"${topPanel} ${topPanel} ${topPanel}"
-						"h-splitter h-splitter h-splitter"
-						"settings-col-area v-splitter-left ${bottomPanel}"
-					` : `
+					gridTemplateAreas = `
 						"menu-area menu-area menu-area"
 						"settings-col-area v-splitter-left ${topPanel}"
-						"h-splitter h-splitter h-splitter"
-						"${bottomPanel} ${bottomPanel} ${bottomPanel}"
+						"settings-col-area v-splitter-left h-splitter"
+						"settings-col-area v-splitter-left ${bottomPanel}"
 					`;
 				} else {
 					gridTemplateColumns = "clamp(185px, var(--settings-col-width, 216px), 320px) 6px var(--primary-left-width, 1fr) 6px minmax(200px, 1fr)";
@@ -293,16 +273,11 @@ export class Layout {
 				if (!isHorizontalPrimary) {
 					gridTemplateColumns = `minmax(250px, 1fr) 6px clamp(185px, ${firstWidth}, 320px) 6px clamp(185px, ${secondWidth}, 320px)`;
 					gridTemplateRows = "max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr)";
-					gridTemplateAreas = state.primaryInverted ? `
-						"menu-area menu-area menu-area menu-area menu-area"
-						"${topPanel} ${topPanel} ${topPanel} ${topPanel} ${topPanel}"
-						"h-splitter h-splitter h-splitter h-splitter h-splitter"
-						"${bottomPanel} v-splitter-right ${firstPanel} v-splitter-mid ${secondPanel}"
-					` : `
+					gridTemplateAreas = `
 						"menu-area menu-area menu-area menu-area menu-area"
 						"${topPanel} v-splitter-right ${firstPanel} v-splitter-mid ${secondPanel}"
-						"h-splitter h-splitter h-splitter h-splitter h-splitter"
-						"${bottomPanel} ${bottomPanel} ${bottomPanel} ${bottomPanel} ${bottomPanel}"
+						"h-splitter v-splitter-right ${firstPanel} v-splitter-mid ${secondPanel}"
+						"${bottomPanel} v-splitter-right ${firstPanel} v-splitter-mid ${secondPanel}"
 					`;
 				} else {
 					gridTemplateColumns = `var(--primary-left-width, 1fr) 6px minmax(200px, 1fr) 6px clamp(185px, ${firstWidth}, 320px) 6px clamp(185px, ${secondWidth}, 320px)`;
@@ -317,16 +292,11 @@ export class Layout {
 				if (!isHorizontalPrimary) {
 					gridTemplateColumns = "minmax(250px, 1fr) 6px clamp(185px, var(--settings-col-width, 216px), 320px)";
 					gridTemplateRows = "max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr)";
-					gridTemplateAreas = state.primaryInverted ? `
-						"menu-area menu-area menu-area"
-						"${topPanel} ${topPanel} ${topPanel}"
-						"h-splitter h-splitter h-splitter"
-						"${bottomPanel} v-splitter-right settings-col-area"
-					` : `
+					gridTemplateAreas = `
 						"menu-area menu-area menu-area"
 						"${topPanel} v-splitter-right settings-col-area"
-						"h-splitter h-splitter h-splitter"
-						"${bottomPanel} ${bottomPanel} ${bottomPanel}"
+						"h-splitter v-splitter-right settings-col-area"
+						"${bottomPanel} v-splitter-right settings-col-area"
 					`;
 				} else {
 					gridTemplateColumns = "var(--primary-left-width, 1fr) 6px minmax(200px, 1fr) 6px clamp(185px, var(--settings-col-width, 216px), 320px)";

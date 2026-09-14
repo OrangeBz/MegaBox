@@ -1851,18 +1851,37 @@ export class SongEditor {
         this._mobileDrawerBackdrop.addEventListener("click", () => this._closeMobileDrawers());
         
         const dismissRotatePrompt = () => {
-            try {
-                window.localStorage.setItem("megabox_rotate_dismissed", "true");
-            } catch (e) {}
+            this._rotateDevicePrompt.classList.add("dismissed");
             this._rotateDevicePrompt.style.display = "none";
         };
         this._rotateDismissBtn.addEventListener("click", dismissRotatePrompt);
         this._rotateDevicePrompt.addEventListener("click", (e: MouseEvent) => {
             if (e.target === this._rotateDevicePrompt) dismissRotatePrompt();
         });
-        if (window.localStorage.getItem("megabox_rotate_dismissed") === "true") {
-            this._rotateDevicePrompt.style.display = "none";
+        
+        try {
+            window.localStorage.removeItem("megabox_rotate_dismissed");
+        } catch (e) {}
+
+        const handleOrientationOrResize = () => {
+            const isLandscape = window.innerWidth > window.innerHeight;
+            if (isLandscape) {
+                // When rotated to landscape, reset dismissal so next time they rotate back to portrait it shows again!
+                this._rotateDevicePrompt.classList.remove("dismissed");
+                this._rotateDevicePrompt.style.display = "";
+            }
+        };
+
+        if (window.matchMedia) {
+            const portraitQuery = window.matchMedia("(orientation: portrait)");
+            if (portraitQuery.addEventListener) {
+                portraitQuery.addEventListener("change", handleOrientationOrResize);
+            } else if ((portraitQuery as any).addListener) {
+                (portraitQuery as any).addListener(handleOrientationOrResize);
+            }
         }
+        window.addEventListener("orientationchange", handleOrientationOrResize);
+        window.addEventListener("resize", handleOrientationOrResize);
 
         this._volumeSlider.container.style.setProperty("display", "flex");
 

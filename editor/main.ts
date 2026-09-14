@@ -33,9 +33,13 @@ if (trackEl) trackEl.className += " load";
 const barScrollEl = editor.mainLayer.getElementsByClassName("barScrollBar")[0];
 if (barScrollEl) barScrollEl.className += " load";
 
-// Give select2 class to these
-$('#pitchPresetSelect').select2({ dropdownAutoWidth: true });
-$('#drumPresetSelect').select2({ dropdownAutoWidth: true });
+// Give select2 class to these (disable searchbox on mobile / coarse pointers to prevent OS virtual keyboard from appearing instead of the list)
+const select2Opts = {
+	dropdownAutoWidth: true,
+	minimumResultsForSearch: (window.matchMedia && window.matchMedia("(pointer: coarse)").matches) ? Infinity : 10
+};
+$('#pitchPresetSelect').select2(select2Opts);
+$('#drumPresetSelect').select2(select2Opts);
 
 // Onclick event to expand/collapse optgroups
 $("body").on('click', '.select2-container--open .select2-results__group', function () {
