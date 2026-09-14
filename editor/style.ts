@@ -21,6 +21,7 @@ document.head.appendChild(HTML.style({ type: "text/css" }, `
 /* Note: "#" symbols need to be encoded as "%23" in SVG data urls, otherwise they are interpreted as fragment identifiers! */
 :root {
 	--pattern-area-height: 481px;
+	--track-area-height: 180px;
 	--primary-left-width: 1fr;
 	--settings-area-width: 192px;
 	--font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;

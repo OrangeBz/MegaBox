@@ -1970,6 +1970,7 @@ export class SongEditor {
             if (!hDragging) return;
             const isMobileLandscape = window.matchMedia("(orientation: landscape) and (max-height: 560px), (max-width: 900px) and (orientation: landscape)").matches;
             const isHorizontal = isMobileLandscape || Layout.getWorkspaceState().primarySplit === "horizontal";
+            const isInverted = Layout.getWorkspaceState().primaryInverted;
             if (isHorizontal) {
                 const clientX = "touches" in e ? (e as TouchEvent).touches[0].clientX : (e as MouseEvent).clientX;
                 const deltaX = clientX - hStartX;
@@ -1982,9 +1983,14 @@ export class SongEditor {
                 const deltaY = clientY - hStartY;
                 if (Math.abs(deltaY) > 3) hMoved = true;
                 const maxH = Math.max(200, window.innerHeight - 200);
-                const newHeight = Math.max(160, Math.min(maxH, hStartDimension + deltaY));
-                document.documentElement.style.setProperty("--pattern-area-height", `${newHeight}px`);
-                hLastExpandedHeight = newHeight;
+                const minH = isInverted ? 60 : 160;
+                const newHeight = Math.max(minH, Math.min(maxH, hStartDimension + deltaY));
+                if (isInverted) {
+                    document.documentElement.style.setProperty("--track-area-height", `${newHeight}px`);
+                } else {
+                    document.documentElement.style.setProperty("--pattern-area-height", `${newHeight}px`);
+                    hLastExpandedHeight = newHeight;
+                }
             }
             this.whenUpdated();
         };
@@ -2002,28 +2008,41 @@ export class SongEditor {
 
             const isMobileLandscape = window.matchMedia("(orientation: landscape) and (max-height: 560px), (max-width: 900px) and (orientation: landscape)").matches;
             const isHorizontal = isMobileLandscape || Layout.getWorkspaceState().primarySplit === "horizontal";
+            const isInverted = Layout.getWorkspaceState().primaryInverted;
 
             if (hMoved) {
                 if (isHorizontal) {
-                    const currentW = (Layout.getWorkspaceState().primaryInverted ? this._trackArea : this._patternArea).clientWidth;
+                    const currentW = (isInverted ? this._trackArea : this._patternArea).clientWidth;
                     Layout.setPanelSize("primaryLeftWidth", currentW);
                 } else {
-                    const currentH = this._patternArea.clientHeight;
-                    Layout.setPanelSize("patternAreaHeight", currentH);
+                    if (isInverted) {
+                        const currentH = this._trackArea.clientHeight;
+                        Layout.setPanelSize("trackAreaHeight", currentH);
+                    } else {
+                        const currentH = this._patternArea.clientHeight;
+                        Layout.setPanelSize("patternAreaHeight", currentH);
+                    }
                 }
             } else {
                 if (!isHorizontal) {
-                    const currentH = this._patternArea.clientHeight;
-                    let targetH: number;
-                    if (currentH <= 170) {
-                        targetH = Math.max(300, hLastExpandedHeight);
-                        document.documentElement.style.setProperty("--pattern-area-height", `${targetH}px`);
+                    if (isInverted) {
+                        const currentH = this._trackArea.clientHeight;
+                        const targetH = currentH <= 100 ? 180 : 80;
+                        document.documentElement.style.setProperty("--track-area-height", `${targetH}px`);
+                        Layout.setPanelSize("trackAreaHeight", targetH);
                     } else {
-                        hLastExpandedHeight = currentH;
-                        targetH = 160;
-                        document.documentElement.style.setProperty("--pattern-area-height", "160px");
+                        const currentH = this._patternArea.clientHeight;
+                        let targetH: number;
+                        if (currentH <= 170) {
+                            targetH = Math.max(300, hLastExpandedHeight);
+                            document.documentElement.style.setProperty("--pattern-area-height", `${targetH}px`);
+                        } else {
+                            hLastExpandedHeight = currentH;
+                            targetH = 160;
+                            document.documentElement.style.setProperty("--pattern-area-height", "160px");
+                        }
+                        Layout.setPanelSize("patternAreaHeight", targetH);
                     }
-                    Layout.setPanelSize("patternAreaHeight", targetH);
                     this.whenUpdated();
                 }
             }

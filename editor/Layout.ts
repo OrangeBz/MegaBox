@@ -13,6 +13,7 @@ export interface WorkspaceState {
 	locked: { [key: string]: boolean }; // "pattern", "track", "songSettings", "instrumentSettings"
 	// Sizing parameters
 	patternAreaHeight?: number;
+	trackAreaHeight?: number;
 	primaryLeftWidth?: number;
 	songSettingsWidth?: number;
 	instrumentSettingsWidth?: number;
@@ -45,6 +46,7 @@ export class Layout {
 				instrumentSettings: true,
 			},
 			patternAreaHeight: 460,
+			trackAreaHeight: 180,
 			songSettingsWidth: 192,
 			instrumentSettingsWidth: 216,
 			settingsColWidth: 216,
@@ -116,7 +118,7 @@ export class Layout {
 		this.saveWorkspaceState({ primarySplit: split });
 	}
 
-	public static setPanelSize(property: "patternAreaHeight" | "primaryLeftWidth" | "songSettingsWidth" | "instrumentSettingsWidth" | "settingsColWidth" | "firstSettingHeight" | "settingsAreaHeight", value: number): void {
+	public static setPanelSize(property: "patternAreaHeight" | "trackAreaHeight" | "primaryLeftWidth" | "songSettingsWidth" | "instrumentSettingsWidth" | "settingsColWidth" | "firstSettingHeight" | "settingsAreaHeight", value: number): void {
 		this.saveWorkspaceState({ [property]: value });
 	}
 
@@ -142,6 +144,9 @@ export class Layout {
 		if (typeof document !== "undefined" && document.documentElement) {
 			if (state.patternAreaHeight != null) {
 				document.documentElement.style.setProperty("--pattern-area-height", `${state.patternAreaHeight}px`);
+			}
+			if (state.trackAreaHeight != null) {
+				document.documentElement.style.setProperty("--track-area-height", `${state.trackAreaHeight}px`);
 			}
 			if (state.primaryLeftWidth != null) {
 				document.documentElement.style.setProperty("--primary-left-width", `${state.primaryLeftWidth}px`);
@@ -176,11 +181,15 @@ export class Layout {
 		const songDock = state.songSettingsDock;
 		const instDock = state.instrumentSettingsDock;
 
+		const defaultVRows = !state.primaryInverted
+			? "max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr)"
+			: "max-content var(--track-area-height, 180px) 6px minmax(180px, 1fr)";
+
 		// Case 1: Song Settings on Left, Instrument Settings on Right
 		if (songDock === "left" && instDock === "right") {
 			if (!isHorizontalPrimary) {
 				gridTemplateColumns = "clamp(185px, var(--song-settings-width, 192px), 320px) 6px minmax(250px, 1fr) 6px clamp(185px, var(--instrument-settings-width, 216px), 320px)";
-				gridTemplateRows = "max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr)";
+				gridTemplateRows = defaultVRows;
 				gridTemplateAreas = `
 					"menu-area menu-area menu-area menu-area menu-area"
 					"song-settings-area v-splitter-left ${topPanel} v-splitter-right instrument-settings-area"
@@ -200,7 +209,7 @@ export class Layout {
 		else if (instDock === "left" && songDock === "right") {
 			if (!isHorizontalPrimary) {
 				gridTemplateColumns = "clamp(185px, var(--instrument-settings-width, 216px), 320px) 6px minmax(250px, 1fr) 6px clamp(185px, var(--song-settings-width, 192px), 320px)";
-				gridTemplateRows = "max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr)";
+				gridTemplateRows = defaultVRows;
 				gridTemplateAreas = `
 					"menu-area menu-area menu-area menu-area menu-area"
 					"instrument-settings-area v-splitter-left ${topPanel} v-splitter-right song-settings-area"
@@ -226,7 +235,7 @@ export class Layout {
 			if (state.sharedDockOrientation === "row") {
 				if (!isHorizontalPrimary) {
 					gridTemplateColumns = `clamp(185px, ${firstWidth}, 320px) 6px clamp(185px, ${secondWidth}, 320px) 6px minmax(250px, 1fr)`;
-					gridTemplateRows = "max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr)";
+					gridTemplateRows = defaultVRows;
 					gridTemplateAreas = `
 						"menu-area menu-area menu-area menu-area menu-area"
 						"${firstPanel} v-splitter-mid ${secondPanel} v-splitter-left ${topPanel}"
@@ -245,7 +254,7 @@ export class Layout {
 				// Stacked in column on left
 				if (!isHorizontalPrimary) {
 					gridTemplateColumns = "clamp(185px, var(--settings-col-width, 216px), 320px) 6px minmax(250px, 1fr)";
-					gridTemplateRows = "max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr)";
+					gridTemplateRows = defaultVRows;
 					gridTemplateAreas = `
 						"menu-area menu-area menu-area"
 						"settings-col-area v-splitter-left ${topPanel}"
@@ -272,7 +281,7 @@ export class Layout {
 			if (state.sharedDockOrientation === "row") {
 				if (!isHorizontalPrimary) {
 					gridTemplateColumns = `minmax(250px, 1fr) 6px clamp(185px, ${firstWidth}, 320px) 6px clamp(185px, ${secondWidth}, 320px)`;
-					gridTemplateRows = "max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr)";
+					gridTemplateRows = defaultVRows;
 					gridTemplateAreas = `
 						"menu-area menu-area menu-area menu-area menu-area"
 						"${topPanel} v-splitter-right ${firstPanel} v-splitter-mid ${secondPanel}"
@@ -291,7 +300,7 @@ export class Layout {
 				// Stacked in column on right
 				if (!isHorizontalPrimary) {
 					gridTemplateColumns = "minmax(250px, 1fr) 6px clamp(185px, var(--settings-col-width, 216px), 320px)";
-					gridTemplateRows = "max-content var(--pattern-area-height, 460px) 6px minmax(100px, 1fr)";
+					gridTemplateRows = defaultVRows;
 					gridTemplateAreas = `
 						"menu-area menu-area menu-area"
 						"${topPanel} v-splitter-right settings-col-area"
