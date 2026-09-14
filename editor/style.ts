@@ -1431,27 +1431,31 @@ body.resizing-v {
 
 .beepboxEditor button.playButton:hover,
 .beepboxEditor button.playButton:focus {
-	border-color: var(--accent-signal-green, #22c55e);
-	box-shadow: var(--glow-green, 0 0 8px rgba(34, 197, 94, 0.4));
-	color: #22c55e;
+	border-color: var(--playhead, var(--link-accent, #00f0ff));
+	box-shadow: 0 0 8px var(--playhead, rgba(0, 240, 255, 0.4));
+	color: var(--playhead, var(--link-accent, #00f0ff));
+}
+.beepboxEditor button.pauseButton {
+	border-color: var(--loop-accent, var(--link-accent, #ff007f));
+	color: var(--loop-accent, var(--link-accent, #ff007f));
 }
 .beepboxEditor button.pauseButton:hover,
 .beepboxEditor button.pauseButton:focus {
-	border-color: var(--accent-signal-amber, #eab308);
-	box-shadow: var(--glow-amber, 0 0 8px rgba(234, 179, 8, 0.4));
-	color: #eab308;
+	border-color: var(--loop-accent, var(--link-accent, #ff007f));
+	box-shadow: 0 0 10px var(--loop-accent, rgba(255, 0, 127, 0.5));
+	color: var(--loop-accent, var(--link-accent, #ff007f));
 }
 .beepboxEditor button.recordButton:hover,
 .beepboxEditor button.recordButton:focus {
-	border-color: var(--accent-rec-orange, #f97316);
-	box-shadow: var(--glow-orange, 0 0 8px rgba(249, 115, 22, 0.4));
-	color: #f97316;
+	border-color: var(--pitch5-primary-channel, #f43f5e);
+	box-shadow: 0 0 8px var(--pitch5-primary-channel, rgba(244, 63, 94, 0.4));
+	color: var(--pitch5-primary-channel, #f43f5e);
 }
 .beepboxEditor button.stopButton:hover,
 .beepboxEditor button.stopButton:focus {
-	border-color: var(--accent-signal-red, #ef4444);
-	box-shadow: var(--glow-red, 0 0 8px rgba(239, 68, 68, 0.4));
-	color: #ef4444;
+	border-color: var(--pitch5-secondary-channel, #e11d48);
+	box-shadow: 0 0 8px var(--pitch5-secondary-channel, rgba(225, 29, 72, 0.4));
+	color: var(--pitch5-secondary-channel, #e11d48);
 }
 .beepboxEditor button.playButton::before {
 	content: "";

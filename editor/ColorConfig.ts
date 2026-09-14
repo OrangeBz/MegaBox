@@ -2872,13 +2872,13 @@ export class ColorConfig {
   --link-accent: #00e5ff;
   --ui-widget-background: #16161f;
   --ui-widget-focus: #22222e;
-  --pitch-background: #13131a;
-  --tonic: #282538;
-  --fifth-note: #1c1c28;
-  --white-piano-key: #323242;
-  --black-piano-key: #181822;
-  --white-piano-key-text: #ffffff;
-  --black-piano-key-text: #c4c4d4;
+  --pitch-background: #18181f;
+  --tonic: #2e2c3d;
+  --fifth-note: #21202e;
+  --white-piano-key: #e4e4e7;
+  --black-piano-key: #27272a;
+  --white-piano-key-text: #18181b;
+  --black-piano-key-text: #f4f4f5;
   --track-editor-bg-pitch: #111a28;
   --track-editor-bg-pitch-dim: #090e17;
   --track-editor-bg-noise: #181424;
@@ -5664,10 +5664,10 @@ export class ColorConfig {
     public static readonly pitchBackground: string = "var(--pitch-background, #18181b)";
     public static readonly tonic: string = "var(--tonic, #2e2e35)";
     public static readonly fifthNote: string = "var(--fifth-note, #232328)";
-    public static readonly whitePianoKey: string = "var(--white-piano-key, #27272a)";
-    public static readonly blackPianoKey: string = "var(--black-piano-key, #141416)";
-    public static readonly whitePianoKeyText: string = "var(--white-piano-key-text, #f4f4f5)";
-    public static readonly blackPianoKeyText: string = "var(--black-piano-key-text, #a1a1aa)";
+    public static readonly whitePianoKey: string = "var(--white-piano-key, #d4d4d8)";
+    public static readonly blackPianoKey: string = "var(--black-piano-key, #27272a)";
+    public static readonly whitePianoKeyText: string = "var(--white-piano-key-text, #18181b)";
+    public static readonly blackPianoKeyText: string = "var(--black-piano-key-text, #f4f4f5)";
 	//public static readonly oscilloscopeLineL: string = "var(--oscilloscope-line-L, var(--primary-text, white))";
 	//public static readonly oscilloscopeLineR: string = "var(--oscilloscope-line-R, var(--text-selection, rgba(119,68,255,0.99)))";
 	// modTitle can stay uncommented until it's used somwhere that's not index.html
