@@ -794,7 +794,20 @@ body.resizing-v {
 
 .beepboxEditor .effects-menu {
 	width: var(--button-size);
+	height: var(--button-size);
 	position: relative;
+	flex-shrink: 0;
+	display: inline-block;
+}
+.beepboxEditor .effects-menu select {
+	width: var(--button-size) !important;
+	height: var(--button-size) !important;
+	min-width: unset !important;
+	max-width: var(--button-size) !important;
+	padding: 0 !important;
+	color: transparent !important;
+	text-shadow: none !important;
+	box-sizing: border-box;
 }
 .beepboxEditor .effects-menu::before {
 	content: "";
