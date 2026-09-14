@@ -15,5 +15,6 @@
 /**/*.ts.bak
 /**/*.html.bak
 /**/*.js.bak
-/build
+/build/*
+!/build/*.js
 /to_deploy/
