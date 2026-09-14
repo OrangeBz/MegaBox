@@ -1364,12 +1364,14 @@ export class SongEditor {
     );
 
     private readonly _mobileMenuButton: HTMLButtonElement = button({ class: "mobile-menu-btn", type: "button", title: isSpanish() ? "Menú" : "Menu" }, "≡");
+    private readonly _mobileFullscreenBtn: HTMLButtonElement = button({ class: "mobile-drawer-close-btn mobile-fullscreen-btn", type: "button", title: isSpanish() ? "Pantalla completa" : "Fullscreen" }, "⛶");
     private readonly _mobileMenuCloseBtn: HTMLButtonElement = button({ class: "mobile-drawer-close-btn mobile-menu-close-btn", type: "button", title: isSpanish() ? "Cerrar menú" : "Close menu" }, "✕");
     private readonly _songTitleRow: HTMLDivElement = div({ class: "version-area menu-song-title-area" },
         this._songTitleInputBox.input,
     );
     private readonly _menuLeftHeader: HTMLDivElement = div({ class: "menu-left-header" },
         this._songTitleRow,
+        this._mobileFullscreenBtn,
         this._mobileMenuCloseBtn,
     );
     private readonly _menuLeftGroup: HTMLDivElement = div({ class: "menu-left-group" },
@@ -1820,6 +1822,21 @@ export class SongEditor {
         this._trackArea.addEventListener("mousedown", this.refocusStage);
 
         this._mobileMenuButton.addEventListener("click", () => this._toggleMobileMenu());
+        this._mobileFullscreenBtn.addEventListener("click", () => {
+            if (!document.fullscreenElement) {
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen().catch(() => {});
+                } else if ((document.documentElement as any).webkitRequestFullscreen) {
+                    (document.documentElement as any).webkitRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen().catch(() => {});
+                } else if ((document as any).webkitExitFullscreen) {
+                    (document as any).webkitExitFullscreen();
+                }
+            }
+        });
         this._mobileMenuCloseBtn.addEventListener("click", () => this._closeMobileDrawers());
         this._mobileUndoButton.addEventListener("click", () => {
             this._doc.undo();
