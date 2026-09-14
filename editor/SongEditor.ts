@@ -2671,6 +2671,8 @@ export class SongEditor {
                 const maxBottom = Math.max(patternRect.bottom, trackRect.bottom);
                 const stageWidth = maxRight - minLeft;
                 const stageHeight = maxBottom - minTop;
+                const isStageTopHalf = e.clientY < minTop + stageHeight / 2;
+                const isStageLeftHalf = e.clientX < minLeft + stageWidth / 2;
                 const normX = Math.abs(mouseX / targetRect.width - 0.5);
                 const normY = Math.abs(mouseY / targetRect.height - 0.5);
 
@@ -2678,7 +2680,7 @@ export class SongEditor {
                     previewLeft = minLeft;
                     previewWidth = stageWidth;
                     previewHeight = stageHeight / 2;
-                    if (isTopHalf) {
+                    if (isStageTopHalf) {
                         previewTop = minTop;
                         labelText = isSpanish() ? "Ubicar arriba" : "Place on top";
                     } else {
@@ -2689,7 +2691,7 @@ export class SongEditor {
                     previewTop = minTop;
                     previewHeight = stageHeight;
                     previewWidth = stageWidth / 2;
-                    if (isLeftHalf) {
+                    if (isStageLeftHalf) {
                         previewLeft = minLeft;
                         labelText = isSpanish() ? "Ubicar a la izquierda" : "Place on left";
                     } else {
@@ -2815,12 +2817,23 @@ export class SongEditor {
                     const target = targetPanel.id;
 
                     if ((source === "pattern" && target === "track") || (source === "track" && target === "pattern")) {
+                        const patternRect = this._patternArea.getBoundingClientRect();
+                        const trackRect = this._trackArea.getBoundingClientRect();
+                        const minLeft = Math.min(patternRect.left, trackRect.left);
+                        const minTop = Math.min(patternRect.top, trackRect.top);
+                        const maxRight = Math.max(patternRect.right, trackRect.right);
+                        const maxBottom = Math.max(patternRect.bottom, trackRect.bottom);
+                        const stageWidth = maxRight - minLeft;
+                        const stageHeight = maxBottom - minTop;
+                        const isStageTopHalf = e.clientY < minTop + stageHeight / 2;
+                        const isStageLeftHalf = e.clientX < minLeft + stageWidth / 2;
+
                         if (normY > normX) {
                             state.primarySplit = "vertical";
-                            state.primaryInverted = (source === "pattern" && !isTopHalf) || (source === "track" && isTopHalf);
+                            state.primaryInverted = (source === "track") ? isStageTopHalf : !isStageTopHalf;
                         } else {
                             state.primarySplit = "horizontal";
-                            state.primaryInverted = (source === "pattern" && !isLeftHalf) || (source === "track" && isLeftHalf);
+                            state.primaryInverted = (source === "track") ? isStageLeftHalf : !isStageLeftHalf;
                         }
                     } else if (source === "songSettings" && (target === "pattern" || target === "track")) {
                         state.songSettingsDock = isLeftHalf ? "left" : "right";

@@ -1,33 +1,27 @@
 # MegaBox Beta
 
-**MegaBox** is an advanced, modernized online digital audio workstation (DAW) and tracker for sketching, composing, and sharing instrumental chiptune and sampled music.
+MegaBox is an online tool for sketching, composing, and sharing instrumental music and custom audio tracks.
 
-🌐 **Live Application:** [https://orangebz.github.io/MegaBox/](https://orangebz.github.io/MegaBox/)
+Live Application: [https://orangebz.github.io/MegaBox/](https://orangebz.github.io/MegaBox/)
 
-MegaBox is a major expansion and modernization built upon the foundations of [UltraBox](https://ultraabox.github.io), [JummBox](https://github.com/jummbus/jummbox), and the original [BeepBox](https://beepbox.co) by [John Nesky](http://www.johnnesky.com/).
-
----
-
-## ✨ Features
-
-- **Cross-Compatibility**: Full backwards compatibility to import and export songs across MegaBox, UltraBox, JummBox, AbyssBox, BeepBox, and other community forks.
-- **Custom Samples & Native Storage**: Persistent in-browser sample management powered by IndexedDB.
-- **Modern Responsive UI**: Dedicated mobile and tablet workflows, collapsible menus, floating transport controls, and customizable themes.
-- **Full Synth Engine**: FM synthesis (up to 6 operators), supersaw, harmonics, PWM, bitcrushing, distortion, custom waveforms, envelopes, and microtonal scales.
-- **PWA & Offline Ready**: Installable Progressive Web App with full offline capabilities.
-- **Project Bundles (.mgb / .zip)**: Export and import complete song projects with all embedded custom samples.
-
-All song data is encoded directly into the URL hash or can be exported to `.mgb`, `.json`, `.mid`, `.wav`, and `.mp3`.
+MegaBox is built upon the foundations of [UltraBox](https://ultraabox.github.io), [JummBox](https://github.com/jummbus/jummbox), and original [BeepBox](https://beepbox.co) by [John Nesky](http://www.johnnesky.com/).
 
 ---
 
-## 🛠️ Compiling & Development
+## Features
+
+- **Cross-Compatibility**: Import and export songs across MegaBox, UltraBox, JummBox, AbyssBox, and BeepBox.
+- **Custom Audio & Samples**: Load and store your own audio files directly in your browser.
+- **Flexible Interface**: Rearrange, dock, or lock workspace panels to fit your workflow on desktop and mobile.
+- **Sound Engine**: 6-operator FM synthesis, custom wave shapes, distortion, filters, and multi-voice unison.
+- **Offline Mode**: Works offline as a Progressive Web App once loaded.
+- **Project Export**: Save and share songs as URL links or package files (`.mgb`, `.mid`, `.wav`, `.mp3`).
+
+---
+
+## Compiling & Development
 
 MegaBox is written in [TypeScript](https://www.typescriptlang.org/) and built with [Node.js](https://nodejs.org/).
-
-### Prerequisites
-- Node.js (v18 or newer)
-- npm
 
 ### Setup
 ```bash
@@ -52,18 +46,18 @@ npm run watch
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
-- `synth/`: The core audio synthesis engine and sound generator.
-- `editor/`: The interactive tracker interface, layout management, and UI controls.
-- `player/`: Lightweight standalone player widget for embedding songs.
-- `website/`: Production web assets, templates, soundbanks, and HTML shells.
-- `build/`: Build pipelines, bundling scripts, and minification configs.
+- `synth/`: Core audio synthesis engine.
+- `editor/`: User interface and tracker controls.
+- `player/`: Standalone player widget for embedding songs.
+- `website/`: Production web templates and asset shells.
+- `build/`: Build scripts and compilation utilities.
 
 ---
 
-## 📜 License & Credits
+## License & Credits
 
-- **MegaBox** developed and maintained by **OrangeBz**.
+- Created and maintained by **OrangeBz**.
 - Distributed under the [MIT License](LICENSE.md).
-- Special thanks to [John Nesky](http://www.johnnesky.com/) (creator of BeepBox) and the entire BeepBox / JummBox / UltraBox modding community!
+- Special thanks to John Nesky and the BeepBox / JummBox / UltraBox modding community!
