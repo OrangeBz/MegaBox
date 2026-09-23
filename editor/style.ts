@@ -1253,13 +1253,16 @@ body.resizing-v {
 }
 
 .select2-container {
-  width: -moz-available !important;
-  width: -webkit-fill-available !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
 }
-@media (min-width: 711px) {
-	.select2 {
-	  width: calc(var(--settings-area-width) * 0.625) !important;
-	}
+.select2 {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
 }
 
 .select2-container--default .select2-selection--single{
@@ -1876,7 +1879,7 @@ body.resizing-v {
 
 .beepboxEditor .selectRow, .beepboxEditor .instrumentCopyPasteRow {
 	margin: 3px 0;
-	height: 28px;
+	min-height: 28px;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -1893,6 +1896,39 @@ body.resizing-v {
 	font-size: 11px;
 	white-space: nowrap;
 	text-align: left;
+}
+
+.beepboxEditor .selectRow .slider-input-group {
+	display: flex;
+	flex-direction: column;
+	width: 66px;
+	min-width: 66px;
+	flex-shrink: 0;
+	justify-content: center;
+}
+.beepboxEditor .selectRow .slider-input-group span.tip {
+	font-size: 10px;
+	line-height: 12px;
+	white-space: nowrap;
+}
+.beepboxEditor .selectRow .slider-input-group input[type="number"] {
+	height: 18px;
+	font-size: 10px;
+	width: 100%;
+	box-sizing: border-box;
+	text-align: center;
+	margin-top: 1px;
+	border: 1px solid var(--border-default, #3f3f46);
+	border-radius: 3px;
+	background: ${ColorConfig.uiWidgetBackground};
+	color: ${ColorConfig.primaryText};
+}
+
+.beepboxEditor .selectRow .pitchSelect,
+.beepboxEditor .selectRow .drumSelect {
+	width: 100%;
+	flex: 1 1 auto;
+	min-width: 0;
 }
 
 .beepboxEditor .selectRow > :last-child {
