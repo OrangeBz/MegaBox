@@ -53,6 +53,7 @@ import { SampleLoadingStatusPrompt } from "./SampleLoadingStatusPrompt";
 import { AddSamplesPrompt } from "./AddSamplesPrompt";
 import { ShortenerConfigPrompt } from "./ShortenerConfigPrompt";
 import { HelpPrompt } from "./HelpPrompt";
+import { AtmosphereOverlay } from "./AtmosphereOverlay";
 import { AboutPrompt } from "./AboutPrompt";
 import { CreditsPrompt } from "./CreditsPrompt";
 import { FaqPrompt } from "./FaqPrompt";
@@ -190,6 +191,7 @@ function buildPresetOptions(isNoise: boolean, idSet: string): HTMLSelectElement 
 
     let firstCategoryGroup: HTMLElement | null = null;
     let customSampleCategoryGroup: HTMLElement | null = null;
+    let megaboxCategoryGroup: HTMLElement | null = null;
 
     for (let categoryIndex: number = 1; categoryIndex < EditorConfig.presetCategories.length; categoryIndex++) {
         const category: PresetCategory = EditorConfig.presetCategories[categoryIndex];
@@ -208,6 +210,8 @@ function buildPresetOptions(isNoise: boolean, idSet: string): HTMLSelectElement 
             firstCategoryGroup = group;
         } else if (category.name === "Custom Sample Presets" && foundAny) {
             customSampleCategoryGroup = group;
+        } else if (category.name === "MegaBox Presets" && foundAny) {
+            megaboxCategoryGroup = group;
         }
 
         // Need to re-sort some elements for readability. Can't just do this in the menu, because indices are saved in URLs and would get broken if the ordering actually changed.
@@ -237,8 +241,16 @@ function buildPresetOptions(isNoise: boolean, idSet: string): HTMLSelectElement 
         if (foundAny) menu.appendChild(group);
     }
 
+    if (firstCategoryGroup != null && megaboxCategoryGroup != null) {
+        // Put MegaBox Presets at the top of the preset list for easy access
+        const parent: HTMLSelectElement = <HTMLSelectElement>megaboxCategoryGroup.parentNode;
+        parent.removeChild(megaboxCategoryGroup);
+        parent.insertBefore(megaboxCategoryGroup, firstCategoryGroup);
+        firstCategoryGroup = megaboxCategoryGroup;
+    }
+
     if (firstCategoryGroup != null && customSampleCategoryGroup != null) {
-        // Put the custom sample presets at the top.
+        // Put the custom sample presets before other categories if present
         const parent: HTMLSelectElement = <HTMLSelectElement>customSampleCategoryGroup.parentNode;
         parent.removeChild(customSampleCategoryGroup);
         parent.insertBefore(customSampleCategoryGroup, firstCategoryGroup);
@@ -818,6 +830,7 @@ export class SongEditor {
     private readonly _loopEditor: LoopEditor = new LoopEditor(this._doc, this._trackEditor);
     private readonly _piano: Piano = new Piano(this._doc);
     private readonly _octaveScrollBar: OctaveScrollBar = new OctaveScrollBar(this._doc, this._piano);
+    private readonly _atmosphereOverlay: AtmosphereOverlay = new AtmosphereOverlay(this._doc);
     private readonly _playButton: HTMLButtonElement = button({ class: "playButton", type: "button", title: isSpanish() ? "Reproducir (Espacio)" : "Play (Space)" }, span("Play"));
     private readonly _pauseButton: HTMLButtonElement = button({ class: "pauseButton", style: "display: none;", type: "button", title: isSpanish() ? "Pausar (Espacio)" : "Pause (Space)" }, isSpanish() ? "Pausar" : "Pause");
     private readonly _recordButton: HTMLButtonElement = button({ class: "recordButton", style: "display: none;", type: "button", title: isSpanish() ? "Grabar (Ctrl+Espacio)" : "Record (Ctrl+Space)" }, span(isSpanish() ? "Grabar" : "Record"));
@@ -897,6 +910,7 @@ export class SongEditor {
         option({ disabled: true }, isSpanish() ? "─── Apariencia ───" : "─── Appearance ───"),
         option({ value: "showFifth" }, isSpanish() ? 'Resaltar "Quinta" nota' : 'Highlight "Fifth" Note'),
         option({ value: "notesFlashWhenPlayed" }, isSpanish() ? "Destello de notas al reproducir" : "Notes Flash When Played"),
+        option({ value: "dynamicAtmosphere" }, isSpanish() ? "Atmósfera visual dinámica (Balatro FX)" : "Dynamic Visual Atmosphere (Balatro FX)"),
         option({ value: "instrumentButtonsAtTop" }, isSpanish() ? "Botones de instrumento arriba" : "Instrument Buttons at Top"),
         option({ value: "frostedGlassBackground" }, isSpanish() ? "Fondo de diálogo con cristal esmerilado" : "Frosted Glass Prompt Backdrop"),
         option({ value: "showChannels" }, isSpanish() ? "Mostrar todos los canales" : "Show All Channels"),
@@ -1544,6 +1558,7 @@ export class SongEditor {
         this._promptContainer,
         this._mobileDrawerBackdrop,
         this._rotateDevicePrompt,
+        this._atmosphereOverlay.canvas,
     );
 
     private _wasPlaying: boolean = false;
@@ -3692,6 +3707,7 @@ export class SongEditor {
             isSpanish() ? "─── Apariencia ───" : "─── Appearance ───",
             formatPreferenceOption(isSpanish() ? 'Resaltar "Quinta" nota' : 'Highlight "Fifth" Note', prefs.showFifth),
             formatPreferenceOption(isSpanish() ? "Destello de notas al reproducir" : "Notes Flash When Played", prefs.notesFlashWhenPlayed),
+            formatPreferenceOption(isSpanish() ? "Atmósfera visual dinámica (Balatro FX)" : "Dynamic Visual Atmosphere (Balatro FX)", prefs.dynamicAtmosphere),
             formatPreferenceOption(isSpanish() ? "Botones de instrumento arriba" : "Instrument Buttons at Top", prefs.instrumentButtonsAtTop),
             formatPreferenceOption(isSpanish() ? "Fondo de diálogo con cristal esmerilado" : "Frosted Glass Prompt Backdrop", prefs.frostedGlassBackground),
             formatPreferenceOption(isSpanish() ? "Mostrar todos los canales" : "Show All Channels", prefs.showChannels),
@@ -6562,6 +6578,9 @@ export class SongEditor {
                 break;
             case "notesFlashWhenPlayed":
                 this._doc.prefs.notesFlashWhenPlayed = !this._doc.prefs.notesFlashWhenPlayed;
+                break;
+            case "dynamicAtmosphere":
+                this._doc.prefs.dynamicAtmosphere = !this._doc.prefs.dynamicAtmosphere;
                 break;
             case "layout":
                 this._openPrompt("layout");

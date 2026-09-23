@@ -44,6 +44,7 @@ export class Preferences {
 	public showInstrumentScrollbars: boolean;
 	public closePromptByClickoff: boolean;
 	public frostedGlassBackground: boolean;
+	public dynamicAtmosphere: boolean;
 	
 	constructor() {
 		this.reload();
@@ -79,6 +80,7 @@ export class Preferences {
 		this.showInstrumentScrollbars = window.localStorage.getItem("showInstrumentScrollbars") == "true";
 		this.closePromptByClickoff = window.localStorage.getItem("closePromptByClickoff") == "true";
 		this.frostedGlassBackground = window.localStorage.getItem("frostedGlassBackground") == "true";
+		this.dynamicAtmosphere = window.localStorage.getItem("dynamicAtmosphere") != "false";
 		this.keyboardLayout = window.localStorage.getItem("keyboardLayout") || "pianoTransposingC";
 		this.layout = window.localStorage.getItem("layout") || "long";
 		if (this.layout == "small") this.layout = "long";
@@ -132,6 +134,7 @@ export class Preferences {
 		window.localStorage.setItem("showInstrumentScrollbars", this.showInstrumentScrollbars ? "true" : "false");
 		window.localStorage.setItem("closePromptByClickoff", this.closePromptByClickoff ? "true" : "false");
 		window.localStorage.setItem("frostedGlassBackground", this.frostedGlassBackground ? "true" : "false");
+		window.localStorage.setItem("dynamicAtmosphere", this.dynamicAtmosphere ? "true" : "false");
 		window.localStorage.setItem("keyboardLayout", this.keyboardLayout);
 		window.localStorage.setItem("bassOffset", String(this.bassOffset));
 		window.localStorage.setItem("layout", this.layout);

@@ -621,10 +621,14 @@ body.resizing-v {
 
 .beepboxEditor .drum-button {
 	flex: 1;
-	background-color: transparent;
+	background-color: var(--pitch-background, #0f1f26);
+	border-bottom: 1px solid rgba(0, 229, 255, 0.15);
 	background-image: var(--internal-drum-symbol);
 	background-repeat: no-repeat;
 	background-position: center;
+}
+.beepboxEditor .drum-button:nth-child(even) {
+	background-color: var(--fifth-note, #153340);
 }
 
 .beepboxEditor .modulator-button {
@@ -632,6 +636,11 @@ body.resizing-v {
 	position: relative;
 	display: flex;
 	align-items: center;
+	background-color: var(--pitch-background, #0f1f26);
+	border-bottom: 1px solid rgba(192, 132, 252, 0.15);
+}
+.beepboxEditor .modulator-button:nth-child(even) {
+	background-color: var(--fifth-note, #153340);
 }
 .beepboxEditor .modulator-button::before {
 	content: "";

@@ -57,7 +57,9 @@ export class PatternEditor {
     private readonly _defaultModBorder: number = 34;
     private readonly _backgroundPitchRows: SVGRectElement[] = [];
     private readonly _backgroundDrumRow: SVGRectElement = SVG.rect();
+    private readonly _backgroundDrumRow2: SVGRectElement = SVG.rect();
     private readonly _backgroundModRow: SVGRectElement = SVG.rect();
+    private readonly _backgroundModRow2: SVGRectElement = SVG.rect();
 
     private _editorWidth: number;
 
@@ -132,8 +134,15 @@ export class PatternEditor {
         this._backgroundDrumRow.setAttribute("y", "1");
         this._backgroundDrumRow.setAttribute("fill", ColorConfig.pitchBackground);
         this._svgDrumBackground.appendChild(this._backgroundDrumRow);
+        this._backgroundDrumRow2.setAttribute("x", "1");
+        this._backgroundDrumRow2.setAttribute("fill", ColorConfig.fifthNote);
+        this._svgDrumBackground.appendChild(this._backgroundDrumRow2);
+        this._backgroundModRow.setAttribute("x", "1");
         this._backgroundModRow.setAttribute("fill", ColorConfig.pitchBackground);
         this._svgModBackground.appendChild(this._backgroundModRow);
+        this._backgroundModRow2.setAttribute("x", "1");
+        this._backgroundModRow2.setAttribute("fill", ColorConfig.fifthNote);
+        this._svgModBackground.appendChild(this._backgroundModRow2);
 
         if (this._interactive) {
             this._updateCursorStatus();
@@ -2370,15 +2379,21 @@ export class PatternEditor {
             this._svgNoteBackground.setAttribute("width", "" + beatWidth);
             this._svgNoteBackground.setAttribute("height", "" + (this._pitchHeight * Config.pitchesPerOctave));
             this._svgDrumBackground.setAttribute("width", "" + beatWidth);
-            this._svgDrumBackground.setAttribute("height", "" + this._pitchHeight);
+            this._svgDrumBackground.setAttribute("height", "" + (this._pitchHeight * 2));
             this._svgModBackground.setAttribute("width", "" + beatWidth);
-            this._svgModBackground.setAttribute("height", "" + (this._pitchHeight));
+            this._svgModBackground.setAttribute("height", "" + (this._pitchHeight * 2));
             this._svgModBackground.setAttribute("y", "" + (this._pitchBorder / 2));
             this._backgroundDrumRow.setAttribute("width", "" + Math.max(0, beatWidth - 2));
             this._backgroundDrumRow.setAttribute("height", "" + Math.max(0, this._pitchHeight - 2));
+            this._backgroundDrumRow2.setAttribute("width", "" + Math.max(0, beatWidth - 2));
+            this._backgroundDrumRow2.setAttribute("y", "" + (this._pitchHeight + 1));
+            this._backgroundDrumRow2.setAttribute("height", "" + Math.max(0, this._pitchHeight - 2));
             if (this._pitchHeight > this._pitchBorder) {
                 this._backgroundModRow.setAttribute("width", "" + Math.max(0, beatWidth - 2));
                 this._backgroundModRow.setAttribute("height", "" + Math.max(0, this._pitchHeight - this._pitchBorder));
+                this._backgroundModRow2.setAttribute("width", "" + Math.max(0, beatWidth - 2));
+                this._backgroundModRow2.setAttribute("y", "" + (this._pitchHeight + 1));
+                this._backgroundModRow2.setAttribute("height", "" + Math.max(0, this._pitchHeight - this._pitchBorder));
             }
 
 
