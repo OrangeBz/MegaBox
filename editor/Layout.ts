@@ -473,11 +473,14 @@ export class Layout {
 					${isHorizontalPrimary ? "width: 6px; height: 100%; border-top: none; border-bottom: none; border-left: 1px solid var(--border-subtle, #2e2e33); border-right: 1px solid var(--border-subtle, #2e2e33);" : "height: 6px; width: 100%; border-left: none; border-right: none; border-top: 1px solid var(--border-subtle, #2e2e33); border-bottom: 1px solid var(--border-subtle, #2e2e33);"}
 				}
 				.beepboxEditor .editor-splitter-horizontal .splitter-handle-h {
-					${isHorizontalPrimary ? "width: 3px; height: 42px;" : "height: 3px; width: 42px;"}
+					width: 3px;
+					height: 3px;
+					border-radius: 50%;
+					${isHorizontalPrimary ? "box-shadow: 0 -6px 0 #71717a, 0 6px 0 #71717a, 0 -12px 0 #71717a, 0 12px 0 #71717a;" : "box-shadow: -6px 0 0 #71717a, 6px 0 0 #71717a, -12px 0 0 #71717a, 12px 0 0 #71717a;"}
 				}
 				.beepboxEditor .editor-splitter-horizontal:hover .splitter-handle-h,
 				.beepboxEditor .editor-splitter-horizontal.active .splitter-handle-h {
-					${isHorizontalPrimary ? "height: 60px; width: 3px;" : "width: 60px; height: 3px;"}
+					${isHorizontalPrimary ? "box-shadow: 0 -6px 0 var(--accent-mod-cyan, #38bdf8), 0 6px 0 var(--accent-mod-cyan, #38bdf8), 0 -12px 0 var(--accent-mod-cyan, #38bdf8), 0 12px 0 var(--accent-mod-cyan, #38bdf8);" : "box-shadow: -6px 0 0 var(--accent-mod-cyan, #38bdf8), 6px 0 0 var(--accent-mod-cyan, #38bdf8), -12px 0 0 var(--accent-mod-cyan, #38bdf8), 12px 0 0 var(--accent-mod-cyan, #38bdf8);"}
 				}
 
 				.beepboxEditor .editor-splitter-left {

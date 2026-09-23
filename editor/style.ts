@@ -365,12 +365,12 @@ body.resizing-v {
 .editor-splitter-horizontal .splitter-handle-h,
 .editor-splitter-mid-h .splitter-handle-h,
 .editor-splitter-bottom .splitter-handle-h {
-	width: 42px;
+	width: 3px;
 	height: 3px;
-	border-radius: 1.5px;
+	border-radius: 50%;
 	background: #71717a;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
-	transition: width 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+	box-shadow: -6px 0 0 #71717a, 6px 0 0 #71717a, -12px 0 0 #71717a, 12px 0 0 #71717a;
+	transition: background-color 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
 }
 .editor-splitter-horizontal:hover,
 .editor-splitter-horizontal.active,
@@ -387,9 +387,9 @@ body.resizing-v {
 .editor-splitter-mid-h.active .splitter-handle-h,
 .editor-splitter-bottom:hover .splitter-handle-h,
 .editor-splitter-bottom.active .splitter-handle-h {
-	width: 60px;
 	background: var(--accent-mod-cyan, #38bdf8);
-	box-shadow: 0 0 8px rgba(56, 189, 248, 0.7);
+	box-shadow: -6px 0 0 var(--accent-mod-cyan, #38bdf8), 6px 0 0 var(--accent-mod-cyan, #38bdf8), -12px 0 0 var(--accent-mod-cyan, #38bdf8), 12px 0 0 var(--accent-mod-cyan, #38bdf8);
+	filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.8));
 }
 
 .editor-splitter-vertical,
@@ -415,12 +415,12 @@ body.resizing-v {
 .editor-splitter-left .splitter-handle-v,
 .editor-splitter-right .splitter-handle-v,
 .editor-splitter-mid .splitter-handle-v {
-	height: 42px;
 	width: 3px;
-	border-radius: 1.5px;
+	height: 3px;
+	border-radius: 50%;
 	background: #71717a;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
-	transition: height 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+	box-shadow: 0 -6px 0 #71717a, 0 6px 0 #71717a, 0 -12px 0 #71717a, 0 12px 0 #71717a;
+	transition: background-color 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
 }
 .editor-splitter-vertical:hover,
 .editor-splitter-vertical.active,
@@ -441,9 +441,9 @@ body.resizing-v {
 .editor-splitter-right.active .splitter-handle-v,
 .editor-splitter-mid:hover .splitter-handle-v,
 .editor-splitter-mid.active .splitter-handle-v {
-	height: 60px;
 	background: var(--accent-mod-cyan, #38bdf8);
-	box-shadow: 0 0 8px rgba(56, 189, 248, 0.7);
+	box-shadow: 0 -6px 0 var(--accent-mod-cyan, #38bdf8), 0 6px 0 var(--accent-mod-cyan, #38bdf8), 0 -12px 0 var(--accent-mod-cyan, #38bdf8), 0 12px 0 var(--accent-mod-cyan, #38bdf8);
+	filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.8));
 }
 
 .collapsible-header {
@@ -2588,11 +2588,11 @@ li.select2-results__option[role=group] > strong:hover {
 	}
 	.beepboxEditor .editor-splitter-horizontal .splitter-handle-h {
 		width: 3px !important;
-		height: 42px !important;
-		border-radius: 1.5px !important;
+		height: 3px !important;
+		border-radius: 50% !important;
 		background: #71717a !important;
-		box-shadow: 0 1px 2px rgba(0, 0, 0, 0.6) !important;
-		transition: height 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease !important;
+		box-shadow: 0 -6px 0 #71717a, 0 6px 0 #71717a, 0 -12px 0 #71717a, 0 12px 0 #71717a !important;
+		transition: background-color 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease !important;
 		position: relative;
 		z-index: 2;
 	}
@@ -2603,10 +2603,9 @@ li.select2-results__option[role=group] > strong:hover {
 	}
 	.beepboxEditor .editor-splitter-horizontal:hover .splitter-handle-h,
 	.beepboxEditor .editor-splitter-horizontal.active .splitter-handle-h {
-		height: 60px !important;
-		width: 3px !important;
 		background: var(--accent-mod-cyan, #38bdf8) !important;
-		box-shadow: 0 0 8px rgba(56, 189, 248, 0.7) !important;
+		box-shadow: 0 -6px 0 var(--accent-mod-cyan, #38bdf8), 0 6px 0 var(--accent-mod-cyan, #38bdf8), 0 -12px 0 var(--accent-mod-cyan, #38bdf8), 0 12px 0 var(--accent-mod-cyan, #38bdf8) !important;
+		filter: drop-shadow(0 0 4px rgba(56, 189, 248, 0.8)) !important;
 	}
 	.beepboxEditor .pattern-area {
 		grid-area: pattern-area !important;
