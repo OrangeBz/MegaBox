@@ -611,7 +611,8 @@ var beepbox = (function (exports) {
         { name: "todbox beta banana wave", expression: 0.8, samples: centerAndNormalizeWave([0.0, 0.2, 0.4, 0.5, 0.6, 0.7, 0.8, 0.85, 0.9, 0.95, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.95, 0.9, 0.85, 0.8, 0.7, 0.6, 0.5, 0.4, 0.2, 0.0]) },
         { name: "todbox beta test wave", expression: 0.5, samples: centerAndNormalizeWave([56, 0, -52, 16, 3, 3, 2, -35, 20, 147, -53, 0, 0, 5, -6]) },
         { name: "todbox beta real snare", expression: 1.0, samples: centerAndNormalizeWave([0.00000, -0.01208, -0.02997, -0.04382, -0.06042, -0.07529, -0.09116, -0.10654, -0.12189, -0.13751, -0.15289, -0.16849, -0.18387, -0.19974, -0.21484, -0.23071, -0.24557, -0.26144, -0.27731, -0.29141, -0.30350, -0.32416, -0.34406, -0.32947, -0.31158, -0.33725, -0.37579, -0.39746, -0.40201, -0.40906, -0.44180, -0.47229, -0.47379, -0.47733, -0.45239, -0.33954, -0.22894, -0.22443, -0.32138, -0.46371, -0.57178, -0.61081, -0.59998, -0.61459, -0.62189, -0.43979, -0.19217, -0.12643, -0.17252, -0.20956, -0.20981, -0.19217, -0.22845, -0.34332, -0.50629, -0.64307, -0.72922, -0.81384, -0.87857, -0.90149, -0.88687, -0.86169, -0.87781, -0.80478, -0.52493, -0.31308, -0.33249, -0.39395, -0.39017, -0.30301, -0.19949, -0.13071, -0.02493, 0.14307, 0.34961, 0.52542, 0.63223, 0.68613, 0.74710, 0.87305, 0.98184, 0.98889, 0.97052, 0.99066, 0.99747, 0.99344, 0.99469, 0.99393, 0.99570, 0.99393, 0.99521, 0.99469, 0.99420, 0.99521, 0.99420, 0.99521, 0.99469, 0.99469, 0.99521, 0.99420, 0.99545, 0.99445, 0.99469, 0.99493, 0.99420, 0.99521, 0.99393, 0.99493, 0.99469, 0.99445, 0.99570, 0.99445, 0.99521, 0.99469, 0.99469, 0.99521, 0.99420, 0.99545, 0.99445, 0.99445, 0.99493, 0.99420, 0.99545, 0.99420, 0.99493, 0.99493, 0.99420, 0.99545, 0.99445, 0.99521, 0.99469, 0.99445, 0.99545, 0.99368, 0.99393, 0.99445, 0.99268, 0.97983, 0.97229, 0.95944, 0.88486, 0.76773, 0.64481, 0.53098, 0.39847, 0.19318, -0.03827, -0.20325, -0.39319, -0.68765, -0.88461, -0.93448, -0.96069, -0.97681, -0.98715, -0.99042, -0.99142, -0.99091, -0.99142, -0.99219, -0.99091, -0.99219, -0.99066, -0.99142, -0.99142, -0.99118, -0.99191, -0.99066, -0.99191, -0.99142, -0.99142, -0.99191, -0.99091, -0.99219, -0.99118, -0.99142, -0.99167, -0.99091, -0.99219, -0.99091, -0.99167, -0.99142, -0.99091, -0.99191, -0.99091, -0.99191, -0.99142, -0.99118, -0.99191, -0.99066, -0.99191, -0.99118, -0.99142, -0.99191, -0.99066, -0.99191, -0.99091, -0.99167, -0.99191, -0.99118, -0.99219, -0.99091, -0.99191, -0.99142, -0.99142, -0.99243, -0.98865, -0.98764, -0.99219, -0.98083, -0.92517, -0.92770, -0.91486, -0.59042, -0.15189, 0.02945, 0.05667, 0.06195, 0.00629, -0.18008, -0.56497, -0.88010, -0.92770, -0.92871, -0.97705, -0.99167, -0.98663, -0.99118, -0.99042, -0.99219, -0.99142, -0.99118, -0.98941, -0.99219, -1.00000, -0.97580, -0.95993, -0.99948, -0.98236, -0.84659, -0.74860, -0.70679, -0.59747, -0.48035, -0.41687, -0.36826, -0.29745, -0.18185, -0.06219, 0.02164, 0.07907, 0.13123, 0.18033, 0.19620, 0.15692, 0.14053, 0.20251, 0.27530, 0.30905, 0.29092, 0.27252, 0.30402, 0.32416, 0.32214, 0.35239, 0.39670, 0.43198, 0.49420, 0.58487, 0.64154, 0.65967, 0.67050, 0.67026, 0.66522, 0.65540, 0.66119, 0.70627, 0.75842, 0.78738, 0.78940, 0.78763, 0.80402, 0.85944, 0.94559, 0.98990, 0.98160, 0.98007, 0.99368, 0.99393, 0.98538, 0.97580, 0.97101, 0.93802, 0.81812, 0.64633, 0.46649, 0.28613, 0.14685, 0.08966, 0.12543, 0.20325, 0.24557, 0.18866, 0.02795, -0.20175, -0.44205, -0.58713, -0.57629, -0.41385, -0.14255, 0.18033, 0.47882, 0.68311, 0.72314, 0.62064, 0.48309, 0.43073, 0.53577, 0.72794, 0.90250, 0.97354, 0.97000, 0.98083, 0.99191, 0.99319, 0.99493, 0.99393, 0.99521, 0.99393, 0.99545, 0.99420, 0.99493, 0.99493, 0.99445, 0.99545, 0.99420, 0.99545, 0.99243, 0.98917, 0.98386, 0.97781, 0.95844, 0.89066, 0.81561, 0.78134, 0.77277, 0.75995, 0.73022, 0.67126, 0.57178, 0.47000, 0.38361, 0.29419, 0.20703, 0.14734, 0.15866, 0.25162, 0.35818, 0.45062, 0.56750, 0.69748, 0.81232, 0.89697, 0.95062, 0.97656, 0.98615, 0.99191, 0.99219, 0.99243, 0.99368, 0.99368, 0.97028, 0.95566, 0.94559, 0.82617, 0.59973, 0.38361, 0.23901, 0.15338, 0.12921, 0.11206, 0.04382, -0.12946, -0.43552, -0.72644, -0.89847, -0.95465, -0.95541, -0.97229, -0.99268, -0.99319, -0.98840, -0.99142, -0.99167, -0.99091, -0.98840, -0.98965, -0.99368, -0.97455, -0.95010, -0.94684, -0.96219, -0.98514, -0.99243, -0.98889, -0.98917, -0.99142, -0.99219, -0.99091, -0.99191, -0.99142, -0.99142, -0.99191, -0.99066, -0.99167, -0.99091, -0.99142, -0.99191, -0.99091, -0.99191, -0.99091, -0.99167, -0.99167, -0.99091, -0.99219, -0.99091, -0.99191, -0.99142, -0.99118, -0.99191, -0.99066, -0.99191, -0.99091, -0.99118, -0.99243, -0.98941, -0.98462, -0.96976, -0.96320, -0.96194, -0.87305, -0.66196, -0.44809, -0.29495, -0.18085, -0.11813, -0.11334, -0.18564, -0.34885, -0.58237, -0.80450, -0.93726, -0.97806, -0.97354, -0.97531, -0.98990, -0.99368, -0.98941, -0.99219, -0.99091, -0.99142, -0.99167, -0.99091, -0.99191, -0.99118, -0.99219, -0.98236, -0.97781, -0.97656, -0.95135, -0.87204, -0.71335, -0.52139, -0.34232, -0.17783, -0.00906, 0.14886, 0.30450, 0.48889, 0.67404, 0.84030, 0.94128, 0.97681, 0.98462, 0.98337, 0.99142, 0.99521, 0.99493, 0.99420, 0.99445, 0.99521, 0.99393, 0.99545, 0.99445, 0.99521, 0.99521, 0.99445, 0.99570, 0.99445, 0.99521, 0.99469, 0.99445, 0.99521, 0.99420, 0.99521, 0.99445, 0.99445, 0.99521, 0.99445, 0.99545, 0.99445, 0.99469, 0.99493, 0.99393, 0.99493, 0.99445, 0.99393, 0.98285, 0.97781, 0.97479, 0.92844, 0.82114, 0.66095, 0.52417, 0.46826, 0.46722, 0.47934, 0.47379, 0.47076, 0.48209, 0.42014, 0.25439, 0.10074, -0.00302, -0.08966, -0.16068, -0.21436, -0.22040, -0.15137, -0.00476, 0.18536, 0.37631, 0.52292, 0.62164, 0.70425, 0.74835, 0.72366, 0.63928, 0.52567, 0.40805, 0.35666, 0.42896, 0.60175, 0.80200, 0.92743, 0.96548, 0.97632, 0.98337, 0.99066, 0.99521, 0.99420, 0.99368, 0.99292, 0.98840, 0.98083, 0.96774, 0.93323, 0.85440, 0.69470, 0.47202, 0.20425, -0.08890, -0.36423, -0.60025, -0.77481, -0.90173, -0.96017, -0.97028, -0.98108, -0.98840, -0.99219, -0.98990, -0.99219, -0.99142, -0.99142, -0.99219, -0.99091, -0.99243, -0.99066, -0.99142, -0.99142, -0.99118, -0.99191, -0.99066, -0.99167, -0.99142, -0.99142, -0.99219, -0.99091, -0.99191, -0.99118, -0.99142, -0.99191, -0.99091, -0.99191, -0.99091, -0.99167, -0.99191, -0.99118, -0.99219, -0.99091, -0.99167, -0.99142, -0.99142, -0.99219, -0.99091, -0.99191, -0.99142, -0.99118, -0.98917, -0.99042, -0.99445, -0.97330, -0.95590, -0.96219, -0.89670, -0.72241, -0.55112, -0.44809, -0.39319, -0.37833, -0.35641, -0.26270, -0.14230, -0.11282, -0.13525, -0.11536, -0.09671, -0.11511, -0.18060, -0.26874, -0.33374, -0.42215, -0.51358, -0.44785, -0.30450, -0.28613, -0.30527, -0.25037, -0.15390, -0.08286, -0.11157, -0.12592, -0.00327, 0.13803, 0.19141, 0.12820, 0.01788, -0.03952, -0.12592, -0.26773, -0.34634, -0.31384, -0.18060, -0.01080, 0.13574, 0.26120, 0.36975, 0.46573, 0.55087, 0.63626, 0.73022, 0.83072, 0.92014, 0.97177, 0.98587, 0.98413, 0.99167, 0.99445, 0.99292, 0.99219, 0.98740, 0.98007, 0.96472, 0.92239, 0.82166, 0.69067, 0.57959, 0.54962, 0.59695, 0.64255, 0.64633, 0.60629, 0.55942, 0.54910, 0.58966, 0.61887, 0.56952, 0.54181, 0.59518, 0.63248, 0.63876, 0.65463, 0.73398, 0.88312, 0.96927, 0.97101, 0.97958, 0.99344, 0.99420, 0.99268, 0.99493, 0.99469, 0.99445, 0.99521, 0.99445, 0.99545, 0.99420, 0.99493, 0.99493, 0.99420, 0.99545, 0.99420, 0.99493, 0.99420, 0.99393, 0.99420, 0.98840, 0.98309, 0.98309, 0.96069, 0.88461, 0.79370, 0.72064, 0.65765, 0.59998, 0.53247, 0.49268, 0.48615, 0.44205, 0.38034, 0.36447, 0.38715, 0.39294, 0.32645, 0.19595, 0.07782, -0.05893, -0.27832, -0.48309, -0.62619, -0.72995, -0.79999, -0.84583, -0.82166, -0.73575, -0.67227, -0.65491, -0.64960, -0.66397, -0.70175, -0.72894, -0.74658, -0.76724, -0.79520, -0.82846, -0.86523, -0.90527, -0.94382, -0.89948, -0.69849, -0.47479, -0.31662, -0.15414, -0.00729, 0.07077, 0.08237, 0.04431, -0.02292, -0.11761, -0.24307, -0.36926, -0.45087, -0.46170, -0.40250, -0.30679, -0.17529, 0.00000, 0.14331, 0.24179, 0.36774, 0.49545, 0.56522, 0.57907, 0.56775, 0.53851, 0.51132, 0.48688, 0.41913, 0.26044, 0.00955, -0.26297, -0.46396, -0.62341, -0.82214, -0.94684, -0.96774, -0.97531, -0.98413, -0.99017, -0.98990, -0.99219, -0.99066, -0.99142, -0.99167, -0.99118, -0.99219, -0.98990, -0.99118, -0.99368, -0.99142, -0.97757, -0.97403, -0.98007, -0.96170, -0.86826, -0.67783, -0.52719, -0.48788, -0.45490, -0.43146, -0.47681, -0.54105, -0.57983, -0.60904, -0.62317, -0.59949, -0.55566, -0.52063, -0.52115, -0.55112, -0.56244, -0.58337, -0.65540, -0.73373, -0.77228, -0.74759, -0.68890, -0.64609, -0.61887, -0.58060, -0.50351, -0.40729, -0.33929, -0.35110, -0.42944, -0.47028, -0.42267, -0.32718, -0.20224, -0.05640, 0.04556, 0.10529, 0.17630, 0.26169, 0.33197, 0.32138, 0.23776, 0.20956, 0.23148, 0.20352, 0.23325, 0.39267, 0.52719, 0.58438, 0.62289, 0.66345, 0.70023, 0.66296, 0.54330, 0.42618, 0.33475, 0.24533, 0.14105, 0.03851, 0.01358, 0.09143, 0.22845, 0.34961, 0.41711, 0.48740, 0.58914, 0.69519, 0.78186, 0.84357, 0.89822, 0.95389, 0.98135, 0.98615, 0.99167, 0.99243, 0.99445, 0.99420, 0.99469, 0.99493, 0.99393, 0.99545, 0.99445, 0.99521, 0.99469, 0.99445, 0.99521, 0.99420, 0.99469, 0.98965, 0.98715, 0.98563, 0.96295, 0.91736, 0.86624, 0.82367, 0.77554, 0.68411, 0.53549, 0.38916, 0.26120, 0.11435, -0.04053, -0.18161, -0.23172, -0.19394, -0.15237, -0.10730, -0.02997, 0.08588, 0.22620, 0.34305, 0.44104, 0.55740, 0.65765, 0.71259, 0.69217, 0.65363, 0.69748, 0.79572, 0.89368, 0.95514, 0.97733, 0.98413, 0.98816, 0.99243, 0.99445, 0.99243, 0.97302, 0.96674, 0.97983, 0.90378, 0.71005, 0.51056, 0.40451, 0.40982, 0.41559, 0.32996, 0.24356, 0.18866, 0.11411, 0.05365, 0.01157, -0.03247, -0.09216, -0.16095, -0.23248, -0.31662, -0.39771, -0.48663, -0.59647, -0.71536, -0.82013, -0.85287, -0.82947, -0.84937, -0.92215, -0.97177, -0.98663, -0.98816, -0.98438, -0.99091, -0.99219, -0.99091, -0.99191, -0.99042, -0.99191, -0.99091, -0.99142, -0.99191, -0.99091, -0.99191, -0.99091, -0.99167, -0.99142]) },
-        { name: "ultrabox shortened od guitar", expression: 0.5, samples: centerAndNormalizeWave([-0.82785, -0.67621, -0.40268, -0.43817, -0.45468, -0.22531, -0.18329, 0.24750, 0.71246, 0.52155, 0.56082, 0.48395, 0.33990, 0.46957, 0.27744, 0.42313, 0.47104, 0.18796, 0.12930, -0.13901, -0.07431, -0.16348, -0.74857, -0.73206, -0.35181, -0.26227, -0.41882, -0.27786, -0.19806, -0.19867, 0.18643, 0.24808, 0.08847, -0.06964, 0.06912, 0.20474, -0.05304, 0.29416, 0.31967, 0.14243, 0.27521, -0.23932, -0.14752, 0.12360, -0.26123, -0.26111, 0.06616, 0.26520, 0.08090, 0.15240, 0.16254, -0.12061, 0.04562, 0.00131, 0.04050, 0.08182, -0.21729, -0.17041, -0.16312, -0.08563, 0.06390, 0.05099, 0.05627, 0.02728, 0.00726, -0.13028, -0.05673, -0.14969, -0.17645, 0.35492, 0.16766, -0.00897, 0.24326, -0.00461, -0.04456, 0.01776, -0.04950, -0.01221, 0.02039, 0.07684, 0.13397, 0.39850, 0.35962, 0.13754, 0.42310, 0.27161, -0.17609, 0.03659, 0.10635, -0.21909, -0.22046, -0.20258, -0.40973, -0.40280, -0.40521, -0.66284]) },
+        { name: "acoustic real kick", expression: 1.0, samples: centerAndNormalizeWave([1.0, 0.94, 0.78, 0.52, 0.19, -0.16, -0.49, -0.73, -0.87, -0.89, -0.80, -0.63, -0.41, -0.18, 0.05, 0.24, 0.38, 0.46, 0.47, 0.42, 0.33, 0.21, 0.08, -0.04, -0.15, -0.22, -0.26, -0.27, -0.24, -0.19, -0.12, -0.06, 0.01, 0.06, 0.10, 0.13, 0.14, 0.13, 0.11, 0.08, 0.04, 0.01, -0.02, -0.05, -0.07, -0.07, -0.07, -0.06, -0.05, -0.03, -0.01, 0.01, 0.02, 0.03, 0.03, 0.03, 0.02, 0.02, 0.01, 0.01, 0.00, 0.00, 0.00, 0.00]) },
+        { name: "acoustic real snare", expression: 1.0, samples: centerAndNormalizeWave([0.0, 0.95, -0.85, 0.72, -0.61, 0.53, -0.42, 0.35, -0.28, 0.22, -0.16, 0.12, -0.38, -0.65, -0.82, -0.75, -0.52, -0.21, 0.12, 0.39, 0.56, 0.58, 0.47, 0.28, 0.06, -0.14, -0.28, -0.34, -0.31, -0.21, -0.08, 0.06, 0.18, 0.24, 0.23, 0.16, 0.06, -0.04, -0.12, -0.16, -0.15, -0.10, -0.03, 0.04, 0.09, 0.11, 0.10, 0.06, 0.01, -0.03, -0.06, -0.07, -0.06, -0.03, 0.00, 0.03, 0.04, 0.04, 0.03, 0.01, 0.00, -0.01, -0.02, -0.01]) },
     ]);
     Config.chipWaves = rawChipToIntegrated(Config.rawChipWaves);
     Config.rawRawChipWaves = Config.rawChipWaves;
@@ -632,6 +633,11 @@ var beepbox = (function (exports) {
         { name: "crackling", expression: 0.9, basePitch: 69, pitchFilterMult: 1024.0, isSoft: false, samples: null },
         { name: "pink", expression: 1.0, basePitch: 69, pitchFilterMult: 8.0, isSoft: true, samples: null },
         { name: "brownian", expression: 1.0, basePitch: 69, pitchFilterMult: 8.0, isSoft: true, samples: null },
+        { name: "acoustic", expression: 1.2, basePitch: 84, pitchFilterMult: 256.0, isSoft: true, samples: null },
+        { name: "acoustic snare", expression: 1.1, basePitch: 84, pitchFilterMult: 512.0, isSoft: false, samples: null },
+        { name: "acoustic cymbal", expression: 0.9, basePitch: 96, pitchFilterMult: 1024.0, isSoft: false, samples: null },
+        { name: "arcade 7-bit", expression: 0.6, basePitch: 72, pitchFilterMult: 1024.0, isSoft: false, samples: null },
+        { name: "arcade 15-bit", expression: 0.5, basePitch: 72, pitchFilterMult: 1024.0, isSoft: false, samples: null },
     ]);
     Config.filterFreqStep = 1.0 / 4.0;
     Config.filterFreqRange = 34;
@@ -1282,6 +1288,138 @@ var beepbox = (function (exports) {
                     wave[i] = (lastOut + (0.02 * white)) / 1.02;
                     lastOut = wave[i];
                     wave[i] *= 14;
+                }
+            }
+            else if (index == 15) {
+                let lp1 = 0.0, lp2 = 0.0, lp3 = 0.0, bp1 = 0.0, bp2 = 0.0;
+                const temp = new Float32Array(Config.chipNoiseLength);
+                for (let i = 0; i < 2000; i++) {
+                    const white = Math.random() * 2.0 - 1.0;
+                    lp1 += 0.07 * (white - lp1);
+                    lp2 += 0.035 * (lp1 - lp2);
+                    lp3 += 0.012 * (lp2 - lp3);
+                    bp1 += 0.16 * (white - bp1);
+                    bp2 += 0.08 * (bp1 - bp2);
+                }
+                for (let i = 0; i < Config.chipNoiseLength; i++) {
+                    const white = Math.random() * 2.0 - 1.0;
+                    lp1 += 0.07 * (white - lp1);
+                    lp2 += 0.035 * (lp1 - lp2);
+                    lp3 += 0.012 * (lp2 - lp3);
+                    bp1 += 0.16 * (white - bp1);
+                    bp2 += 0.08 * (bp1 - bp2);
+                    const midResonance = bp1 - bp2;
+                    const highCrack = (white - bp1) * 0.12;
+                    temp[i] = lp3 * 2.2 + midResonance * 1.3 + highCrack;
+                }
+                const fade = 512;
+                for (let i = 0; i < fade; i++) {
+                    const t = i / fade;
+                    temp[i] = temp[i] * t + temp[Config.chipNoiseLength - fade + i] * (1.0 - t);
+                }
+                let maxAmp = 0.0001;
+                for (let i = 0; i < Config.chipNoiseLength; i++) {
+                    if (Math.abs(temp[i]) > maxAmp)
+                        maxAmp = Math.abs(temp[i]);
+                }
+                for (let i = 0; i < Config.chipNoiseLength; i++) {
+                    wave[i] = temp[i] / maxAmp;
+                }
+            }
+            else if (index == 16) {
+                let drum1 = 0.0, drum2 = 0.0, snare1 = 0.0, snare2 = 0.0, air = 0.0;
+                const temp = new Float32Array(Config.chipNoiseLength);
+                for (let i = 0; i < 2000; i++) {
+                    const white = Math.random() * 2.0 - 1.0;
+                    drum1 += 0.12 * (white - drum1);
+                    drum2 += 0.06 * (drum1 - drum2);
+                    snare1 += 0.45 * (white - snare1);
+                    snare2 += 0.25 * (snare1 - snare2);
+                }
+                for (let i = 0; i < Config.chipNoiseLength; i++) {
+                    const white = Math.random() * 2.0 - 1.0;
+                    drum1 += 0.12 * (white - drum1);
+                    drum2 += 0.06 * (drum1 - drum2);
+                    snare1 += 0.45 * (white - snare1);
+                    snare2 += 0.25 * (snare1 - snare2);
+                    air = white - snare1;
+                    const drumBody = drum1 - drum2;
+                    const snareRattle = (snare1 - snare2) * 1.4 + air * 0.35;
+                    temp[i] = drumBody * 1.1 + snareRattle * 0.9;
+                }
+                const fade = 512;
+                for (let i = 0; i < fade; i++) {
+                    const t = i / fade;
+                    temp[i] = temp[i] * t + temp[Config.chipNoiseLength - fade + i] * (1.0 - t);
+                }
+                let maxAmp = 0.0001;
+                for (let i = 0; i < Config.chipNoiseLength; i++) {
+                    if (Math.abs(temp[i]) > maxAmp)
+                        maxAmp = Math.abs(temp[i]);
+                }
+                for (let i = 0; i < Config.chipNoiseLength; i++) {
+                    wave[i] = temp[i] / maxAmp;
+                }
+            }
+            else if (index == 17) {
+                let c1 = 0.0, c2 = 0.0, c3 = 0.0, c4 = 0.0, shine = 0.0;
+                const temp = new Float32Array(Config.chipNoiseLength);
+                for (let i = 0; i < 2000; i++) {
+                    const white = Math.random() * 2.0 - 1.0;
+                    c1 += 0.70 * (white - c1);
+                    c2 += 0.50 * (c1 - c2);
+                    c3 += 0.30 * (c2 - c3);
+                    c4 += 0.15 * (c3 - c4);
+                }
+                for (let i = 0; i < Config.chipNoiseLength; i++) {
+                    const white = Math.random() * 2.0 - 1.0;
+                    c1 += 0.70 * (white - c1);
+                    c2 += 0.50 * (c1 - c2);
+                    c3 += 0.30 * (c2 - c3);
+                    c4 += 0.15 * (c3 - c4);
+                    shine = white - c1;
+                    const plateMid = c2 - c3;
+                    const plateHigh = c1 - c2;
+                    temp[i] = shine * 0.6 + plateHigh * 1.1 + plateMid * 0.8 + c4 * 0.2;
+                }
+                const fade = 512;
+                for (let i = 0; i < fade; i++) {
+                    const t = i / fade;
+                    temp[i] = temp[i] * t + temp[Config.chipNoiseLength - fade + i] * (1.0 - t);
+                }
+                let maxAmp = 0.0001;
+                for (let i = 0; i < Config.chipNoiseLength; i++) {
+                    if (Math.abs(temp[i]) > maxAmp)
+                        maxAmp = Math.abs(temp[i]);
+                }
+                for (let i = 0; i < Config.chipNoiseLength; i++) {
+                    wave[i] = temp[i] / maxAmp;
+                }
+            }
+            else if (index == 18) {
+                const period = 127;
+                const cycle = new Float32Array(period);
+                let lfsr = 0x7f;
+                for (let i = 0; i < period; i++) {
+                    cycle[i] = (lfsr & 1) * 2.0 - 1.0;
+                    let feedback = (lfsr & 1) ^ ((lfsr >> 1) & 1);
+                    lfsr = (lfsr >> 1) | (feedback << 6);
+                }
+                for (let i = 0; i < Config.chipNoiseLength; i++) {
+                    wave[i] = cycle[i % period];
+                }
+            }
+            else if (index == 19) {
+                const period = 32767;
+                const cycle = new Float32Array(period);
+                let lfsr = 0x7fff;
+                for (let i = 0; i < period; i++) {
+                    cycle[i] = (lfsr & 1) * 2.0 - 1.0;
+                    let feedback = (lfsr & 1) ^ ((lfsr >> 1) & 1);
+                    lfsr = (lfsr >> 1) | (feedback << 14);
+                }
+                for (let i = 0; i < Config.chipNoiseLength; i++) {
+                    wave[i] = cycle[i % period];
                 }
             }
             else {
@@ -4999,19 +5137,22 @@ var beepbox = (function (exports) {
   --link-accent: #00e5ff;
   --ui-widget-background: #16161f;
   --ui-widget-focus: #22222e;
-  --pitch-background: #18181f;
-  --tonic: #2e2c3d;
-  --fifth-note: #21202e;
-  --white-piano-key: #e4e4e7;
-  --black-piano-key: #27272a;
-  --white-piano-key-text: #18181b;
-  --black-piano-key-text: #f4f4f5;
-  --track-editor-bg-pitch: #111a28;
-  --track-editor-bg-pitch-dim: #090e17;
-  --track-editor-bg-noise: #181424;
-  --track-editor-bg-noise-dim: #0d0a14;
-  --track-editor-bg-mod: #221226;
-  --track-editor-bg-mod-dim: #120815;
+  --pitch-background: #0f1f26;
+  --tonic: #1c495c;
+  --fifth-note: #153340;
+  --white-piano-key: #ebf9fb;
+  --black-piano-key: #162c36;
+  --white-piano-key-text: #0c2028;
+  --black-piano-key-text: #00e5ff;
+  --track-editor-bg-pitch: #0e2028;
+  --track-editor-bg-pitch-dim: #081318;
+  --track-editor-bg-noise: #112630;
+  --track-editor-bg-noise-dim: #0a1820;
+  --track-editor-bg-mod: #1e1328;
+  --track-editor-bg-mod-dim: #12091c;
+  --mod-label-primary: #1e1b2e;
+  --mod-label-primary-text: #00e5ff;
+  --mod-label-secondary-text: #c084fc;
   --indicator-primary: #ff007f;
   --indicator-secondary: #00e5ff;
   --oscilloscope-line-L: #ff007f;
@@ -7786,13 +7927,13 @@ var beepbox = (function (exports) {
     ColorConfig.linkAccent = "var(--link-accent, #38bdf8)";
     ColorConfig.uiWidgetBackground = "var(--ui-widget-background, #1f1f23)";
     ColorConfig.uiWidgetFocus = "var(--ui-widget-focus, #27272a)";
-    ColorConfig.pitchBackground = "var(--pitch-background, #18181b)";
-    ColorConfig.tonic = "var(--tonic, #2e2e35)";
-    ColorConfig.fifthNote = "var(--fifth-note, #232328)";
-    ColorConfig.whitePianoKey = "var(--white-piano-key, #d4d4d8)";
-    ColorConfig.blackPianoKey = "var(--black-piano-key, #27272a)";
-    ColorConfig.whitePianoKeyText = "var(--white-piano-key-text, #18181b)";
-    ColorConfig.blackPianoKeyText = "var(--black-piano-key-text, #f4f4f5)";
+    ColorConfig.pitchBackground = "var(--pitch-background, #0f1f26)";
+    ColorConfig.tonic = "var(--tonic, #1c495c)";
+    ColorConfig.fifthNote = "var(--fifth-note, #153340)";
+    ColorConfig.whitePianoKey = "var(--white-piano-key, #ebf9fb)";
+    ColorConfig.blackPianoKey = "var(--black-piano-key, #162c36)";
+    ColorConfig.whitePianoKeyText = "var(--white-piano-key-text, #0c2028)";
+    ColorConfig.blackPianoKeyText = "var(--black-piano-key-text, #00e5ff)";
     ColorConfig.useColorFormula = "var(--use-color-formula, false)";
     ColorConfig.pitchSecondaryChannelHue = "var(--pitch-secondary-channel-hue)";
     ColorConfig.pitchSecondaryChannelHueScale = "var(--pitch-secondary-channel-hue-scale)";
@@ -8410,8 +8551,33 @@ var beepbox = (function (exports) {
             ])
         },
         { name: "MegaBox Presets", presets: toNameMap([
+                { name: "acoustic studio drumset", midiProgram: 116, isNoise: true, settings: { "type": "drumset", "effects": ["panning", "reverb"], "reverb": 25, "pan": 0, "panDelay": 10, "drums": [
+                            { "filterEnvelope": "twang 1", "spectrum": [100, 100, 85, 55, 30, 15, 10, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+                            { "filterEnvelope": "decay 2", "spectrum": [25, 45, 80, 100, 85, 70, 70, 75, 75, 70, 65, 60, 55, 55, 50, 50, 45, 45, 40, 40, 35, 35, 30, 30, 25, 25, 20, 20, 15, 10] },
+                            { "filterEnvelope": "twang 1", "spectrum": [85, 100, 75, 45, 20, 10, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+                            { "filterEnvelope": "twang 1", "spectrum": [45, 85, 100, 75, 40, 20, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+                            { "filterEnvelope": "twang 1", "spectrum": [20, 50, 85, 100, 70, 35, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+                            { "filterEnvelope": "twang 3", "spectrum": [0, 0, 10, 20, 40, 60, 85, 100, 100, 95, 90, 80, 70, 60, 50, 45, 40, 35, 30, 25, 20, 15, 10, 10, 5, 5, 0, 0, 0, 0] },
+                            { "filterEnvelope": "twang 2", "spectrum": [0, 0, 15, 30, 60, 85, 95, 90, 80, 70, 60, 50, 40, 35, 30, 25, 20, 15, 10, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+                            { "filterEnvelope": "decay 3", "spectrum": [0, 0, 15, 30, 50, 75, 90, 100, 100, 100, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40, 35, 30, 25, 20, 15, 10, 5, 0] },
+                            { "filterEnvelope": "decay 3", "spectrum": [15, 25, 40, 55, 70, 85, 100, 90, 85, 90, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40, 35, 30, 25, 20, 15, 10, 5, 0] },
+                            { "filterEnvelope": "decay 3", "spectrum": [35, 45, 60, 75, 90, 100, 100, 100, 100, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40, 35, 30, 25, 20, 15, 10, 5, 0, 0] },
+                            { "filterEnvelope": "decay 2", "spectrum": [0, 10, 30, 60, 85, 100, 100, 100, 90, 80, 70, 60, 50, 40, 30, 20, 15, 10, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] },
+                            { "filterEnvelope": "twang 1", "spectrum": [0, 15, 30, 50, 85, 100, 85, 60, 40, 30, 20, 15, 10, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] }
+                        ] } },
+                { name: "acoustic studio snare", midiProgram: 116, isNoise: true, settings: { "type": "spectrum", "eqFilter": [{ "type": "peak", "cutoffHz": 2400, "linearGain": 1.5 }], "effects": ["panning", "reverb"], "reverb": 25, "pan": 0, "panDelay": 10, "transition": "hard fade", "chord": "strum", "filterCutoffHz": 4000, "filterResonance": 14, "filterEnvelope": "decay 2", "spectrum": [25, 45, 80, 100, 85, 70, 70, 75, 75, 70, 65, 60, 55, 55, 50, 50, 45, 45, 40, 40, 35, 35, 30, 30, 25, 25, 20, 20, 15, 10] } },
+                { name: "acoustic studio kick", midiProgram: 116, isNoise: true, settings: { "type": "spectrum", "eqFilter": [{ "type": "peak", "cutoffHz": 75, "linearGain": 2.0 }], "effects": ["panning", "reverb"], "reverb": 15, "pan": 0, "panDelay": 10, "transition": "hard fade", "chord": "strum", "filterCutoffHz": 1200, "filterResonance": 29, "filterEnvelope": "twang 1", "spectrum": [100, 100, 85, 55, 30, 15, 10, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] } },
+                { name: "acoustic studio tom", midiProgram: 116, isNoise: true, settings: { "type": "spectrum", "eqFilter": [], "effects": ["panning", "reverb"], "reverb": 25, "pan": 15, "panDelay": 10, "transition": "hard fade", "chord": "strum", "filterCutoffHz": 2000, "filterResonance": 14, "filterEnvelope": "twang 1", "spectrum": [45, 85, 100, 75, 40, 20, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] } },
+                { name: "acoustic ride cymbal", midiProgram: 116, isNoise: true, settings: { "type": "spectrum", "eqFilter": [{ "type": "high-pass", "cutoffHz": 3000, "linearGain": 1.0 }], "effects": ["panning", "reverb"], "reverb": 35, "pan": 20, "panDelay": 10, "transition": "hard fade", "chord": "harmony", "filterCutoffHz": 8000, "filterResonance": 14, "filterEnvelope": "decay 3", "spectrum": [15, 25, 40, 55, 70, 85, 100, 90, 85, 90, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40, 35, 30, 25, 20, 15, 10, 5, 0] } },
+                { name: "acoustic crash cymbal", midiProgram: 116, isNoise: true, settings: { "type": "spectrum", "eqFilter": [{ "type": "high-pass", "cutoffHz": 2000, "linearGain": 1.0 }], "effects": ["panning", "reverb"], "reverb": 45, "pan": -25, "panDelay": 10, "transition": "hard fade", "chord": "harmony", "filterCutoffHz": 8000, "filterResonance": 14, "filterEnvelope": "decay 3", "spectrum": [35, 45, 60, 75, 90, 100, 100, 100, 100, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40, 35, 30, 25, 20, 15, 10, 5, 0, 0] } },
+                { name: "arcade 7-bit drum", midiProgram: 116, isNoise: true, settings: { "type": "noise", "eqFilter": [], "eqFilterType": false, "eqSimpleCut": 10, "eqSimplePeak": 0, "effects": ["panning", "transition type"], "transition": "normal", "clicklessTransition": true, "pan": 0, "panDelay": 10, "fadeInSeconds": 0, "fadeOutTicks": -1, "wave": "arcade 7-bit", "envelopes": [] } },
+                { name: "arcade 15-bit crash", midiProgram: 116, isNoise: true, settings: { "type": "noise", "eqFilter": [], "eqFilterType": false, "eqSimpleCut": 10, "eqSimplePeak": 0, "effects": ["panning", "transition type"], "transition": "normal", "clicklessTransition": true, "pan": 0, "panDelay": 10, "fadeInSeconds": 0, "fadeOutTicks": 6, "wave": "arcade 15-bit", "envelopes": [] } },
                 { name: "nes white", midiProgram: 116, generalMidi: true, isNoise: true, settings: { "type": "noise", "eqFilter": [], "eqFilterType": false, "eqSimpleCut": 8, "eqSimplePeak": 0, "eqSubFilters1": [], "effects": ["panning"], "pan": 0, "panDelay": 10, "fadeInSeconds": 0, "fadeOutTicks": 0, "wave": "1-bit white", "envelopes": [] } },
                 { name: "nes ping", midiProgram: 116, generalMidi: true, isNoise: true, settings: { "type": "noise", "eqFilter": [], "eqFilterType": false, "eqSimpleCut": 8, "eqSimplePeak": 0, "eqSubFilters1": [], "effects": ["panning"], "pan": 0, "panDelay": 10, "fadeInSeconds": 0, "fadeOutTicks": 0, "wave": "1-bit metallic", "envelopes": [] } },
+                { name: "acoustic wooden guitar", midiProgram: 25, generalMidi: true, isNoise: false, settings: { "type": "Picked String", "eqFilter": [{ "type": "high-pass", "cutoffHz": 120, "linearGain": 0.8 }, { "type": "peak", "cutoffHz": 3000, "linearGain": 1.5 }], "effects": ["panning", "transition type", "reverb"], "reverb": 35, "transition": "normal", "clicklessTransition": true, "pan": 0, "panDelay": 10, "fadeInSeconds": 0, "fadeOutTicks": 48, "chord": "strum", "harmonics": [100, 100, 90, 75, 70, 70, 85, 80, 70, 55, 45, 45, 45, 55, 55, 55, 55, 55, 45, 45, 45, 45, 45, 45, 45, 45, 45, 45], "unison": "none", "stringSustain": 75, "stringSustainType": "acoustic", "envelopes": [] } },
+                { name: "acoustic finger bass", midiProgram: 33, generalMidi: true, isNoise: false, settings: { "type": "harmonics", "eqFilter": [{ "type": "low-pass", "cutoffHz": 3000, "linearGain": 1.0 }, { "type": "peak", "cutoffHz": 100, "linearGain": 2.0 }], "effects": ["panning", "transition type", "reverb"], "transition": "hard fade", "clicklessTransition": true, "chord": "strum", "pan": 0, "panDelay": 10, "reverb": 15, "fadeInSeconds": 0, "fadeOutTicks": -2, "harmonics": [100, 90, 75, 60, 70, 45, 55, 30, 30, 30, 30, 30, 30, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 0], "envelopes": [] } },
+                { name: "modern studio grand", midiProgram: 0, generalMidi: true, isNoise: false, settings: { "type": "Picked String", "eqFilter": [{ "type": "high-pass", "cutoffHz": 100, "linearGain": 0.7 }, { "type": "peak", "cutoffHz": 2500, "linearGain": 2.5 }], "effects": ["panning", "transition type", "reverb"], "reverb": 50, "transition": "normal", "clicklessTransition": true, "pan": 0, "panDelay": 10, "fadeInSeconds": 0, "fadeOutTicks": 60, "chord": "simultaneous", "harmonics": [100, 100, 88, 88, 85, 75, 75, 75, 0, 75, 75, 75, 75, 60, 60, 75, 60, 20, 60, 60, 60, 60, 60, 60, 60, 60, 35, 60], "unison": "piano", "stringSustain": 88, "stringSustainType": "acoustic", "envelopes": [] } },
+                { name: "arcade 7-bit lead", midiProgram: 80, isNoise: false, settings: { "type": "chip", "eqFilter": [{ "type": "low-pass", "cutoffHz": 9000, "linearGain": 1.0 }], "effects": ["aliasing", "panning"], "transition": "interrupt", "clicklessTransition": true, "pan": 0, "panDelay": 10, "chord": "arpeggio", "wave": "square", "unison": "none", "envelopes": [] } },
                 { name: "distorted pulse vocal", generalMidi: false, settings: { "type": "chip", "eqFilter": [{ "type": "low-pass", "cutoffHz": 19027.31, "linearGain": 0.0884 }], "eqFilterType": false, "eqSimpleCut": 10, "eqSimplePeak": 0, "eqSubFilters0": [{ "type": "low-pass", "cutoffHz": 19027.31, "linearGain": 0.0884 }], "effects": ["panning", "transition type", "pitch shift", "vibrato", "note filter", "bitcrusher", "echo", "reverb"], "transition": "normal", "clicklessTransition": false, "pitchShiftSemitones": 0, "vibrato": "delayed", "vibratoDepth": 0.3, "vibratoDelay": 18.5, "vibratoSpeed": 10, "vibratoType": 0, "noteFilterType": false, "noteSimpleCut": 10, "noteSimplePeak": 0, "noteFilter": [{ "type": "high-pass", "cutoffHz": 840.9, "linearGain": 11.3137 }, { "type": "low-pass", "cutoffHz": 297.3, "linearGain": 8 }, { "type": "peak", "cutoffHz": 500, "linearGain": 11.3137 }, { "type": "high-pass", "cutoffHz": 62.5, "linearGain": 1.4142 }, { "type": "peak", "cutoffHz": 176.78, "linearGain": 11.3137 }, { "type": "high-pass", "cutoffHz": 250, "linearGain": 11.3137 }], "noteSubFilters0": [{ "type": "high-pass", "cutoffHz": 840.9, "linearGain": 11.3137 }, { "type": "low-pass", "cutoffHz": 297.3, "linearGain": 8 }, { "type": "peak", "cutoffHz": 500, "linearGain": 11.3137 }, { "type": "high-pass", "cutoffHz": 62.5, "linearGain": 1.4142 }, { "type": "peak", "cutoffHz": 176.78, "linearGain": 11.3137 }, { "type": "high-pass", "cutoffHz": 250, "linearGain": 11.3137 }], "bitcrusherOctave": 6.5, "bitcrusherQuantization": 71, "pan": 0, "panDelay": 10, "echoSustain": 14, "echoDelayBeats": 0.167, "reverb": 0, "fadeInSeconds": 0, "fadeOutTicks": -3, "wave": "1/8 pulse", "unison": "none", "envelopes": [] } },
                 { name: "dubstep bwah", generalMidi: false, settings: { "type": "FM", "eqFilter": [{ "type": "low-pass", "cutoffHz": 19027.31, "linearGain": 0.7071 }], "eqFilterType": true, "eqSimpleCut": 10, "eqSimplePeak": 0, "eqSubFilters1": [], "effects": ["panning", "transition type", "chord type"], "transition": "interrupt", "clicklessTransition": false, "chord": "custom interval", "fastTwoNoteArp": false, "arpeggioSpeed": 12, "pan": 0, "panDelay": 10, "fadeInSeconds": 0, "fadeOutTicks": -1, "algorithm": "1←(2 3 4)", "feedbackType": "1⟲", "feedbackAmplitude": 10, "operators": [{ "frequency": "2×", "amplitude": 15, "waveform": "sine", "pulseWidth": 5 }, { "frequency": "4×", "amplitude": 15, "waveform": "sine", "pulseWidth": 5 }, { "frequency": "1×", "amplitude": 11, "waveform": "sine", "pulseWidth": 5 }, { "frequency": "1×", "amplitude": 13, "waveform": "sine", "pulseWidth": 5 }], "envelopes": [{ "target": "noteVolume", "envelope": "note size" }, { "target": "operatorAmplitude", "envelope": "swell 2", "index": 1 }, { "target": "operatorAmplitude", "envelope": "punch", "index": 2 }, { "target": "operatorAmplitude", "envelope": "note size", "index": 3 }] } },
                 { name: "FM cool bass", generalMidi: false, settings: { "type": "FM", "eqFilter": [{ "type": "low-pass", "cutoffHz": 6727.17, "linearGain": 1 }, { "type": "high-pass", "cutoffHz": 88.39, "linearGain": 1 }, { "type": "peak", "cutoffHz": 1000, "linearGain": 0.7071 }], "eqFilterType": false, "eqSimpleCut": 10, "eqSimplePeak": 0, "eqSubFilters0": [{ "type": "low-pass", "cutoffHz": 6727.17, "linearGain": 1 }, { "type": "high-pass", "cutoffHz": 88.39, "linearGain": 1 }, { "type": "peak", "cutoffHz": 1000, "linearGain": 0.7071 }], "effects": ["panning", "transition type", "note filter", "reverb"], "transition": "interrupt", "clicklessTransition": false, "noteFilterType": true, "noteSimpleCut": 9, "noteSimplePeak": 2, "noteFilter": [{ "type": "low-pass", "cutoffHz": 7231.23, "linearGain": 1 }], "noteSubFilters1": [{ "type": "low-pass", "cutoffHz": 7231.23, "linearGain": 1 }], "pan": 0, "panDelay": 10, "reverb": 0, "fadeInSeconds": 0, "fadeOutTicks": -1, "algorithm": "1←(2 3←4)", "feedbackType": "1⟲", "feedbackAmplitude": 0, "operators": [{ "frequency": "2×", "amplitude": 15, "waveform": "sine", "pulseWidth": 5 }, { "frequency": "1×", "amplitude": 8, "waveform": "sine", "pulseWidth": 5 }, { "frequency": "1×", "amplitude": 7, "waveform": "sine", "pulseWidth": 5 }, { "frequency": "13×", "amplitude": 11, "waveform": "sine", "pulseWidth": 5 }], "envelopes": [{ "target": "noteFilterAllFreqs", "envelope": "punch" }, { "target": "operatorAmplitude", "envelope": "twang 2", "index": 1 }, { "target": "operatorAmplitude", "envelope": "twang 3", "index": 2 }, { "target": "operatorAmplitude", "envelope": "twang 2", "index": 3 }] } },
