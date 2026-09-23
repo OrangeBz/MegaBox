@@ -1129,24 +1129,32 @@ body.resizing-v {
 }
 .beepboxEditor .selectContainer {
 	position: relative;
+	display: inline-flex;
+	align-items: center;
 }
 .beepboxEditor .selectContainer:not(.menu)::after {
 	content: "";
 	flex-shrink: 0;
 	position: absolute;
-	right: 0;
+	right: 6px;
 	top: 50%;
 	transform: translateY(-50%);
 	pointer-events: none;
 	width: 14px;
-	height: var(--button-size);
+	height: var(--button-size, 26px);
 	background: currentColor;
+	opacity: 0.75;
 	-webkit-mask-image: var(--internal-select-arrows-symbol);
 	-webkit-mask-repeat: no-repeat;
 	-webkit-mask-position: center;
 	mask-image: var(--internal-select-arrows-symbol);
 	mask-repeat: no-repeat;
 	mask-position: center;
+	transition: opacity 0.15s ease, color 0.15s ease;
+}
+.beepboxEditor .selectContainer:not(.menu):hover::after {
+	opacity: 1;
+	color: var(--accent-mod-cyan, #38bdf8);
 }
 .beepboxEditor .selectContainer.menu::after {
 	content: "";
@@ -1156,8 +1164,8 @@ body.resizing-v {
 	top: 50%;
 	transform: translateY(-50%);
 	pointer-events: none;
-	width: var(--button-size);
-	height: var(--button-size);
+	width: var(--button-size, 26px);
+	height: var(--button-size, 26px);
 	background: currentColor;
 	-webkit-mask-image: var(--internal-menu-down-symbol);
 	margin: 0.5em 0;
@@ -1186,9 +1194,9 @@ body.resizing-v {
 }
 .beepboxEditor select {
 	margin: 0;
-	padding: 0 6px;
+	padding: 0 22px 0 8px;
 	display: block;
-	height: var(--button-size);
+	height: var(--button-size, 26px);
 	border: 1px solid var(--border-default, #3f3f46);
 	border-radius: 5px;
 	background: ${ColorConfig.uiWidgetBackground};
@@ -1203,6 +1211,7 @@ body.resizing-v {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
+	box-sizing: border-box;
 }
 .beepboxEditor select option {
 	background: ${ColorConfig.editorBackground};
@@ -1270,7 +1279,7 @@ body.resizing-v {
 }
 .select2-selection__rendered {
 	margin: 0;
-	padding: 0 0.4em;
+	padding: 0 20px 0 8px;
 	display: flex;
 	align-items: center;
 	height: var(--button-size, 26px);
@@ -1288,6 +1297,7 @@ body.resizing-v {
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
+	box-sizing: border-box;
 }
 .select2-selection__rendered:hover {
 	border-color: var(--accent-mod-cyan, #38bdf8);
@@ -1324,6 +1334,7 @@ body.resizing-v {
     vertical-align: middle;
     background-color: #1f1f23;
     border: 1px solid var(--border-default, #3f3f46);
+    border-radius: 6px;
     box-shadow: 0 12px 36px rgba(0,0,0,0.9);
     z-index: 100020 !important;
 }
@@ -1376,7 +1387,7 @@ body.resizing-v {
 .beepboxEditor button {
 	margin: 0;
 	position: relative;
-	height: var(--button-size);
+	height: var(--button-size, 26px);
 	border: 1px solid var(--border-default, #3f3f46);
 	border-radius: 5px;
 	background: ${ColorConfig.uiWidgetBackground};
@@ -1388,6 +1399,10 @@ body.resizing-v {
 	cursor: pointer;
 	box-shadow: 0 1px 2px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 	transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
 }
 .beepboxEditor button:hover {
 	background: ${ColorConfig.uiWidgetFocus};
@@ -1410,10 +1425,17 @@ body.resizing-v {
 
 .beepboxEditor button.cancelButton {
 	float: right;
-	width: var(--button-size);
+	width: var(--button-size, 26px);
+	height: var(--button-size, 26px);
 	position: absolute;
-	top: 8px;
-	right: 8px;
+	top: 10px;
+	right: 10px;
+	padding: 0;
+}
+.beepboxEditor button.cancelButton:hover {
+	border-color: var(--accent-signal-red, #ef4444);
+	color: var(--accent-signal-red, #ef4444);
+	box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
 }
 
 .beepboxEditor .playback-bar-controls {
@@ -1583,7 +1605,16 @@ body.resizing-v {
 	padding-right: 12px;
 }
 .beepboxEditor button.okayButton, .beepboxEditor button.exportButton {
-	padding-left: var(--button-size);
+	padding-left: calc(var(--button-size, 26px) + 2px);
+	padding-right: 14px;
+	background: linear-gradient(180deg, rgba(56, 189, 248, 0.18) 0%, rgba(14, 165, 233, 0.24) 100%), ${ColorConfig.uiWidgetBackground};
+	border-color: rgba(56, 189, 248, 0.55);
+	color: #ffffff;
+}
+.beepboxEditor button.okayButton:hover, .beepboxEditor button.exportButton:hover {
+	background: linear-gradient(180deg, rgba(56, 189, 248, 0.32) 0%, rgba(14, 165, 233, 0.42) 100%), ${ColorConfig.uiWidgetFocus};
+	border-color: var(--accent-mod-cyan, #38bdf8);
+	box-shadow: 0 0 10px rgba(56, 189, 248, 0.45), 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 .beepboxEditor button.prevBarButton,
 .beepboxEditor button.nextBarButton {
@@ -2248,11 +2279,13 @@ body.resizing-v {
 	background: #141416;
 	text-align: center;
 	border: 1px solid var(--border-default, #3f3f46);
-	border-radius: 4px;
+	border-radius: 5px;
 	color: ${ColorConfig.primaryText};
-	padding: 2px 4px;
+	padding: 0 6px;
+	height: var(--button-size, 26px);
 	box-shadow: inset 0 1px 2px rgba(0,0,0,0.6);
 	transition: all 0.15s ease;
+	box-sizing: border-box;
 }
 
 .beepboxEditor input[type=text]:hover, .beepboxEditor input[type=number]:hover {
@@ -2272,15 +2305,21 @@ body.resizing-v {
 }
 
 .beepboxEditor input[type=checkbox] {
-  transform: scale(1.3);
+  transform: scale(1.15);
   accent-color: var(--accent-mod-cyan, #38bdf8);
+  cursor: pointer;
+}
+
+.beepboxEditor input[type=radio] {
+  accent-color: var(--accent-mod-cyan, #38bdf8);
+  cursor: pointer;
 }
 
 .beepboxEditor input[type=range] {
 	-webkit-appearance: none;
 	color: inherit;
 	width: 100%;
-	height: var(--button-size);
+	height: var(--button-size, 26px);
 	font-size: inherit;
 	margin: 0;
 	cursor: pointer;
@@ -2295,7 +2334,7 @@ body.resizing-v {
 	width: 100%;
 	height: 6px;
 	cursor: pointer;
-	background: #27272c;
+	background: #1e1e24;
 	border-radius: 3px;
 	border: 1px solid #3f3f46;
 	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.05);
@@ -2340,45 +2379,54 @@ body.resizing-v {
 }
 .beepboxEditor input[type=range]::-webkit-slider-thumb {
 	height: 18px;
-	width: 9px;
-	border-radius: 2px;
+	width: 10px;
+	border-radius: 3px;
 	background: linear-gradient(180deg, #52525b 0%, #3f3f46 50%, #27272a 100%);
 	border: 1px solid #71717a;
-	box-shadow: 0 1px 3px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.3);
+	box-shadow: 0 2px 4px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.3);
 	cursor: pointer;
 	-webkit-appearance: none;
 	margin-top: -6.5px;
-	transition: border-color 0.1s ease, box-shadow 0.1s ease;
+	transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
 }
 .beepboxEditor input[type=range]:hover::-webkit-slider-thumb {
 	border-color: var(--accent-mod-cyan, #38bdf8);
-	box-shadow: 0 0 6px rgba(56, 189, 248, 0.6), inset 0 1px 0 rgba(255,255,255,0.4);
+	box-shadow: 0 0 8px rgba(56, 189, 248, 0.6), inset 0 1px 0 rgba(255,255,255,0.4);
 }
-.beepboxEditor input[type=range]:focus::-webkit-slider-thumb {
+.beepboxEditor input[type=range]:focus::-webkit-slider-thumb,
+.beepboxEditor input[type=range]:active::-webkit-slider-thumb {
 	border-color: var(--accent-mod-cyan, #38bdf8);
-	box-shadow: 0 0 8px rgba(56, 189, 248, 0.8), inset 0 1px 0 rgba(255,255,255,0.4);
+	background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+	box-shadow: 0 0 10px rgba(56, 189, 248, 0.8), inset 0 1px 0 rgba(255,255,255,0.5);
 }
 .beepboxEditor input[type=range]::-moz-range-track {
 	width: 100%;
 	height: 6px;
 	cursor: pointer;
-	background: #27272c;
+	background: #1e1e24;
 	border-radius: 3px;
 	border: 1px solid #3f3f46;
 	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 .beepboxEditor input[type=range]::-moz-range-thumb {
 	height: 18px;
-	width: 9px;
-	border-radius: 2px;
+	width: 10px;
+	border-radius: 3px;
 	border: 1px solid #71717a;
 	background: linear-gradient(180deg, #52525b 0%, #3f3f46 50%, #27272a 100%);
-	box-shadow: 0 1px 3px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.3);
+	box-shadow: 0 2px 4px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.3);
 	cursor: pointer;
+	transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
 }
 .beepboxEditor input[type=range]:hover::-moz-range-thumb {
 	border-color: var(--accent-mod-cyan, #38bdf8);
-	box-shadow: 0 0 6px rgba(56, 189, 248, 0.6), inset 0 1px 0 rgba(255,255,255,0.4);
+	box-shadow: 0 0 8px rgba(56, 189, 248, 0.6), inset 0 1px 0 rgba(255,255,255,0.4);
+}
+.beepboxEditor input[type=range]:focus::-moz-range-thumb,
+.beepboxEditor input[type=range]:active::-moz-range-thumb {
+	border-color: var(--accent-mod-cyan, #38bdf8);
+	background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+	box-shadow: 0 0 10px rgba(56, 189, 248, 0.8), inset 0 1px 0 rgba(255,255,255,0.5);
 }
 .beepboxEditor input[type=range]::-ms-track {
 	width: 100%;
