@@ -42,7 +42,7 @@ document.head.appendChild(HTML.style({ type: "text/css" }, `
 	--accent-rec-orange: #f97316;
 	--accent-mod-cyan: #38bdf8;
 	--button-size: 26px;
-	--settings-area-width: 192px;
+	--settings-area-width: 220px;
 	--internal-play-symbol: var(--play-symbol, url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="-13 -13 26 26"><path d="M -5 -8 L -5 8 L 8 0 z" fill="gray"/></svg>'));
 	--internal-pause-symbol: var(--pause-symbol, url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="-13 -13 26 26"><rect x="-5" y="-7" width="4" height="14" fill="gray"/><rect x="3" y="-7" width="4" height="14" fill="gray"/></svg>'));
 	--internal-record-symbol: var(--record-symbol, url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="-13 -13 26 26"><circle cx="0" cy="0" r="6" fill="gray"/></svg>'));
@@ -449,32 +449,44 @@ body.resizing-v {
 .collapsible-header {
 	cursor: pointer;
 	user-select: none;
-	transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
-	background: linear-gradient(180deg, #27272a 0%, #1f1f23 100%);
-	border: 1px solid var(--border-subtle, #2e2e33);
-	border-radius: 4px;
-	padding: 5px 8px;
+	transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+	background: ${ColorConfig.uiWidgetBackground};
+	background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(0, 0, 0, 0.12) 100%);
+	border: 1px solid var(--border-default, #3f3f46);
+	border-radius: 5px;
+	height: var(--button-size, 26px);
+	padding: 0 10px;
 	margin-bottom: 6px;
-	font-weight: 700;
-	color: #e4e4e7;
-	font-size: 11px;
-	text-transform: uppercase;
-	letter-spacing: 0.5px;
+	font-weight: 600;
+	color: ${ColorConfig.primaryText};
+	font-size: 12px;
+	font-family: var(--font-sans);
+	text-transform: none;
+	letter-spacing: normal;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+	box-shadow: 0 1px 2px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+	box-sizing: border-box;
 }
 .collapsible-header:hover {
-	background: linear-gradient(180deg, #323238 0%, #25252a 100%);
+	background: ${ColorConfig.uiWidgetFocus};
+	background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(0, 0, 0, 0.08) 100%);
 	border-color: var(--accent-mod-cyan, #38bdf8);
 	color: #ffffff;
-	box-shadow: 0 0 6px rgba(56, 189, 248, 0.25);
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5), 0 0 8px rgba(56, 189, 248, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+.collapsible-header:active {
+	transform: translateY(0.5px);
+	background: #1f1f23;
+	border-color: var(--accent-mod-cyan, #38bdf8);
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 0 6px rgba(56, 189, 248, 0.3);
 }
 .collapsible-header .fold-icon {
 	display: inline-block;
 	color: var(--accent-mod-cyan, #38bdf8);
-	font-size: 12px;
+	font-size: 11px;
+	margin-left: 6px;
 }
 
 .panel-lock-button {
@@ -1863,27 +1875,39 @@ body.resizing-v {
 }
 
 .beepboxEditor .selectRow, .beepboxEditor .instrumentCopyPasteRow {
-	margin: 4px 0;
+	margin: 3px 0;
 	height: 28px;
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	justify-content: space-between;
-	gap: 6px;
+	gap: 8px;
 	width: 100%;
 	box-sizing: border-box;
 }
 
+.beepboxEditor .selectRow > span.tip {
+	width: 66px;
+	min-width: 66px;
+	flex-shrink: 0;
+	font-size: 11px;
+	white-space: nowrap;
+	text-align: left;
+}
+
 .beepboxEditor .selectRow > :last-child {
-	flex: 1;
+	flex: 1 1 auto;
 	min-width: 0;
 }
 .beepboxEditor .selectRow .selectContainer {
 	width: 100%;
+	flex: 1 1 auto;
+	min-width: 0;
 }
 .beepboxEditor .selectRow .selectContainer select {
 	width: 100%;
 	box-sizing: border-box;
+	min-width: 0;
 }
 
 .beepboxEditor .selectRow.key-octave-row {
@@ -1903,16 +1927,20 @@ body.resizing-v {
 	min-width: 0;
 	display: flex;
 	align-items: center;
-	gap: 4px;
+	gap: 6px;
+}
+.beepboxEditor .selectRow.key-octave-row .key-group > span.tip {
+	width: 66px;
+	min-width: 66px;
+	flex-shrink: 0;
 }
 .beepboxEditor .selectRow.key-octave-row .key-group .selectContainer {
 	flex: 1;
 	min-width: 0;
-	max-width: 95px;
 }
 .beepboxEditor .selectRow.key-octave-row .octave-group input[type="number"] {
 	width: 44px;
-	height: 24px;
+	height: var(--button-size, 26px);
 	text-align: center;
 	box-sizing: border-box;
 }
@@ -2180,7 +2208,7 @@ body.resizing-v {
 	padding: 8px 10px;
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
 	flex-shrink: 0;
-	min-width: 192px;
+	min-width: 200px;
 	max-height: 100%;
 	overflow-y: auto;
 	overflow-x: hidden;
@@ -2218,7 +2246,7 @@ body.resizing-v {
 	padding: 8px 10px;
 	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
 	flex-shrink: 0;
-	min-width: 216px;
+	min-width: 200px;
 	max-height: 100%;
 	overflow-y: auto;
 	overflow-x: hidden;
@@ -2475,12 +2503,20 @@ li.select2-results__option[role=group] > strong:hover {
 	}
 }
 
-/* Mobile & Drawer Controls Defaults */
-.mobile-menu-btn {
-	display: none;
-}
-.mobile-drawer-close-btn {
-	display: none;
+/* Mobile & Drawer Controls Defaults (Strictly hidden on desktop) */
+.beepboxEditor .mobile-menu-btn,
+.beepboxEditor .mobile-drawer-close-btn,
+.beepboxEditor .mobile-fullscreen-btn,
+.beepboxEditor .mobile-menu-close-btn,
+.beepboxEditor .mobile-quick-bar,
+.beepboxEditor .mobile-buttons-row,
+.mobile-menu-btn,
+.mobile-drawer-close-btn,
+.mobile-fullscreen-btn,
+.mobile-menu-close-btn,
+.mobile-quick-bar,
+.mobile-buttons-row {
+	display: none !important;
 }
 .mobile-drawer-backdrop {
 	display: none;
@@ -2498,10 +2534,6 @@ li.select2-results__option[role=group] > strong:hover {
 	display: block;
 	opacity: 1;
 	pointer-events: auto;
-}
-.mobile-quick-bar,
-.mobile-buttons-row {
-	display: none;
 }
 .rotate-device-prompt {
 	display: none;
@@ -2710,9 +2742,9 @@ li.select2-results__option[role=group] > strong:hover {
 		z-index: 10001 !important;
 		pointer-events: auto !important;
 	}
-	.mobile-menu-btn {
+	.beepboxEditor .mobile-menu-btn {
 		pointer-events: auto !important;
-		display: flex;
+		display: flex !important;
 		align-items: center;
 		justify-content: center;
 		font-size: 18px;
@@ -2927,8 +2959,8 @@ li.select2-results__option[role=group] > strong:hover {
 		transform: translateY(-50%) !important;
 		pointer-events: none !important;
 	}
-	.mobile-drawer-close-btn {
-		display: flex;
+	.beepboxEditor .mobile-drawer-close-btn {
+		display: flex !important;
 		align-items: center;
 		justify-content: center;
 		width: 28px;

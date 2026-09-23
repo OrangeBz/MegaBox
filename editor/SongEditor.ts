@@ -1309,7 +1309,7 @@ export class SongEditor {
     private readonly _instrumentSettingsFoldIcon: HTMLSpanElement = span({ class: "fold-icon", style: "margin-left: 6px; pointer-events: none;" }, "▾");
     private readonly _instrumentSettingsLockBtn: HTMLSpanElement = span({ class: "panel-lock-button panel-floating-lock", title: isSpanish() ? "Panel fijado (clic para desbloquear y mover)" : "Panel locked (click to unlock and reposition)" });
     private readonly _instrumentSettingsCloseBtn: HTMLButtonElement = button({ class: "mobile-drawer-close-btn", type: "button", title: isSpanish() ? "Cerrar" : "Close" }, "✕");
-    private readonly _instrumentSettingsTextRow: HTMLDivElement = div({ id: "instrumentSettingsText", class: "collapsible-header", style: `padding: 3px 0; width: 100%; text-align: center; color: ${ColorConfig.secondaryText}; display: flex; align-items: center; justify-content: center; position: relative;` },
+    private readonly _instrumentSettingsTextRow: HTMLDivElement = div({ id: "instrumentSettingsText", class: "collapsible-header", style: "width: 100%; position: relative;" },
         this._instrumentSettingsTitleSpan,
         this._instrumentSettingsFoldIcon,
         this._instrumentSettingsCloseBtn,
@@ -1459,8 +1459,8 @@ export class SongEditor {
     private readonly _songSettingsFoldIcon: HTMLSpanElement = span({ class: "fold-icon", style: "margin-left: 6px; pointer-events: none;" }, "▾");
     private readonly _songSettingsLockBtn: HTMLSpanElement = span({ class: "panel-lock-button panel-floating-lock", title: isSpanish() ? "Panel fijado (clic para desbloquear y mover)" : "Panel locked (click to unlock and reposition)" });
     private readonly _songSettingsCloseBtn: HTMLButtonElement = button({ class: "mobile-drawer-close-btn", type: "button", title: isSpanish() ? "Cerrar" : "Close" }, "✕");
-    private readonly _songSettingsHeader: HTMLDivElement = div({ class: "editor-song-settings collapsible-header" },
-        div({ style: `width: 100%; margin: 3px 0; position: relative; text-align: center; color: ${ColorConfig.secondaryText}; display: flex; align-items: center; justify-content: center;` },
+    private readonly _songSettingsHeader: HTMLDivElement = div({ class: "editor-song-settings collapsible-header", style: "width: 100%; position: relative;" },
+        div({ style: "width: 100%; position: relative; display: flex; align-items: center; justify-content: center;" },
             div({ class: "tip", style: "flex-shrink: 0; position:absolute; left: 0; top: 0; width: 12px; height: 12px", onclick: (e: MouseEvent) => { e.stopPropagation(); this._openPrompt("usedPattern"); } },
                 SVG.svg({ style: "flex-shrink: 0; position: absolute; left: 0; top: 0; pointer-events: none;", width: "12px", height: "12px", "margin-right": "0.5em", viewBox: "-6 -6 12 12" },
                     this._usedPatternIndicator,

@@ -43,7 +43,7 @@ export class Slider {
 
 	constructor(public readonly input: HTMLInputElement, private readonly _doc: SongDocument, private readonly _getChange: ((oldValue: number, newValue: number) => Change) | null, midTick: boolean) {
 		// A container is created around the input to allow for spec-compliant pseudo css classes (e.g ::before and ::after, which must be added to containers, not the input itself)
-		this.container = (midTick) ? span({ class: "midTick", style: "position: sticky; width: 61.5%;" }, input) : span({ style: "position: sticky;" }, input);
+		this.container = (midTick) ? span({ class: "midTick", style: "position: relative; flex: 1; min-width: 0; display: flex; align-items: center; width: 100%;" }, input) : span({ style: "position: relative; flex: 1; min-width: 0; display: flex; align-items: center; width: 100%;" }, input);
 		input.addEventListener("input", this._whenInput);
 		input.addEventListener("change", this._whenChange);
 	}
