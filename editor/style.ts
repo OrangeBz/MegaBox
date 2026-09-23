@@ -531,16 +531,6 @@ body.resizing-v {
 	backdrop-filter: blur(4px);
 	pointer-events: auto;
 }
-.beepboxEditor .song-settings-area .panel-floating-lock,
-.beepboxEditor .instrument-settings-area .panel-floating-lock {
-	position: sticky;
-	bottom: 6px;
-	right: 6px;
-	margin-left: auto;
-	margin-top: auto;
-	align-self: flex-end;
-	flex-shrink: 0;
-}
 .beepboxEditor .pattern-area .panel-floating-lock {
 	right: 26px;
 	bottom: 6px;
@@ -1148,20 +1138,22 @@ body.resizing-v {
 	content: "";
 	flex-shrink: 0;
 	position: absolute;
-	right: 6px;
+	right: 5px;
 	top: 50%;
 	transform: translateY(-50%);
 	pointer-events: none;
-	width: 14px;
+	width: 10px;
 	height: var(--button-size, 26px);
 	background: currentColor;
-	opacity: 0.75;
+	opacity: 0.6;
 	-webkit-mask-image: var(--internal-select-arrows-symbol);
 	-webkit-mask-repeat: no-repeat;
 	-webkit-mask-position: center;
+	-webkit-mask-size: 10px;
 	mask-image: var(--internal-select-arrows-symbol);
 	mask-repeat: no-repeat;
 	mask-position: center;
+	mask-size: 10px;
 	transition: opacity 0.15s ease, color 0.15s ease;
 }
 .beepboxEditor .selectContainer:not(.menu):hover::after {
@@ -1201,12 +1193,12 @@ body.resizing-v {
 
 .beepboxEditor select,
 .beepboxEditor select option {
-	font-size: 12px;
+	font-size: 11px;
 	font-family: var(--font-sans);
 }
 .beepboxEditor select {
 	margin: 0;
-	padding: 0 22px 0 8px;
+	padding: 0 16px 0 6px;
 	display: block;
 	height: var(--button-size, 26px);
 	border: 1px solid var(--border-default, #3f3f46);
@@ -1214,7 +1206,7 @@ body.resizing-v {
 	background: ${ColorConfig.uiWidgetBackground};
 	background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(0, 0, 0, 0.12) 100%);
 	color: ${ColorConfig.primaryText};
-	font-size: 12px;
+	font-size: 11px;
 	font-family: var(--font-sans);
 	font-weight: 500;
 	cursor: pointer;
@@ -1944,6 +1936,58 @@ body.resizing-v {
 	width: 100%;
 	box-sizing: border-box;
 	min-width: 0;
+}
+
+.beepboxEditor .selectRow .operator-freq-select {
+	width: 52px !important;
+	min-width: 52px !important;
+	max-width: 52px !important;
+	flex: 0 0 52px !important;
+}
+.beepboxEditor .selectRow .operator-freq-select select {
+	padding: 0 14px 0 4px !important;
+	font-size: 11px !important;
+	text-align: center;
+	text-align-last: center;
+}
+
+.beepboxEditor .selectRow .instrument-bar {
+	margin: 0 !important;
+	height: var(--button-size, 26px) !important;
+	flex: 1 1 auto !important;
+	min-width: 0 !important;
+}
+.beepboxEditor .selectRow .instrument-bar button {
+	height: var(--button-size, 26px) !important;
+	font-size: 10px !important;
+}
+
+.beepboxEditor .envelope-row {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	margin: 3px 0;
+	width: 100%;
+}
+.beepboxEditor .envelope-row .selectContainer {
+	width: 0;
+	min-width: 0;
+}
+.beepboxEditor .envelope-row .selectContainer::after {
+	display: none !important;
+}
+.beepboxEditor .envelope-row select {
+	padding: 0 4px !important;
+	font-size: 11px !important;
+	height: 24px !important;
+	text-align: center;
+	text-align-last: center;
+}
+.beepboxEditor .envelope-row .delete-envelope {
+	width: 24px !important;
+	height: 24px !important;
+	min-width: 24px !important;
+	flex-shrink: 0 !important;
 }
 
 .beepboxEditor .selectRow.key-octave-row {

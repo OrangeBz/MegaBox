@@ -940,7 +940,7 @@ export class SongEditor {
     private readonly _keySelect: HTMLSelectElement = buildOptions(select(), Config.keys.map(key => key.name).reverse());
     private readonly _octaveStepper: HTMLInputElement = input({ style: "width: 44px; text-align: center;", type: "number", min: Config.octaveMin, max: Config.octaveMax, value: "0" });
     private readonly _tempoSlider: Slider = new Slider(input({ style: "margin: 0; vertical-align: middle;", type: "range", min: "1", max: "500", value: "160", step: "1" }), this._doc, (oldValue: number, newValue: number) => new ChangeTempo(this._doc, oldValue, newValue), false);
-    private readonly _tempoStepper: HTMLInputElement = input({ style: "width: 4em; font-size: 80%; margin-left: 0.4em; vertical-align: middle;", type: "number", step: "1" });
+    private readonly _tempoStepper: HTMLInputElement = input({ style: "width: 44px; min-width: 44px; height: var(--button-size, 26px); font-size: 11px; text-align: center; box-sizing: border-box; padding: 0 2px;", type: "number", step: "1" });
     private readonly _chorusSlider: Slider = new Slider(input({ style: "margin: 0;", type: "range", min: "0", max: Config.chorusRange - 1, value: "0", step: "1" }), this._doc, (oldValue: number, newValue: number) => new ChangeChorus(this._doc, oldValue, newValue), false);
     private readonly _chorusRow: HTMLDivElement = div({ class: "selectRow" }, span({ class: "tip", onclick: () => this._openPrompt("chorus") }, "Chorus:"), this._chorusSlider.container);
     private readonly _reverbSlider: Slider = new Slider(input({ style: "margin: 0; position: sticky,", type: "range", min: "0", max: Config.reverbRange - 1, value: "0", step: "1" }), this._doc, (oldValue: number, newValue: number) => new ChangeReverb(this._doc, oldValue, newValue), false);
@@ -1014,9 +1014,9 @@ export class SongEditor {
     private readonly _transitionDropdownGroup: HTMLElement = div({ class: "editor-controls", style: "display: none;" }, this._clicklessTransitionRow);
 
     private readonly _effectsSelect: HTMLSelectElement = select(option({ selected: true, disabled: true, hidden: false })); // todo: "hidden" should be true but looks wrong on mac chrome, adds checkmark next to first visible option even though it's not selected. :(
-    private readonly _eqFilterSimpleButton: HTMLButtonElement = button({ style: "font-size: x-small; width: 50%; height: 40%", class: "no-underline", onclick: () => this._switchEQFilterType(true) }, "simple");
-    private readonly _eqFilterAdvancedButton: HTMLButtonElement = button({ style: "font-size: x-small; width: 50%; height: 40%", class: "last-button no-underline", onclick: () => this._switchEQFilterType(false) }, "advanced");
-    private readonly _eqFilterTypeRow: HTMLElement = div({ class: "selectRow", style: "padding-top: 4px; margin-bottom: 0px;" }, span({ style: "font-size: x-small;", class: "tip", onclick: () => this._openPrompt("filterType") }, "EQ Filt.Type:"), div({ class: "instrument-bar" }, this._eqFilterSimpleButton, this._eqFilterAdvancedButton));
+    private readonly _eqFilterSimpleButton: HTMLButtonElement = button({ style: "font-size: 10px; flex: 1; height: 100%;", class: "no-underline", onclick: () => this._switchEQFilterType(true) }, "simple");
+    private readonly _eqFilterAdvancedButton: HTMLButtonElement = button({ style: "font-size: 10px; flex: 1; height: 100%;", class: "last-button no-underline", onclick: () => this._switchEQFilterType(false) }, "advanced");
+    private readonly _eqFilterTypeRow: HTMLElement = div({ class: "selectRow" }, span({ class: "tip", onclick: () => this._openPrompt("filterType") }, "EQ Filt.Type:"), div({ class: "instrument-bar", style: "margin: 0; height: var(--button-size, 26px); flex: 1 1 auto; min-width: 0;" }, this._eqFilterSimpleButton, this._eqFilterAdvancedButton));
     private readonly _eqFilterEditor: FilterEditor = new FilterEditor(this._doc);
     private readonly _eqFilterZoom: HTMLButtonElement = button({ style: "margin-left:0em; padding-left:0.2em; height:1.5em; max-width: 12px;", onclick: () => this._openPrompt("customEQFilterSettings") }, "+");
     private readonly _eqFilterRow: HTMLElement = div({ class: "selectRow" }, span({ class: "tip", onclick: () => this._openPrompt("eqFilter") }, "EQ Filt:"), this._eqFilterZoom, this._eqFilterEditor.container);
@@ -1025,9 +1025,9 @@ export class SongEditor {
     private readonly _eqFilterSimplePeakSlider: Slider = new Slider(input({ style: "margin: 0;", type: "range", min: "0", max: Config.filterSimplePeakRange - 1, value: "6", step: "1" }), this._doc, (oldValue: number, newValue: number) => new ChangeEQFilterSimplePeak(this._doc, oldValue, newValue), false);
     private _eqFilterSimplePeakRow: HTMLDivElement = div({ class: "selectRow", title: "Low-pass Filter Peak Resonance" }, span({ class: "tip", onclick: () => this._openPrompt("filterResonance") }, "Filter Peak:"), this._eqFilterSimplePeakSlider.container);
 
-    private readonly _noteFilterSimpleButton: HTMLButtonElement = button({ style: "font-size: x-small; width: 50%; height: 40%", class: "no-underline", onclick: () => this._switchNoteFilterType(true) }, "simple");
-    private readonly _noteFilterAdvancedButton: HTMLButtonElement = button({ style: "font-size: x-small; width: 50%; height: 40%", class: "last-button no-underline", onclick: () => this._switchNoteFilterType(false) }, "advanced");
-    private readonly _noteFilterTypeRow: HTMLElement = div({ class: "selectRow", style: "padding-top: 4px; margin-bottom: 0px;" }, span({ style: "font-size: x-small;", class: "tip", onclick: () => this._openPrompt("filterType") }, "Note Filt.Type:"), div({ class: "instrument-bar" }, this._noteFilterSimpleButton, this._noteFilterAdvancedButton));
+    private readonly _noteFilterSimpleButton: HTMLButtonElement = button({ style: "font-size: 10px; flex: 1; height: 100%;", class: "no-underline", onclick: () => this._switchNoteFilterType(true) }, "simple");
+    private readonly _noteFilterAdvancedButton: HTMLButtonElement = button({ style: "font-size: 10px; flex: 1; height: 100%;", class: "last-button no-underline", onclick: () => this._switchNoteFilterType(false) }, "advanced");
+    private readonly _noteFilterTypeRow: HTMLElement = div({ class: "selectRow" }, span({ class: "tip", onclick: () => this._openPrompt("filterType") }, "Note Filt.Type:"), div({ class: "instrument-bar", style: "margin: 0; height: var(--button-size, 26px); flex: 1 1 auto; min-width: 0;" }, this._noteFilterSimpleButton, this._noteFilterAdvancedButton));
     private readonly _noteFilterEditor: FilterEditor = new FilterEditor(this._doc, true);
     private readonly _noteFilterZoom: HTMLButtonElement = button({ style: "margin-left:0em; padding-left:0.2em; height:1.5em; max-width: 12px;", onclick: () => this._openPrompt("customNoteFilterSettings") }, "+");
     private readonly _noteFilterRow: HTMLElement = div({ class: "selectRow" }, span({ class: "tip", onclick: () => this._openPrompt("noteFilter") }, "Note Filt:"), this._noteFilterZoom, this._noteFilterEditor.container);
@@ -1278,7 +1278,7 @@ export class SongEditor {
         this._stringSustainRow,
         this._unisonSelectRow,
         this._unisonDropdownGroup,
-        div({ style: `padding: 2px 0; margin-left: 2em; display: flex; align-items: center;` },
+        div({ style: `padding: 2px 0; display: flex; align-items: center; justify-content: space-between; width: 100%;` },
             span({ style: `flex-grow: 1; text-align: center;` }, span({ class: "tip", onclick: () => this._openPrompt("effects") }, "Effects")),
             div({ class: "effects-menu" }, this._effectsSelect),
         ),
@@ -1302,7 +1302,7 @@ export class SongEditor {
         this._echoSustainRow,
         this._echoDelayRow,
         this._reverbRow,
-        div({ style: `padding: 2px 0; margin-left: 2em; display: flex; align-items: center;` },
+        div({ style: `padding: 2px 0; display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 6px;` },
             span({ style: `flex-grow: 1; text-align: center;` }, span({ class: "tip", onclick: () => this._openPrompt("envelopes") }, "Envelopes")),
             this._envelopeDropdown,
             this._addEnvelopeButton,
@@ -1324,11 +1324,12 @@ export class SongEditor {
     );
     private readonly _instrumentSettingsTitleSpan: HTMLSpanElement = span({ class: "instrument-header-text", style: "flex-grow: 1; text-align: center;" }, isSpanish() ? "Ajustes de Instrumento" : "Instrument Settings");
     private readonly _instrumentSettingsFoldIcon: HTMLSpanElement = span({ class: "fold-icon", style: "margin-left: 6px; pointer-events: none;" }, "▾");
-    private readonly _instrumentSettingsLockBtn: HTMLSpanElement = span({ class: "panel-lock-button panel-floating-lock", title: isSpanish() ? "Panel fijado (clic para desbloquear y mover)" : "Panel locked (click to unlock and reposition)" });
+    private readonly _instrumentSettingsLockBtn: HTMLSpanElement = span({ class: "panel-lock-button", style: "position: absolute; right: 8px; top: 50%; transform: translateY(-50%);", title: isSpanish() ? "Panel fijado (clic para desbloquear y mover)" : "Panel locked (click to unlock and reposition)" });
     private readonly _instrumentSettingsCloseBtn: HTMLButtonElement = button({ class: "mobile-drawer-close-btn", type: "button", title: isSpanish() ? "Cerrar" : "Close" }, "✕");
     private readonly _instrumentSettingsTextRow: HTMLDivElement = div({ id: "instrumentSettingsText", class: "collapsible-header", style: "width: 100%; position: relative;" },
         this._instrumentSettingsTitleSpan,
         this._instrumentSettingsFoldIcon,
+        this._instrumentSettingsLockBtn,
         this._instrumentSettingsCloseBtn,
     );
     private readonly _instrumentTypeSelectRow: HTMLDivElement = div({ class: "selectRow", id: "typeSelectRow" },
@@ -1474,25 +1475,24 @@ export class SongEditor {
     );
 
     private readonly _songSettingsFoldIcon: HTMLSpanElement = span({ class: "fold-icon", style: "margin-left: 6px; pointer-events: none;" }, "▾");
-    private readonly _songSettingsLockBtn: HTMLSpanElement = span({ class: "panel-lock-button panel-floating-lock", title: isSpanish() ? "Panel fijado (clic para desbloquear y mover)" : "Panel locked (click to unlock and reposition)" });
+    private readonly _songSettingsLockBtn: HTMLSpanElement = span({ class: "panel-lock-button", style: "position: absolute; right: 8px; top: 50%; transform: translateY(-50%);", title: isSpanish() ? "Panel fijado (clic para desbloquear y mover)" : "Panel locked (click to unlock and reposition)" });
     private readonly _songSettingsCloseBtn: HTMLButtonElement = button({ class: "mobile-drawer-close-btn", type: "button", title: isSpanish() ? "Cerrar" : "Close" }, "✕");
     private readonly _songSettingsHeader: HTMLDivElement = div({ class: "editor-song-settings collapsible-header", style: "width: 100%; position: relative;" },
         div({ style: "width: 100%; position: relative; display: flex; align-items: center; justify-content: center;" },
-            div({ class: "tip", style: "flex-shrink: 0; position:absolute; left: 0; top: 0; width: 12px; height: 12px", onclick: (e: MouseEvent) => { e.stopPropagation(); this._openPrompt("usedPattern"); } },
-                SVG.svg({ style: "flex-shrink: 0; position: absolute; left: 0; top: 0; pointer-events: none;", width: "12px", height: "12px", "margin-right": "0.5em", viewBox: "-6 -6 12 12" },
-                    this._usedPatternIndicator,
+            div({ style: "display: flex; align-items: center; gap: 4px; position: absolute; left: 6px; top: 50%; transform: translateY(-50%);" },
+                div({ class: "tip", style: "display: flex; align-items: center; width: 14px; height: 14px; cursor: pointer;", onclick: (e: MouseEvent) => { e.stopPropagation(); this._openPrompt("usedPattern"); } },
+                    SVG.svg({ width: "14px", height: "14px", viewBox: "-6 -6 12 12" }, this._usedPatternIndicator),
+                ),
+                div({ class: "tip", style: "display: flex; align-items: center; width: 14px; height: 14px; cursor: pointer;", onclick: (e: MouseEvent) => { e.stopPropagation(); this._openPrompt("usedInstrument"); } },
+                    SVG.svg({ width: "14px", height: "14px", viewBox: "-6 -6 12 12" }, this._usedInstrumentIndicator),
+                ),
+                div({ class: "tip", style: "display: flex; align-items: center; width: 14px; height: 14px; cursor: pointer;", onclick: (e: MouseEvent) => { e.stopPropagation(); this._openPrompt("jumpToMod"); } },
+                    this._jumpToModIndicator,
                 ),
             ),
-            div({ class: "tip", style: "flex-shrink: 0; position: absolute; left: 14px; top: 0; width: 12px; height: 12px", onclick: (e: MouseEvent) => { e.stopPropagation(); this._openPrompt("usedInstrument"); } },
-                SVG.svg({ style: "flex-shrink: 0; position: absolute; left: 0; top: 0; pointer-events: none;", width: "12px", height: "12px", "margin-right": "1em", viewBox: "-6 -6 12 12" },
-                    this._usedInstrumentIndicator,
-                ),
-            ),
-            div({ class: "tip", style: "flex-shrink: 0; position: absolute; left: 28px; top: 0; width: 12px; height: 12px", onclick: (e: MouseEvent) => { e.stopPropagation(); this._openPrompt("jumpToMod"); } },
-                this._jumpToModIndicator,
-            ),
-            span({ class: "song-header-text" }, isSpanish() ? "Ajustes de Canción" : "Song Settings"),
+            span({ class: "song-header-text", style: "padding: 0 24px 0 54px;" }, isSpanish() ? "Ajustes de Canción" : "Song Settings"),
             this._songSettingsFoldIcon,
+            this._songSettingsLockBtn,
             this._songSettingsCloseBtn,
         ),
     );
@@ -1507,7 +1507,7 @@ export class SongEditor {
         ),
         div({ class: "selectRow", style: "margin: 0;" },
             span({ class: "tip", onclick: () => this._openPrompt("tempo") }, "Tempo:"),
-            span({ style: "display: flex; width: 100%; align-items: center;" }, this._tempoSlider.container, this._tempoStepper),
+            div({ style: "display: flex; width: 100%; align-items: center; gap: 6px; min-width: 0;" }, this._tempoSlider.container, this._tempoStepper),
         ),
         div({ class: "selectRow", style: "margin: 0;" },
             span({ class: "tip", onclick: () => this._openPrompt("rhythm") }, "Rhythm:"),
@@ -1521,11 +1521,9 @@ export class SongEditor {
     );
     private readonly _songSettingsArea: HTMLDivElement = div({ class: "song-settings-area" },
         this._songSettingsGroup,
-        this._songSettingsLockBtn,
     );
     private readonly _instrumentSettingsArea: HTMLDivElement = div({ class: "instrument-settings-area" },
         this._instrumentSettingsGroup,
-        this._instrumentSettingsLockBtn,
     );
     private readonly _leftSplitter: HTMLDivElement = div({ class: "editor-splitter-left", title: isSpanish() ? "Arrastrar para redimensionar" : "Drag to resize" },
         div({ class: "splitter-handle-v" })
@@ -1670,17 +1668,18 @@ export class SongEditor {
         this._modSliderValues = new Array<number>(Config.modulators.length);
 
         this._phaseModGroup.appendChild(div({ class: "selectRow", style: `color: ${ColorConfig.secondaryText}; height: 1em; margin-top: 0.5em;` },
-            div({ style: "margin-right: .1em; visibility: hidden;" }, 1 + "."),
-            div({ style: "width: 4.8em; min-width: 4.8em; flex-shrink: 0; margin-right: .3em;", class: "tip", onclick: () => this._openPrompt("operatorFrequency") }, "Freq:"),
-            div({ class: "tip", style: "flex: 1 1 auto;", onclick: () => this._openPrompt("operatorVolume") }, "Volume:"),
+            div({ style: "width: 12px; margin-right: 2px; visibility: hidden;" }, "1"),
+            div({ style: "width: 10px; margin-right: 2px; visibility: hidden;" }),
+            div({ style: "width: 52px; min-width: 52px; flex-shrink: 0; margin-right: 6px; text-align: center;", class: "tip", onclick: () => this._openPrompt("operatorFrequency") }, "Freq:"),
+            div({ class: "tip", style: "flex: 1 1 auto; text-align: center;", onclick: () => this._openPrompt("operatorVolume") }, "Volume:"),
         ));
         for (let i: number = 0; i < Config.operatorCount+2; i++) {
             const operatorIndex: number = i;
-            const operatorNumber: HTMLDivElement = div({ style: "margin-right: 0px; color: " + ColorConfig.secondaryText + ";" }, i + 1 + "");
+            const operatorNumber: HTMLDivElement = div({ style: "width: 12px; min-width: 12px; margin-right: 2px; color: " + ColorConfig.secondaryText + "; text-align: right; font-size: 11px;" }, i + 1 + "");
             const frequencySelect: HTMLSelectElement = buildOptions(select({ style: "width: 100%;", title: "Frequency" }), Config.operatorFrequencies.map(freq => freq.name));
             const amplitudeSlider: Slider = new Slider(input({ type: "range", min: "0", max: Config.operatorAmplitudeMax, value: "0", step: "1", title: "Volume" }), this._doc, (oldValue: number, newValue: number) => new ChangeOperatorAmplitude(this._doc, operatorIndex, oldValue, newValue), false);
             const waveformSelect: HTMLSelectElement = buildOptions(select({ style: "width: 100%;", title: "Waveform" }), Config.operatorWaves.map(wave => wave.name));
-            const waveformDropdown: HTMLButtonElement = button({ style: "margin-left:0em; margin-right: 2px; height:1.5em; width: 8px; max-width: 10px; padding: 0px; font-size: 8px;", onclick: () => this._toggleDropdownMenu(DropdownID.FM, i) }, "▼");
+            const waveformDropdown: HTMLButtonElement = button({ style: "margin: 0 2px; height: 1.5em; width: 10px; min-width: 10px; max-width: 10px; padding: 0px; font-size: 8px;", onclick: () => this._toggleDropdownMenu(DropdownID.FM, i) }, "▼");
             const waveformDropdownHint: HTMLSpanElement = span({ class: "tip", style: "margin-left: 10px;", onclick: () => this._openPrompt("operatorWaveform") }, "Wave:");
             const waveformPulsewidthSlider: Slider = new Slider(input({ style: "margin-left: 10px; width: 85%;", type: "range", min: "0", max: Config.pwmOperatorWaves.length - 1, value: "0", step: "1", title: "Pulse Width" }), this._doc, (oldValue: number, newValue: number) => new ChangeOperatorPulseWidth(this._doc, operatorIndex, oldValue, newValue), true);
             const waveformDropdownRow: HTMLElement = div({ class: "selectRow" }, waveformDropdownHint, waveformPulsewidthSlider.container,
@@ -1689,7 +1688,7 @@ export class SongEditor {
             const row: HTMLDivElement = div({ class: "selectRow" },
                 operatorNumber,
                 waveformDropdown,
-                div({ class: "selectContainer", style: "width: 4.8em; min-width: 4.8em; flex-shrink: 0; margin-right: .3em;" }, frequencySelect),
+                div({ class: "selectContainer operator-freq-select", style: "width: 52px; min-width: 52px; max-width: 52px; flex: 0 0 52px; margin-right: 6px;" }, frequencySelect),
                 amplitudeSlider.container,
             );
             this._phaseModGroup.appendChild(row);
